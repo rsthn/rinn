@@ -2,7 +2,7 @@
 **	rin/router
 **
 **	Copyright (c) 2013-2020, RedStar Technologies, All rights reserved.
-**	https://www.redstar-technologies.com/
+**	https://www.rsthn.com/
 **
 **	THIS LIBRARY IS PROVIDED BY REDSTAR TECHNOLOGIES "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
 **	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A 
@@ -177,17 +177,17 @@ let _Router = module.exports =
 	/**
 	**	Initializes the router global instance.
 	**
-	**	>> void init (object window);
+	**	>> void init ();
 	*/
-	init: function (_window)
+	init: function ()
 	{
 		if (this.alreadyAttached)
 			return;
 
 		this.alreadyAttached = true;
 
-		this._window = _window;
-		this._window.onhashchange = this.onLocationChanged.bind(this);
+		if ('onhashchange' in globalThis)
+			globalThis.onhashchange = this.onLocationChanged.bind(this);
 	},
 
 	/**
@@ -211,7 +211,7 @@ let _Router = module.exports =
 		if (location == this.location) return;
 
 		if (silent) this.ignoreHashchangeEvent++;
-		this._window.location.hash = location;
+		globalThis.location.hash = location;
 	},
 
 	/**
@@ -393,7 +393,7 @@ let _Router = module.exports =
 
 		if (cLocation != rLocation)
 		{
-			this._window.location.replace("#" + rLocation);
+			globalThis.location.replace("#" + rLocation);
 			return;
 		}
 
@@ -411,5 +411,4 @@ let _Router = module.exports =
 	}
 };
 
-// Initialize router system only if using a browser.
-(function() { if (!('global' in this)) _Router.init (this); }) ();
+_Router.init();

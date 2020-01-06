@@ -2,7 +2,7 @@
 **	rin/main
 **
 **	Copyright (c) 2013-2020, RedStar Technologies, All rights reserved.
-**	https://www.redstar-technologies.com/
+**	https://www.rsthn.com/
 **
 **	THIS LIBRARY IS PROVIDED BY REDSTAR TECHNOLOGIES "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
 **	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A 
@@ -34,4 +34,5 @@ Rin.Template = require('./template');
 Rin.Router = require('./router');
 Rin.Element = require('./element');
 
+/* ---- */
 Object.assign (module.exports, Rin);

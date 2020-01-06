@@ -2,7 +2,7 @@
 **	rin/core
 **
 **	Copyright (c) 2013-2020, RedStar Technologies, All rights reserved.
-**	https://www.redstar-technologies.com/
+**	https://www.rsthn.com/
 **
 **	THIS LIBRARY IS PROVIDED BY REDSTAR TECHNOLOGIES "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
 **	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A 
@@ -30,5 +30,5 @@ Rin.Schema = require('./schema');
 
 Rin.Template = require('./template');
 
-
+/* ---- */
 Object.assign (module.exports, Rin);

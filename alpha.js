@@ -1,8 +1,8 @@
 /*
-**	rin.alpha.js
+**	rin/alpha
 **
 **	Copyright (c) 2013-2020, RedStar Technologies, All rights reserved.
-**	https://www.redstar-technologies.com/
+**	https://www.rsthn.com/
 **
 **	THIS LIBRARY IS PROVIDED BY REDSTAR TECHNOLOGIES "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
 **	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A 
@@ -14,7 +14,7 @@
 **	USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-let Rin = { };
+let Rin = module.exports = { };
 
 /**
 **	Invokes the specified function 'fn' 10ms later.
@@ -224,6 +224,7 @@ Rin.serialize = function (o)
 	return JSON.stringify(o);
 };
 
+
 /**
 **	Deserializes a string in JSON format and returns an object.
 **
@@ -233,7 +234,3 @@ Rin.deserialize = function (s)
 {
 	return JSON.parse(s);
 };
-
-
-// *****************************************
-Object.assign(exports, Rin);

@@ -183,3 +183,14 @@ Class.extend = function (...protos)
 {
 	return this._class.prototype._extend (this, protos);
 };
+
+
+/**
+**	Creates a new instance by extending the class first with the specified prototype.
+**
+**	>> object create (object proto);
+*/
+Class.create = function (proto)
+{
+	return new (this.extend(proto)) ();
+};

@@ -577,7 +577,7 @@ _Template.filters =
 	},
 
 	/**
-	**	Returns the value if the expression is true.
+	**	Returns the value if the expression is true, supports 'elif' and 'else' as well.
 	**
 	**	if <expr> <value> [elif <expr> <value>] [else <value>]
 	*/
@@ -590,6 +590,25 @@ _Template.filters =
 
 			if (_Template.expand(parts[i+1], data, 'arg'))
 				return _Template.expand(parts[i+2], data, 'arg');
+		}
+
+		return '';
+	},
+
+	/**
+	**	Loads the expression value and attempts to match one case.
+	**
+	**	switch <expr> <case1> <value1> ... <caseN> <valueN> default <defvalue> 
+	*/
+	'_switch': function(parts, data)
+	{
+		let value = _Template.expand(parts[1], data, 'arg');
+
+		for (let i = 2; i < parts.length; i += 2)
+		{
+			let case_value = _Template.expand(parts[i], data, 'arg');
+			if (case_value == value || case_value == 'default')
+				return _Template.expand(parts[i+1], data, 'arg');
 		}
 
 		return '';

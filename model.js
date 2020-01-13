@@ -267,8 +267,8 @@ let _Model = module.exports = EventDispatcher.extend
 		if (evt != null && evt.ret.length && evt.ret[0] === false)
 			return;
 
-		this.dispatchEvent ("propertyChanged", temp);
 		this.dispatchEvent ("propertyChanged." + name, temp);
+		this.dispatchEvent ("propertyChanged", temp);
 
 		this.changedList.push (name);
 	},

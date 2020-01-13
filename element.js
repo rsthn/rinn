@@ -436,6 +436,7 @@ let _Element = module.exports =
 	onModelPropertyChanged: function (evt, args)
 	{
 		this.dispatch ("propertyChanged." + args.name, args);
+		this.dispatch ("propertyChanged", args);
 	},
 
 	/**

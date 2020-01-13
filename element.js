@@ -16,6 +16,7 @@
 
 let Rin = require('./alpha');
 let Model = require('./model');
+let Template = require('./template');
 
 /*
 **	Base class for custom elements.
@@ -48,12 +49,15 @@ let _Element = module.exports =
 	*/
 	__ctor: function()
 	{
-		this.init.apply(this, arguments);
-
 		if (this.events)
 			this.bindEvents (this.events);
 
+		this._list_watch = [];
+		this._list_visible = [];
+		this._list_property = [];
+
 		this.init();
+		this.collectWatchers();
 	},
 
 	/**
@@ -79,20 +83,20 @@ let _Element = module.exports =
 
 		if (this.model != null)
 		{
-			this.model.removeEventListener ("modelChanged", this.onModelChanged, this);
+			this.model.removeEventListener ("modelChanged", this.onModelPreChanged, this);
 			this.model.removeEventListener ("propertyChanging", this.onModelPropertyChanging, this);
-			this.model.removeEventListener ("propertyChanged", this.onModelPropertyChanged, this);
+			this.model.removeEventListener ("propertyChanged", this.onModelPropertyPreChanged, this);
 			this.model.removeEventListener ("propertyRemoved", this.onModelPropertyRemoved, this);
 		}
 
 		this.model = model;
 
-		this.model.addEventListener ("modelChanged", this.onModelChanged, this);
+		this.model.addEventListener ("modelChanged", this.onModelPreChanged, this);
 		this.model.addEventListener ("propertyChanging", this.onModelPropertyChanging, this);
-		this.model.addEventListener ("propertyChanged", this.onModelPropertyChanged, this);
+		this.model.addEventListener ("propertyChanged", this.onModelPropertyPreChanged, this);
 		this.model.addEventListener ("propertyRemoved", this.onModelPropertyRemoved, this);
 
-		this.onModelChanged ();
+		this.onModelPreChanged ();
 		return this;
 	},
 
@@ -214,7 +218,7 @@ let _Element = module.exports =
 					}
 					else
 					{
-						evt.source = evt.source.parentNode;
+						evt.source = evt.source.parentElement;
 					}
 				}
 			}
@@ -238,6 +242,79 @@ let _Element = module.exports =
 	},
 
 	/**
+	**	Sets the innerHTML property of the element and runs some post set-content tasks.
+	**
+	**	>> void setInnerHTML (value);
+	*/
+	setInnerHTML: function (value)
+	{
+		this.innerHTML = value;
+		this.collectWatchers ();
+	},
+
+	/**
+	**	Collects all watchers elements (data-watch, data-visible, data-property), that depend on the model, should be invoked
+	**	when the structure of the element changed (added/removed children). This is automatically called when the setInnerHTML
+	**	method is called.
+	**
+	**	>> void collectWatchers ();
+	*/
+	collectWatchers: function ()
+	{
+		let self = this;
+		let list;
+
+		list = this.querySelectorAll("[data-watch='true']");
+		for (let i = 0; i < list.length; i++)
+		{
+			list[i]._template = Template.compile(list[i].innerHTML);
+			list[i].innerHTML = '';
+
+			list[i].removeAttribute('data-watch');
+			this._list_watch.push(list[i]);
+		}
+
+		list = this.querySelectorAll("[data-visible]");
+		for (let i = 0; i < list.length; i++)
+		{
+			list[i]._visible = Template.compile(list[i].dataset.visible);
+
+			list[i].removeAttribute('data-visible');
+			this._list_visible.push(list[i]);
+		}
+
+		list = this.querySelectorAll("[data-property]");
+		for (let i = 0; i < list.length; i++)
+		{
+			list[i].onchange = function()
+			{
+				switch (this.type)
+				{
+					case 'checkbox':
+						self.getModel().set(this.name, this.checked ? '1' : '0');
+						break;
+
+					default:
+						self.getModel().set(this.name, this.value);
+						break;
+				}
+			};
+
+			list[i].name = list[i].dataset.property;
+
+			list[i].removeAttribute('data-property');
+			this._list_property.push(list[i]);
+		}
+
+		this._list_watch = this._list_watch.filter(i => i.parentElement != null);
+		this._list_visible = this._list_visible.filter(i => i.parentElement != null);
+		this._list_property = this._list_property.filter(i => i.parentElement != null);
+
+		if (this.model != null)
+			this.model.update(true);
+	},
+
+	/**
 	**	Handler for the DOM connected event.
 	**
 	**	>> void onConnected ();
@@ -256,6 +333,32 @@ let _Element = module.exports =
 	},
 
 	/**
+	**	Event handler invoked when the model has changed, executed before onModelChanged() to update internal dependencies,
+	**	should not be overriden or elements watching the model will not be updated.
+	**
+	**	>> void onModelPreChanged (evt, args);
+	*/
+	onModelPreChanged: function (evt, args)
+	{
+		let data = this.getModel().get();
+
+		for (let i = 0; i < this._list_watch.length; i++)
+		{
+			this._list_watch[i].innerHTML = this._list_watch[i]._template(data);
+		}
+
+		for (let i = 0; i < this._list_visible.length; i++)
+		{
+			if (this._list_visible[i]._visible(data, 'arg'))
+				this._list_visible[i].style.display = 'block';
+			else
+				this._list_visible[i].style.display = 'none';
+		}
+
+		this.onModelChanged(evt, args);
+	},
+
+	/**
 	**	Event handler invoked when the model has changed.
 	**
 	**	>> void onModelChanged (evt, args);
@@ -271,6 +374,57 @@ let _Element = module.exports =
 	*/
 	onModelPropertyChanging: function (evt, args)
 	{
+	},
+
+	/**
+	**	Event handler invoked when a property of the model has changed, executed before onModelPropertyChanged() to update internal
+	**	dependencies, should not be overriden or elements depending on the property will not be updated.
+	**
+	**	>> void onModelPropertyPreChanged (evt, args);
+	*/
+	onModelPropertyPreChanged: function (evt, args)
+	{
+		for (let i = 0; i < this._list_property.length; i++)
+		{
+			if (this._list_property[i].name == args.name)
+			{
+				switch (this._list_property[i].type)
+				{
+					case 'radio':
+						if (this._list_property[i].value != args.value)
+						{
+							this._list_property[i].parentElement.classList.remove('active');
+							continue;
+						}
+
+						this._list_property[i].checked = true;
+						this._list_property[i].parentElement.classList.add('active');
+						break;
+
+					case 'checkbox':
+						if (~~args.value)
+						{
+							this._list_property[i].checked = true;
+							this._list_property[i].parentElement.classList.add('active');
+						}
+						else
+						{
+							this._list_property[i].checked = false;
+							this._list_property[i].parentElement.classList.remove('active');
+						}
+
+						break;
+
+					default:
+						this._list_property[i].value = args.value;
+						break;
+				}
+
+				if (this._list_property[i].onchange) this._list_property[i].onchange();
+			}
+		}
+
+		this.onModelPropertyChanged(evt, args);
 	},
 
 	/**
@@ -311,14 +465,14 @@ let _Element = module.exports =
 
 			findRoot()
 			{
-				let elem = this;
+				let elem = this.parentElement;
 
 				while (elem != null)
 				{
 					if ("isRoot" in elem && elem.isRoot)
 						return elem;
 
-					elem = elem.parentNode;
+					elem = elem.parentElement;
 				}
 
 				return null;
@@ -334,8 +488,8 @@ let _Element = module.exports =
 
 				if (this.invokeConstructor)
 				{
-					this.__ctor();
 					this.invokeConstructor = false;
+					this.__ctor();
 				}
 
 				this.onConnected();

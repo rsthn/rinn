@@ -258,13 +258,13 @@ let _Template = module.exports =
 		if (mode == 'var')
 		{
 			parts = _Template.expand(parts, data, 'obj');
-	
+
 			if (parts[0] == 'nl')
 				return '\n';
-	
+
 			let escape = true;
 			let quote = false;
-	
+
 			while (true)
 			{
 				if (parts[0][0] == '$')
@@ -280,12 +280,12 @@ let _Template = module.exports =
 				else
 					break;
 			}
-	
+
 			let i = 0;
-	
+
 			if (parts[i] == 'this')
 				i++;
-	
+
 			for (; i < parts.length && data != null; i++)
 			{
 				if (parts[i] in data)
@@ -293,16 +293,16 @@ let _Template = module.exports =
 				else
 					data = null;
 			}
-	
+
 			if (typeof(data) == 'string')
 			{
 				if (escape)
 					data = data.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-	
+
 				if (quote)
 					data = '"' + data + '"';
 			}
-	
+
 			return data;
 		}
 	
@@ -310,18 +310,21 @@ let _Template = module.exports =
 		if (mode == 'fn')
 		{
 			var args = [];
-	
+
 			args.push(_Template.expand(parts[0], data, 'arg'));
-	
+
 			if ('_'+args[0] in _Template.filters)
 				args[0] = '_'+args[0];
-	
+
 			if (!(args[0] in _Template.filters))
 				return `(Unknown: ${args[0]})`;
-	
+
+			if (args[0][0] == '_')
+				return _Template.filters[args[0]] (parts, data);
+
 			for (let i = 1; i < parts.length; i++)
-				args.push(_Template.expand(parts[i], data, args[0][0] == '_' ? 'obj' : 'arg'));
-	
+				args.push(_Template.expand(parts[i], data, 'arg'));
+
 			return _Template.filters[args[0]] (args, parts, data);
 		}
 	
@@ -345,7 +348,7 @@ let _Template = module.exports =
 				s.push(parts[i]);
 		}
 	
-		// Return as argument, that is, the first item in the result.
+		// Return as argument ('object' if only one, or string if more than one), that is, the first item in the result.
 		if (mode == 'arg')
 		{
 			if (s.length != 1)
@@ -366,14 +369,15 @@ let _Template = module.exports =
 	/**
 	**	Parses the given template and returns a function that when called with an object will expand the template.
 	**
+	**	>> object compile (string template, string mode);
 	**	>> object compile (string template);
 	*/
 	compile: function (template)
 	{
 		template = _Template.parse(template);
 
-		return function (data) {
-			return _Template.expand(template, data);
+		return function (data, mode) {
+			return _Template.expand(template, data, mode);
 		};
 	}
 };
@@ -386,11 +390,25 @@ let _Template = module.exports =
 _Template.filters =
 {
 	/**
+	**	Expression filters.
+	*/
+	not: function(args) { return !args[1]; },
+	int: function(args) { return ~~args[1]; },
+	eq: function(args) { return args[1] == args[2]; },
+	ne: function(args) { return args[1] != args[2]; },
+	lt: function(args) { return args[1] < args[2]; },
+	le: function(args) { return args[1] <= args[2]; },
+	gt: function(args) { return args[1] > args[2]; },
+	ge: function(args) { return args[1] >= args[2]; },
+	and: function(args) { for (let i = 1; i < args.length; i++) if (!args[i]) return false; return true; },
+	or: function(args) { for (let i = 1; i < args.length; i++) if (~~args[i]) return true; return false; },
+
+	/**
 	**	Returns the JSON representation of the expression.
 	**
 	**	json <expr>
 	*/
-	_json: function(args)
+	json: function(args)
 	{
 		return JSON.stringify(args[1], null, 4);
 	},
@@ -552,6 +570,29 @@ _Template.filters =
 				s.push(_Template.expand(parts[j], data, 'obj'));
 		}
 
+		delete data[var_name];
+		delete data[var_name + '#'];
+
 		return s;
-	}
+	},
+
+	/**
+	**	Returns the value if the expression is true.
+	**
+	**	if <expr> <value> [elif <expr> <value>] [else <value>]
+	*/
+	'_if': function(parts, data)
+	{
+		for (let i = 0; i < parts.length; i += 3)
+		{
+			if (_Template.expand(parts[i], data, 'arg') == 'else')
+				return _Template.expand(parts[i+1], data, 'arg');
+
+			if (_Template.expand(parts[i+1], data, 'arg'))
+				return _Template.expand(parts[i+2], data, 'arg');
+		}
+
+		return '';
+	},
+
 };

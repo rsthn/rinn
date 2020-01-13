@@ -16,6 +16,7 @@
 
 let Rin = require('./alpha');
 
+Rin.Rin = Rin;
 Rin.Class = require('./class');
 
 Rin.Event = require('./event');

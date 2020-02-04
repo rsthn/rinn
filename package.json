@@ -1,10 +1,10 @@
 {
   "name": "@rsthn/rin",
-  "version": "2.0.2-0",
+  "version": "2.0.3",
   "description": "Rin Framework (JS)",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Ok\"",
+    "test": "echo Ok",
     "build": "node scripts/build.js"
   },
   "repository": {

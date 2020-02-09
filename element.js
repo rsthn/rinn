@@ -14,16 +14,21 @@
 **	USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-let Rin = require('./alpha');
-let Model = require('./model');
-let Template = require('./template');
+const Rin = require('./alpha');
+const Model = require('./model');
+const Template = require('./template');
 
 /*
 **	Base class for custom elements.
 */
 
-let _Element = module.exports = 
+const Element = module.exports = 
 {
+	/**
+	**	Map containing the original prototypes for all registered elements.
+	*/
+	protos: { },
+
 	/**
 	**	Indicates if the element is a root element, that is, the target element to attach elements having data-ref attribute.
 	*/
@@ -449,10 +454,11 @@ let _Element = module.exports =
 	},
 
 	/*
-	**	Registers a new custom element with the specified name, extra functionality can be added with one or more prototypes,
-	**	by default all elements also get the Rin.Element prototype.
+	**	Registers a new custom element with the specified name, extra functionality can be added with one or more prototypes, by default
+	**	all elements also get the Rin.Element prototype. Note that the final prototypes of all registered elements are stored, and
+	**	if you want to inherit another element's prototype just provide its name (string) in the protos argument list.
 	**
-	**	>> class register (string name, object... protos);
+	**	>> class register (string name, (object|string)... protos);
 	*/
 	register: function (name, ...protos)
 	{
@@ -462,6 +468,17 @@ let _Element = module.exports =
 			{
 				super();
 				this.invokeConstructor = true;
+
+				this._super = { };
+
+				for (let i of Object.entries(this.constructor.prototype._super))
+				{
+					this._super[i[0]] = { };
+
+					for (let j of Object.entries(i[1])) {
+						this._super[i[0]][j[0]] = j[1].bind(this);
+					}
+				}
 			}
 
 			findRoot()
@@ -508,12 +525,46 @@ let _Element = module.exports =
 			}
 		};
 
-		Rin.override (newElement.prototype, _Element);
+		Rin.override (newElement.prototype, Element);
+
+		const proto = { };
+		const _super = { };
 
 		for (let i = 0; i < protos.length; i++)
+		{
+			if (!protos[i]) continue;
+
+			if (Rin.typeOf(protos[i]) == 'string')
+			{
+				const name = protos[i];
+
+				protos[i] = Element.protos[name];
+				if (!protos[i]) continue;
+
+				_super[name] = { };
+
+				for (let f in protos[i])
+				{
+					if (Rin.typeOf(protos[i][f]) != 'function')
+						continue;
+
+					_super[name][f] = protos[i][f];
+				}
+			}
+
+			if ('_super' in protos[i])
+				Rin.override (_super, protos[i]._super);
+
 			Rin.override (newElement.prototype, protos[i]);
+			Rin.override (proto, protos[i]);
+		}
+
+		newElement.prototype._super = _super;
+		proto._super = _super;
 
 		customElements.define (name, newElement);
+		Element.protos[name] = proto;
+
 		return newElement;
 	}
 };

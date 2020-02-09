@@ -97,7 +97,7 @@ let _Schema = module.exports =
 		({
 			flatten: function (value, context)
 			{
-				if (value == null) return null;
+				if (value == null) return 0;
 
 				value = value.toString();
 
@@ -118,7 +118,7 @@ let _Schema = module.exports =
 
 			unflatten: function (value, context)
 			{
-                return value == null ? null : context.strings[~~value - 1];
+                return value == null || value == 0 ? null : context.strings[~~value - 1];
             }
         });
     },

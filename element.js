@@ -62,6 +62,13 @@ const Element = module.exports =
 		this._list_property = [];
 
 		this.init();
+
+		Object.keys(this._super).reverse().forEach(i =>
+		{
+			if ('init' in this._super[i])
+				this._super[i].init();
+		});
+
 		this.collectWatchers();
 	},
 
@@ -320,7 +327,16 @@ const Element = module.exports =
 	},
 
 	/**
-	**	Handler for the DOM connected event.
+	**	Executed when the element is created and yet not attached to the DOM tree.
+	**
+	**	>> void onCreated ();
+	*/
+	onCreated: function()
+	{
+	},
+
+	/**
+	**	Executed whem the element is attached to the DOM tree.
 	**
 	**	>> void onConnected ();
 	*/
@@ -329,7 +345,7 @@ const Element = module.exports =
 	},
 
 	/**
-	**	Handler for the DOM disconnected event.
+	**	Executed when the element is no longer a part of the DOM tree.
 	**
 	**	>> void onDisconnected ();
 	*/
@@ -479,6 +495,8 @@ const Element = module.exports =
 						this._super[i[0]][j[0]] = j[1].bind(this);
 					}
 				}
+
+				this.onCreated();
 			}
 
 			findRoot()

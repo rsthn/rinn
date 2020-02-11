@@ -15,16 +15,18 @@
 */
 
 /**
-**	Templating module. The template formats available are:
+**	Templating module. The template formats available are shown below, note that the sym-open and sym-close symbols are by
+**	default the square brackets, however those can be modified since are just parameters.
 **
-**	HTML Escaped Value:				[data.value]
-**	Raw Value:						[!data.value]
-**	Double-Quoted Escaped Value:	[$data.value]
-**	Immediate Value:				[<....] OR [@....]
-**	Filtered Value:					[filterName ... <expr> ...]
-**
-**	Where 'expr' can be any of the allowed formats (nested if desired). The filterName should map to one of the available
-**	filter functions in the Rin.Template.filters map, each of which have their own parameters.
+**	HTML Escaped Output:			[data.value]					Escapes HTML characters from the output.
+**	Raw Output:						[!data.value]					Does not escape HTML characters from the output (used to output direct HTML).
+**	Double-Quoted Escaped Output:	[$data.value]					Escapes HTML characters and surrounds with double quotes.
+**	Immediate Reparse:				[<....] OR [@....]				Reparses the contents as if parseTemplate() was called again.
+**	Immediate Output:				[:...]							Takes the contents and outputs exactly as-is without format and optionally surrounded by the
+**																	sym-open and sym-close symbols when the first character is not '<', sym_open or space.
+**	Filtered Output:				[filterName ... <expr> ...]		Runs a filter call, 'expr' can be any of the allowed formats shown here (nested if desired),
+**																	filterName should map to one of the available filter functions in the Rin.Template.filters map,
+**																	each of which have their own parameters.
 */
 
 let Template = module.exports =
@@ -36,7 +38,7 @@ let Template = module.exports =
 	*/
 	parseTemplate: function (template, sym_open, sym_close, is_tpl)
 	{
-		let nflush = 'str', flush = null, state = 0, count = 0;
+		let nflush = 'string', flush = null, state = 0, count = 0;
 		let str = '', nstr = '';
 		let parts = [], mparts = parts, nparts = false;
 	
@@ -57,38 +59,45 @@ let Template = module.exports =
 				case 0:
 					if (template[i] == '\0')
 					{
-						flush = 'str';
+						flush = 'string';
 					}
 					else if (template[i] == sym_open && template[i+1] == '<')
 					{
 						state = count = 1;
-						flush = 'str';
-						nflush = 'merge-str';
+						flush = 'string';
+						nflush = 'parse-string-and-merge';
 					}
 					else if (template[i] == sym_open && template[i+1] == '@')
 					{
 						state = count = 1;
-						flush = 'str';
-						nflush = 'merge-str';
+						flush = 'string';
+						nflush = 'parse-string-and-merge';
+						i++;
+					}
+					else if (template[i] == sym_open && template[i+1] == ':')
+					{
+						state = 4; count = 1;
+						flush = 'string';
+						nflush = 'string';
 						i++;
 					}
 					else if (template[i] == sym_open)
 					{
 						state = count = 1;
-						flush = 'str';
-						nflush = 'tpl';
+						flush = 'string';
+						nflush = 'parse-template';
 					}
 					else
 					{
 						str += template[i];
 					}
-	
+
 					break;
 	
 				case 1:
 					if (template[i] == '\0')
 					{
-						throw new Error ("Parse error");
+						throw new Error ("Parse error: Unexpected end of template");
 					}
 	
 					if (template[i] == sym_close)
@@ -96,8 +105,8 @@ let Template = module.exports =
 						count--;
 	
 						if (count < 0)
-							throw new Error ("Parse error");
-	
+							throw new Error ("Parse error: Unmatched " + sym_close);
+
 						if (count == 0)
 						{
 							state = 0;
@@ -122,13 +131,13 @@ let Template = module.exports =
 					else if (template[i] == '.')
 					{
 						flush = nflush;
-						nflush = 'str';
+						nflush = 'string';
 						break;
 					}
 					else if (template[i].match(/[\t\n\r\f\v ]/) != null)
 					{
 						flush = nflush;
-						nflush = 'str';
+						nflush = 'string';
 						nparts = true;
 	
 						while (template[i].match(/[\t\n\r\f\v ]/) != null) i++;
@@ -139,13 +148,20 @@ let Template = module.exports =
 					else if (template[i] == sym_open && template[i+1] == '<')
 					{
 						if (str) flush = nflush;
-						state = 3; count = 1; nflush = 'merge-str';
+						state = 3; count = 1; nflush = 'parse-string-and-merge';
 						break;
 					}
 					else if (template[i] == sym_open && template[i+1] == '@')
 					{
 						if (str) flush = nflush;
-						state = 3; count = 1; nflush = 'merge-str';
+						state = 3; count = 1; nflush = 'parse-string-and-merge';
+						i++;
+						break;
+					}
+					else if (template[i] == sym_open && template[i+1] == ':')
+					{
+						if (str) flush = nflush;
+						state = 5; count = 1; nflush = 'string';
 						i++;
 						break;
 					}
@@ -157,7 +173,7 @@ let Template = module.exports =
 							nstr = template[i];
 						}
 	
-						state = 3; count = 1; nflush = 'tpl2';
+						state = 3; count = 1; nflush = 'parse-string';
 	
 						if (str) break;
 					}
@@ -167,21 +183,81 @@ let Template = module.exports =
 	
 				case 3:
 					if (template[i] == '\0')
-						throw new Error ('Parse error');
+						throw new Error ("Parse error: Unexpected end of template");
 	
 					if (template[i] == sym_close)
 					{
 						count--;
 	
 						if (count < 0)
-							throw new Error ('Parse error');
-	
+							throw new Error ("Parse error: Unmatched " + sym_close);
+
 						if (count == 0)
 						{
 							state = 2;
 	
-							if (nflush == 'merge-str')
+							if (nflush == 'parse-string-and-merge')
 								break;
+						}
+					}
+					else if (template[i] == sym_open)
+					{
+						count++;
+					}
+	
+					str += template[i];
+					break;
+
+				case 4:
+					if (template[i] == '\0')
+						throw new Error ("Parse error: Unexpected end of template");
+	
+					if (template[i] == sym_close)
+					{
+						count--;
+	
+						if (count < 0)
+							throw new Error ("Parse error: Unmatched " + sym_close);
+
+						if (count == 0)
+						{
+							if (str.length != 0)
+							{
+								if (!(str[0] == '<' || str[0] == '[' || str[0] == ' '))
+									str = sym_open + str + sym_close;
+							}
+
+							state = 0;
+							flush = nflush;
+							break;
+						}
+					}
+					else if (template[i] == sym_open)
+					{
+						count++;
+					}
+	
+					str += template[i];
+					break;
+
+				case 5:
+					if (template[i] == '\0')
+						throw new Error ("Parse error: Unexpected end of template");
+
+					if (template[i] == sym_close)
+					{
+						count--;
+	
+						if (count < 0)
+							throw new Error ("Parse error: Unmatched " + sym_close);
+
+						if (count == 0)
+						{
+							if (!(str[0] == '<' || str[0] == '[' || str[0] == ' '))
+								str = sym_open + str + sym_close;
+
+							state = 2;
+							break;
 						}
 					}
 					else if (template[i] == sym_open)
@@ -195,23 +271,23 @@ let Template = module.exports =
 	
 			if (flush != null)
 			{
-				if (flush == 'tpl')
+				if (flush == 'parse-template')
 				{
 					str = Template.parseTemplate (str, sym_open, sym_close, true);
 				}
-				else if (flush == 'tpl2')
+				else if (flush == 'parse-string')
 				{
 					str = Template.parseTemplate (str, sym_open, sym_close, false);
 					str = str[0];
 				}
-				else if (flush == 'merge-str')
+				else if (flush == 'parse-string-and-merge')
 				{
 					str = Template.parseTemplate (str, sym_open, sym_close, false);
 				}
 	
 				if (typeof(str) != 'string' || str.length != 0)
 				{
-					if (flush == 'merge-str')
+					if (flush == 'parse-string-and-merge')
 					{
 						for (let i = 0; i < str.length; i++)
 							parts.push(str[i]);

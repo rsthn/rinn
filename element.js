@@ -108,7 +108,7 @@ const Element = module.exports =
 		this.model.addEventListener ("propertyChanged", this.onModelPropertyPreChanged, this);
 		this.model.addEventListener ("propertyRemoved", this.onModelPropertyRemoved, this);
 
-		this.onModelPreChanged ();
+		this.onModelPreChanged(null, { fields: Object.keys(this.model.properties) });
 		return this;
 	},
 
@@ -296,10 +296,11 @@ const Element = module.exports =
 		let self = this;
 		let list;
 
-		list = this.querySelectorAll("[data-watch='true']");
+		list = this.querySelectorAll("[data-watch]");
 		for (let i = 0; i < list.length; i++)
 		{
 			list[i]._template = Template.compile(list[i].innerHTML);
+			list[i]._watch = new RegExp(list[i].dataset.watch);
 			list[i].innerHTML = '';
 
 			list[i].removeAttribute('data-watch');
@@ -324,6 +325,10 @@ const Element = module.exports =
 				{
 					case 'checkbox':
 						self.getModel().set(this.name, this.checked ? '1' : '0');
+						break;
+
+					case 'field':
+						self.getModel().set(this.name, this.getValue());
 						break;
 
 					default:
@@ -385,7 +390,14 @@ const Element = module.exports =
 
 		for (let i = 0; i < this._list_watch.length; i++)
 		{
-			this._list_watch[i].innerHTML = this._list_watch[i]._template(data);
+			for (let j of args.fields)
+			{
+				if (!this._list_watch[i]._watch.test(j))
+					continue;
+
+				this._list_watch[i].innerHTML = this._list_watch[i]._template(data);
+				break;
+			}
 		}
 
 		for (let i = 0; i < this._list_visible.length; i++)
@@ -429,6 +441,8 @@ const Element = module.exports =
 		{
 			if (this._list_property[i].name == args.name)
 			{
+				let trigger = true;
+
 				switch (this._list_property[i].type)
 				{
 					case 'radio':
@@ -456,12 +470,18 @@ const Element = module.exports =
 
 						break;
 
+					case 'field':
+						this._list_property[i].setValue (args.value);
+						trigger = false;
+						break;
+
 					default:
 						this._list_property[i].value = args.value;
 						break;
 				}
 
-				if (this._list_property[i].onchange) this._list_property[i].onchange();
+				if (trigger && this._list_property[i].onchange)
+					this._list_property[i].onchange();
 			}
 		}
 

@@ -27,7 +27,7 @@
 **	filter functions in the Rin.Template.filters map, each of which have their own parameters.
 */
 
-let _Template = module.exports =
+let Template = module.exports =
 {
 	/**
 	**	Parses a template and returns the compiled 'parts' structure to be used by the 'expand' method.
@@ -197,16 +197,16 @@ let _Template = module.exports =
 			{
 				if (flush == 'tpl')
 				{
-					str = _Template.parseTemplate (str, sym_open, sym_close, true);
+					str = Template.parseTemplate (str, sym_open, sym_close, true);
 				}
 				else if (flush == 'tpl2')
 				{
-					str = _Template.parseTemplate (str, sym_open, sym_close, false);
+					str = Template.parseTemplate (str, sym_open, sym_close, false);
 					str = str[0];
 				}
 				else if (flush == 'merge-str')
 				{
-					str = _Template.parseTemplate (str, sym_open, sym_close, false);
+					str = Template.parseTemplate (str, sym_open, sym_close, false);
 				}
 	
 				if (typeof(str) != 'string' || str.length != 0)
@@ -257,7 +257,7 @@ let _Template = module.exports =
 		// Expand variable parts.
 		if (mode == 'var')
 		{
-			parts = _Template.expand(parts, data, 'obj');
+			parts = Template.expand(parts, data, 'obj');
 
 			if (parts[0] == 'nl')
 				return '\n';
@@ -311,30 +311,30 @@ let _Template = module.exports =
 		{
 			var args = [];
 
-			args.push(_Template.expand(parts[0], data, 'arg'));
+			args.push(Template.expand(parts[0], data, 'arg'));
 
-			if ('_'+args[0] in _Template.filters)
+			if ('_'+args[0] in Template.filters)
 				args[0] = '_'+args[0];
 
-			if (!(args[0] in _Template.filters))
+			if (!(args[0] in Template.filters))
 				return `(Unknown: ${args[0]})`;
 
 			if (args[0][0] == '_')
-				return _Template.filters[args[0]] (parts, data);
+				return Template.filters[args[0]] (parts, data);
 
 			for (let i = 1; i < parts.length; i++)
-				args.push(_Template.expand(parts[i], data, 'arg'));
+				args.push(Template.expand(parts[i], data, 'arg'));
 
-			return _Template.filters[args[0]] (args, parts, data);
+			return Template.filters[args[0]] (args, parts, data);
 		}
 	
 		// Expand template parts.
 		if (mode == 'tpl')
 		{
 			if (parts.length == 1)
-				return _Template.expand(parts[0], data, 'var');
+				return Template.expand(parts[0], data, 'var');
 	
-			return _Template.expand(parts, data, 'fn');
+			return Template.expand(parts, data, 'fn');
 		}
 	
 		// Expand string parts.
@@ -343,7 +343,7 @@ let _Template = module.exports =
 		for (let i = 0; i < parts.length; i++)
 		{
 			if (typeof(parts[i]) != 'string')
-				s.push(_Template.expand(parts[i], data, 'tpl'));
+				s.push(Template.expand(parts[i], data, 'tpl'));
 			else
 				s.push(parts[i]);
 		}
@@ -369,15 +369,14 @@ let _Template = module.exports =
 	/**
 	**	Parses the given template and returns a function that when called with an object will expand the template.
 	**
-	**	>> object compile (string template, string mode);
 	**	>> object compile (string template);
 	*/
 	compile: function (template)
 	{
-		template = _Template.parse(template);
+		template = Template.parse(template);
 
 		return function (data, mode) {
-			return _Template.expand(template, data, mode);
+			return Template.expand(template, data, mode);
 		};
 	}
 };
@@ -387,7 +386,7 @@ let _Template = module.exports =
 **	Template filters, functions that are used to format data.
 */
 
-_Template.filters =
+Template.filters =
 {
 	/**
 	**	Expression filters.
@@ -567,7 +566,7 @@ _Template.filters =
 			data[var_name + '#'] = i;
 
 			for (let j = k; j < parts.length; j++)
-				s.push(_Template.expand(parts[j], data, 'obj'));
+				s.push(Template.expand(parts[j], data, 'obj'));
 		}
 
 		delete data[var_name];
@@ -585,11 +584,11 @@ _Template.filters =
 	{
 		for (let i = 0; i < parts.length; i += 3)
 		{
-			if (_Template.expand(parts[i], data, 'arg') == 'else')
-				return _Template.expand(parts[i+1], data, 'arg');
+			if (Template.expand(parts[i], data, 'arg') == 'else')
+				return Template.expand(parts[i+1], data, 'arg');
 
-			if (_Template.expand(parts[i+1], data, 'arg'))
-				return _Template.expand(parts[i+2], data, 'arg');
+			if (Template.expand(parts[i+1], data, 'arg'))
+				return Template.expand(parts[i+2], data, 'arg');
 		}
 
 		return '';
@@ -602,13 +601,13 @@ _Template.filters =
 	*/
 	'_switch': function(parts, data)
 	{
-		let value = _Template.expand(parts[1], data, 'arg');
+		let value = Template.expand(parts[1], data, 'arg');
 
 		for (let i = 2; i < parts.length; i += 2)
 		{
-			let case_value = _Template.expand(parts[i], data, 'arg');
+			let case_value = Template.expand(parts[i], data, 'arg');
 			if (case_value == value || case_value == 'default')
-				return _Template.expand(parts[i+1], data, 'arg');
+				return Template.expand(parts[i+1], data, 'arg');
 		}
 
 		return '';

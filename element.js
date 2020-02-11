@@ -122,6 +122,26 @@ const Element = module.exports =
 		return this.model;
 	},
 
+	/*
+	**	Returns the width of the element.
+	**
+	**	>> float getWidth([elem]);
+	*/
+	getWidth: function (elem)
+	{
+		return (elem || this).getBoundingClientRect().width;
+	},
+
+	/*
+	**	Returns the height of the element.
+	**
+	**	>> float getHeight([elem]);
+	*/
+	getHeight: function (elem)
+	{
+		return (elem || this).getBoundingClientRect().height;
+	},
+
 	/**
 	**	Binds all events in the specified map to the element, the events map can have one of the following forms:
 	**

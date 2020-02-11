@@ -459,7 +459,9 @@ let Template = module.exports =
 
 
 /**
-**	Template filters, functions that are used to format data.
+**	Template filters, functions that are used to format data. Each function takes three parameters (args, parts and data). By default the filter arguments
+**	are expanded and passed via 'args' for convenience, however if the filter name starts with '_' the 'args' parameter will be skipped and only (parts, data)
+**	will be available, each 'part' must be expanded manually by calling Template.expand.
 */
 
 Template.filters =
@@ -467,23 +469,23 @@ Template.filters =
 	/**
 	**	Expression filters.
 	*/
-	not: function(args) { return !args[1]; },
-	int: function(args) { return ~~args[1]; },
-	eq: function(args) { return args[1] == args[2]; },
-	ne: function(args) { return args[1] != args[2]; },
-	lt: function(args) { return args[1] < args[2]; },
-	le: function(args) { return args[1] <= args[2]; },
-	gt: function(args) { return args[1] > args[2]; },
-	ge: function(args) { return args[1] >= args[2]; },
-	and: function(args) { for (let i = 1; i < args.length; i++) if (!args[i]) return false; return true; },
-	or: function(args) { for (let i = 1; i < args.length; i++) if (~~args[i]) return true; return false; },
+	'not': function(args) { return !args[1]; },
+	'int': function(args) { return ~~args[1]; },
+	'eq': function(args) { return args[1] == args[2]; },
+	'ne': function(args) { return args[1] != args[2]; },
+	'lt': function(args) { return args[1] < args[2]; },
+	'le': function(args) { return args[1] <= args[2]; },
+	'gt': function(args) { return args[1] > args[2]; },
+	'ge': function(args) { return args[1] >= args[2]; },
+	'and': function(args) { for (let i = 1; i < args.length; i++) if (!args[i]) return false; return true; },
+	'or': function(args) { for (let i = 1; i < args.length; i++) if (~~args[i]) return true; return false; },
 
 	/**
 	**	Returns the JSON representation of the expression.
 	**
 	**	json <expr>
 	*/
-	json: function(args)
+	'json': function(args)
 	{
 		return JSON.stringify(args[1], null, 4);
 	},
@@ -689,4 +691,33 @@ Template.filters =
 		return '';
 	},
 
+	/**
+	**	Repeats the specified template for a number of times.
+	**
+	**	repeat <count> [<varname:i>] <template>
+	*/
+	'repeat': function(args, parts, data)
+	{
+		let var_name = 'i';
+		let count = ~~(args[1]);
+
+		let k = 2;
+
+		if (args[k] && args[k].match(/^[A-Za-z0-9_-]+$/) != null)
+			var_name = args[k++];
+
+		let s = [];
+
+		for (let i = 0; i < count; i++)
+		{
+			data[var_name] = i;
+
+			for (let j = k; j < parts.length; j++)
+				s.push(Template.expand(parts[j], data, 'obj'));
+		}
+
+		delete data[var_name];
+
+		return s;
+	}
 };

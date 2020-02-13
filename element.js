@@ -551,7 +551,7 @@ const Element = module.exports =
 					elem = elem.parentElement;
 				}
 
-				return null;
+				return globalThis;
 			}
 
 			connectedCallback()
@@ -559,7 +559,11 @@ const Element = module.exports =
 				if (this.dataset.ref)
 				{
 					let root = this.findRoot();
-					if (root) root[this.dataset.ref] = this;
+					if (root)
+					{
+						root[this.dataset.ref] = this;
+						this.root = root;
+					}
 				}
 
 				if (this.invokeConstructor)
@@ -576,7 +580,10 @@ const Element = module.exports =
 				if (this.dataset.ref)
 				{
 					let root = this.findRoot();
-					if (root) root[this.dataset.ref] = null;
+					if (root) {
+						root[this.dataset.ref] = null;
+						this.root = null;
+					}
 				}
 
 				this.onDisconnected();

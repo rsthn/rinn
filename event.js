@@ -154,7 +154,7 @@ module.exports = Class.extend
 				}
 				else
 				{
-					if (window[this.list[this.i].handler].call (null, this, this.args, this.list[this.i].data) === false)
+					if (globalThis[this.list[this.i].handler].call (null, this, this.args, this.list[this.i].data) === false)
 						break;
 				}
 			}

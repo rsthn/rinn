@@ -654,6 +654,22 @@ Template.filters =
 	},
 
 	/**
+	**	Returns the valueA if the expression is true otherwise valueB, this is a shorthand of the 'if' filter.
+	**
+	**	? <expr> <valueA> [<valueB>]
+	*/
+	'_?': function(parts, data)
+	{
+		if (Template.expand(parts[1], data, 'arg'))
+			return Template.expand(parts[2], data, 'arg');
+
+		if (parts.length > 3)
+			return Template.expand(parts[3], data, 'arg');
+
+		return '';
+	},
+
+	/**
 	**	Returns the value if the expression is true, supports 'elif' and 'else' as well.
 	**
 	**	if <expr> <value> [elif <expr> <value>] [else <value>]

@@ -294,7 +294,12 @@ const Element = module.exports =
 	collectWatchers: function ()
 	{
 		let self = this;
+		let modified = false;
 		let list;
+
+		let _list_watch_length = this._list_watch.length;
+		let _list_visible_length = this._list_visible.length;
+		let _list_property_length = this._list_property.length;
 
 		list = this.querySelectorAll("[data-watch]");
 		for (let i = 0; i < list.length; i++)
@@ -344,11 +349,16 @@ const Element = module.exports =
 		}
 
 		this._list_watch = this._list_watch.filter(i => i.parentElement != null);
-		this._list_visible = this._list_visible.filter(i => i.parentElement != null);
-		this._list_property = this._list_property.filter(i => i.parentElement != null);
+		if (_list_watch_length != this._list_watch.length) modified = true;
 
-		if (this.model != null)
-			this.model.update(true);
+		this._list_visible = this._list_visible.filter(i => i.parentElement != null);
+		if (_list_visible_length != this._list_visible.length) modified = true;
+
+		this._list_property = this._list_property.filter(i => i.parentElement != null);
+		if (_list_property_length != this._list_property.length) modified = true;
+
+		if (this.model != null && modified)
+			this.model.update();
 	},
 
 	/**

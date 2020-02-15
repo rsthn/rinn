@@ -65,17 +65,18 @@ let _Model = module.exports = EventDispatcher.extend
 	/**
 	**	Initializes the model and sets the properties to the specified data object.
 	**
-	**	>> Model __ctor (string map);
+	**	>> Model __ctor (object data);
+	**	>> Model __ctor (object data, object defaults);
 	*/
-	__ctor: function ()
+	__ctor: function (data, defaults)
 	{
 		this._super.EventDispatcher.__ctor();
 
 		this.properties = { };
 
-		if (arguments.length >= 2 && arguments[1] != null)
+		if (defaults != null)
 		{
-			this.reset(arguments[1]);
+			this.reset (defaults);
 		}
 		else
 		{
@@ -106,8 +107,8 @@ let _Model = module.exports = EventDispatcher.extend
 
 		this.init();
 
-		if (arguments.length >= 1 && arguments[0] != null)
-			this.set(arguments[0], true);
+		if (data != null)
+			this.set (arguments[0], true);
 
 		if (this.constraints) this.update();
 
@@ -125,7 +126,7 @@ let _Model = module.exports = EventDispatcher.extend
 	{
 		if (!this.defaults)
 		{
-			if (!defaults || Rin.typeOf(defaults) != "object")
+			if (!defaults || (Rin.typeOf(defaults) != "object" && Rin.typeOf(defaults) != "function"))
 				return this;
 
 			this.defaults = defaults;

@@ -32,8 +32,4 @@ Rin.Schema = require('./schema');
 Rin.Template = require('./template');
 
 /* ---- */
-Rin.Router = require('./router');
-Rin.Element = require('./element');
-
-/* ---- */
 Object.assign (module.exports, Rin);

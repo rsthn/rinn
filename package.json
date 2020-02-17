@@ -18,7 +18,8 @@
   "homepage": "https://github.com/rsthn/rin#readme",
   "files": [
     "*.js",
-    "LICENSE"
+    "LICENSE",
+    "README.md"
   ],
   "dependencies": {
     "base-64": "^0.1.0",

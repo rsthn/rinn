@@ -164,7 +164,43 @@ Rin.override = function (output, ...objs)
 };
 
 
-/**
+/*
+**	Compares two objects and returns a boolean if all properties in "partial" find a match in "full".
+*/
+Rin.partialCompare = function (full, partial)
+{
+	if (full == null || partial == null) return false;
+
+	if (full === partial)
+		return true;
+
+	for (var i in partial)
+	{
+		if (full[i] != partial[i])
+			return false;
+	}
+
+	return true;
+};
+
+
+/*
+**	Performs a partial search for an object (o) in the specified array and returns its index or false
+**	if the object was not found.
+*/
+Rin.arrayFind = function (arr, o, getObject)
+{
+	for (var i = 0; arr && i < arr.length; i++)
+	{
+		if (this.partialCompare (arr[i], o))
+			return getObject ? arr[i] : i;
+	}
+
+	return getObject ? null : false;
+};
+
+
+/*
 **	Traverses the given object attempting to find the index/key that does an identical match with the specified value,
 **	if not found returns null, otherwise the index/key where the value was found.
 **

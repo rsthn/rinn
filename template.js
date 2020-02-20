@@ -654,7 +654,8 @@ Template.filters =
 	},
 
 	/**
-	**	Returns the valueA if the expression is true otherwise valueB, this is a shorthand of the 'if' filter.
+	**	Returns the valueA if the expression is true otherwise valueB, this is a short version of the 'if' filter with the
+	**	difference that the result is 'obj' instead of text.
 	**
 	**	? <expr> <valueA> [<valueB>]
 	*/
@@ -670,7 +671,7 @@ Template.filters =
 	},
 
 	/**
-	**	Returns the value if the expression is true, supports 'elif' and 'else' as well.
+	**	Returns the value if the expression is true, supports 'elif' and 'else' as well. The result of this filter is always text.
 	**
 	**	if <expr> <value> [elif <expr> <value>] [else <value>]
 	*/
@@ -679,10 +680,10 @@ Template.filters =
 		for (let i = 0; i < parts.length; i += 3)
 		{
 			if (Template.expand(parts[i], data, 'arg') == 'else')
-				return Template.expand(parts[i+1], data, 'arg');
+				return Template.expand(parts[i+1], data, 'text');
 
 			if (Template.expand(parts[i+1], data, 'arg'))
-				return Template.expand(parts[i+2], data, 'arg');
+				return Template.expand(parts[i+2], data, 'text');
 		}
 
 		return '';

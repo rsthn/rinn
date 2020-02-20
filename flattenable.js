@@ -1,5 +1,5 @@
 /*
-**	rin/main
+**	rin/flattenable
 **
 **	Copyright (c) 2013-2020, RedStar Technologies, All rights reserved.
 **	https://www.rsthn.com/
@@ -14,22 +14,39 @@
 **	USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-let Rin = require('./alpha');
+let Class = require('./class');
+let Schema = require('./schema');
 
-Rin.Rin = Rin;
-Rin.Class = require('./class');
+/**
+**	Flattenable class used to add flattening and unflattening capabilities to any object.
+*/
 
-Rin.Event = require('./event');
-Rin.EventDispatcher = require('./event-dispatcher');
+module.exports = Class.extend
+({
+	/**
+	**	Name of the class.
+	*/
+	className: "Flattenable",
 
-Rin.Model = require('./model');
-Rin.Model.List = require('./model-list');
+	/**
+	**	Type schema used to flatten/unflatten the contents of this class. See Schema class for more information.
+	*/
+	typeSchema: null,
 
-Rin.Schema = require('./schema');
-Rin.Flattenable = require('./flattenable');
-Rin.Collection = require('./collection');
+	/**
+	**	Returns a flattened contents of the object.
+	*/
+	flatten: function (context)
+	{
+		return this.typeSchema.flatten(this, context);
+	},
 
-Rin.Template = require('./template');
-
-/* ---- */
-Object.assign (module.exports, Rin);
+	/**
+	**	Unflattens the given object and overrides the local contents.
+	*/
+	unflatten: function (value, context)
+	{
+		Object.assign(this, this.typeSchema.unflatten(value, context));
+		return this;
+	}
+});

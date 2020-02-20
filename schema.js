@@ -21,7 +21,7 @@ let Rin = require('./alpha');
 **	to ensure that all values are of the specific type when stored in string format.
 */
 
-let _Schema = module.exports =
+let Schema = module.exports =
 {
 	Type: function (data)
     {
@@ -41,7 +41,7 @@ let _Schema = module.exports =
 
 	String: function()
 	{
-		return _Schema.Type({
+		return Schema.Type({
 			flatten: function (value, context) {
 				return value != null ? value.toString() : null;
 			},
@@ -54,7 +54,7 @@ let _Schema = module.exports =
 
 	Integer: function()
 	{
-		return _Schema.Type({
+		return Schema.Type({
 			flatten: function (value, context) {
 				return ~~value;
 			},
@@ -67,7 +67,7 @@ let _Schema = module.exports =
 
 	Numeric: function()
 	{
-		return _Schema.Type({
+		return Schema.Type({
 			flatten: function (value, context) {
 				return parseFloat(value);
 			},
@@ -80,7 +80,7 @@ let _Schema = module.exports =
 
 	Bool: function()
 	{
-		return _Schema.Type({
+		return Schema.Type({
 			flatten: function (value, context) {
 				return (~~value) ? true : false;
 			},
@@ -93,7 +93,7 @@ let _Schema = module.exports =
 
 	SharedString: function()
 	{
-		return _Schema.Type
+		return Schema.Type
 		({
 			flatten: function (value, context)
 			{
@@ -125,12 +125,12 @@ let _Schema = module.exports =
 
 	Array: function()
     {
-        return _Schema.Type({
+        return Schema.Type({
 
-            contains: null,
+            itemType: null,
 
             of: function (type) {
-                this.contains = type;
+                this.itemType = type;
                 return this;
             },
 
@@ -141,11 +141,11 @@ let _Schema = module.exports =
                 var o = [ ];
                 
                 for (var i = 0; i < value.length; i++)
-                    o.push(this.contains.flatten(value[i], context));
+                    o.push(this.itemType.flatten(value[i], context));
 
                 return o;
             },
-            
+
 			unflatten: function (value, context)
 			{
 				if (value == null) return null;
@@ -153,7 +153,7 @@ let _Schema = module.exports =
                 var o = [ ];
 
                 for (var i = 0; i < value.length; i++)
-                    o.push(this.contains.unflatten(value[i], context));
+                    o.push(this.itemType.unflatten(value[i], context));
 
                 return o;
             }
@@ -162,7 +162,7 @@ let _Schema = module.exports =
 
     Object: function()
     {
-        return _Schema.Type({
+        return Schema.Type({
 
             properties: [ ],
 
@@ -198,6 +198,30 @@ let _Schema = module.exports =
                 }
 
                 return o;
+            }
+        });
+	},
+
+    Class: function (classConstructor)
+    {
+        return Schema.Type({
+
+            _constructor: classConstructor,
+
+            constructor: function (classConstructor)
+            {
+                this._constructor = classConstructor;
+                return this;
+            },
+
+            flatten: function (value, context)
+            {
+                return value == null ? null : value.flatten(context);
+            },
+
+            unflatten: function (value, context)
+            {
+				return value == null ? null : (new this._constructor()).unflatten(value, context);
             }
         });
     }

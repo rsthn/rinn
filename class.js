@@ -160,7 +160,6 @@ Class.prototype._extend = function (base, protos)
 	Class.inherit.call (_class, base);
 
 	delete _class.prototype.className;
-	delete _class.prototype.classInit;
 
 	for (let i = 0; i < protos.length; i++)
 		_class.inherit (protos[i]);

@@ -14,30 +14,20 @@
 **	USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+let Flattenable = require('./flattenable');
+let Schema = require('./schema');
 let Rin = require('./alpha');
-let Serializable = require('./serializable');
 
 /**
-**	Serializable collection class, used to store items and manipulate them. The items should also be serializable.
+**	Flattenable collection class, used to store items and manipulate them. The items should also be flattenable.
 */
 
-module.exports = Serializable.extend
+module.exports = Flattenable.extend
 ({
 	/**
 	**	Name of the class.
 	*/
 	className: "Collection",
-
-	/**
-	**	Type of the items in the collection, should be overriden by derived classes to reference a valid class.
-	*/
-	itemt: null, /* Class or Function */
-
-	/**
-	**	Indicates if the collection is dynamic. This affects only unflattening. When dynamic the "itemt" attribute is a
-	**	function that takes an object as parameter and returns the appropriate instanced class (unflattened).
-	*/
-	isDynamic: false,
 
 	/**
 	**	Array of items.
@@ -47,75 +37,49 @@ module.exports = Serializable.extend
 	/**
 	**	Constructs the collection.
 	*/
-	__ctor: function (opts, isflat)
+	__ctor: function ()
 	{
-		this._super.Serializable.__ctor(opts, isflat);
+		this.typeSchema = Schema.Array().of(this.typeSchema);
+		this.reset();
 	},
 
-	/**
-	**	Initializes the collection with the specified options.
+	/*
+	**	Sets the item type schema.
 	*/
-	init: function (opts)
+	setType: function (typeSchema)
 	{
-		Rin.override (this, opts);
-		
-		this.items = new Array();
-
-		if (opts.items)
-		{
-			for (var i = 0; i < opts.items.length; i++)
-				this.add (opts.items[i]);
-		}
-	},
-
-	/**
-	**	Flattens the collection.
-	*/
-	flatten: function ()
-	{
-		var items = [];
-
-		if (this.itemt == null && !("flattenItem" in this))
-			throw new Error ("Collection: Unable to flatten, the itemt class was not specified and flattenItem() is not available.");
-
-		for (var i = 0; i < this.items.length; i++)
-		{
-			if (this.itemt == null)
-				items.push (this.flattenItem(this.items[i]));
-			else
-				items.push (this.items[i].flatten());
-		}
-
-		return items;
-	},
-
-	/**
-	**	Unflattens the collection. Uses the "itemt" attribute to convert the plain objects into class-objects.
-	*/
-	unflatten: function (o)
-	{
-		var items = [];
-
-		if (this.itemt == null && !("unflattenItem" in this))
-			throw new Error ("Collection: Unable to unflatten, the itemt class was not specified and unflattenItem() is not available.");
-
-		for (var i = 0; i < o.length; i++)
-		{
-			if (this.itemt == null)
-				items.push (this.unflattenItem (o[i]));
-			else
-				items.push (this.isDynamic ? this.itemt(o[i]) : new this.itemt (o[i], true));
-		}
-
-		return { items: items };
-	},
-
-	reset: function ()
-	{
-		this.items = new Array();
+		this.typeSchema = Schema.Array().of(typeSchema);
 		return this;
 	},
 
+	/*
+	**	Returns a flattened version of the collection.
+	*/
+	flatten: function (context)
+	{
+		return this.typeSchema.flatten (this.items, context);
+	},
+
+	/*
+	**	Unflattens the value and adds all items to the collection.
+	*/
+	unflatten: function (value, context)
+	{
+		return this.addItems (this.typeSchema.unflatten (value, context));
+	},
+
+	/*
+	**	Resets the collection to empty. Note that onItemRemoved will not be called.
+	*/
+	reset: function ()
+	{
+		this.items = [];
+		return this;
+	},
+
+	/*
+	**	Clears the contents of the collection.
+	*/
 	clear: function ()
 	{
 		var items = this.items;
@@ -127,7 +91,7 @@ module.exports = Serializable.extend
 		return this;
 	},
 
-	/**
+	/*
 	**	Sorts the collection. A comparison function should be provided, or the name of a property to sort by.
 	**
 	**	Object sort (fn: Function)
@@ -148,7 +112,7 @@ module.exports = Serializable.extend
 		return this;
 	},
 
-	/**
+	/*
 	**	Searches for an item with the specified fields and returns it. The "inc" object is the "inclusive" map, meaning all fields must match
 	**	and the optional "exc" is the exclusive map, meaning not even one field should match.
 	**
@@ -170,24 +134,36 @@ module.exports = Serializable.extend
 		return null;
 	},
 
+	/*
+	**	Returns the container array.
+	*/
 	getItems: function ()
 	{
 		return this.items;
 	},
 
+	/*
+	**	Returns the number of items in the collection.
+	*/
 	count: function ()
 	{
 		return this.items.length;
 	},
 
+	/*
+	**	Returns true if the collection is empty.
+	*/
 	isEmpty: function ()
 	{
 		return !this.items.length;
 	},
 
+	/*
+	**	Adds an item to the collection, onBeforeItemAdded and onItemAdded will be triggered.
+	*/
 	add: function (item)
 	{
-		if (!item || !this.onBeforeItemAdd(item))
+		if (!item || !this.onBeforeItemAdded(item))
 			return this;
 
 		this.items.push (item);
@@ -196,9 +172,12 @@ module.exports = Serializable.extend
 		return this;
 	},
 
+	/*
+	**	Adds an item at the specified index, effectively moving the remaining items to the right.
+	*/
 	addAt: function (index, item)
 	{
-		if (!item || !this.onBeforeItemAdd (item))
+		if (!item || !this.onBeforeItemAdded (item))
 			return this;
 
 		if (index < 0) index = 0;
@@ -224,6 +203,9 @@ module.exports = Serializable.extend
 		return this;
 	},
 
+	/*
+	**	Traverses the given array and adds all items to the collection.
+	*/
 	addItems: function (list)
 	{
 		if (!list) return this;
@@ -234,11 +216,17 @@ module.exports = Serializable.extend
 		return this;
 	},
 
+	/*
+	**	Returns the index of the specified item, or -1 if not found.
+	*/
 	indexOf: function (item)
 	{
 		return this.items.indexOf(item);
 	},
 
+	/*
+	**	Returns the item at the specified index, or null if not found.
+	*/
 	getAt: function (index, rel)
 	{
 		if (index < 0 && rel == true)
@@ -247,6 +235,9 @@ module.exports = Serializable.extend
 		return index >= 0 && index < this.items.length ? this.items[index] : null;
 	},
 
+	/*
+	**	Removes the item at the specified index.
+	*/
 	removeAt: function (index)
 	{
 		if (index < 0 || index >= this.items.length)
@@ -260,78 +251,90 @@ module.exports = Serializable.extend
 		return this;
 	},
 
+	/*
+	**	Removes the specified item.
+	*/
 	remove: function (item)
 	{
 		this.removeAt (this.indexOf(item));
 	},
 
-	forEach: function (hdl, ctx)
+	/*
+	**	Runs the specified callback for each of the items in the collection, if false is returned by the callback this function
+	**	will exit immediately. Parameters to the callback are: (item, index, collection).
+	*/
+	forEach: function (callback)
 	{
 		if (this.isEmpty())
 			return this;
-
-		if (!ctx) ctx = this;
 
 		for (var i = 0; i < this.items.length; i++)
-			if (hdl.call (ctx, this.items[i], i) === false) break;
+			if (callback (this.items[i], i, this) === false) break;
 
 		return this;
 	},
 
-	forEachCall: function (method)
+	/*
+	**	Executes a method call with the specified parameters on each of the items in the collection, if false is returned by the
+	**	item's method this function will exit immediately.
+	*/
+	forEachCall: function (method, ...args)
 	{
 		if (this.isEmpty())
 			return this;
-
-		var args = new Array ();
-
-		for (var i = 1; i < arguments.length; i++)
-			args.push(arguments[i]);
 
 		for (var i = 0; i < this.items.length; i++)
-			if (this.items[i][method].apply (this.items[i], args) === false) break;
+			if (this.items[i][method] (...args) === false) break;
 
 		return this;
 	},
 
-	forEachRev: function (hdl, ctx)
+	/*
+	**	Exactly the same as forEach but in reverse order.
+	*/
+	forEachRev: function (callback)
 	{
 		if (this.isEmpty())
 			return this;
 
-		if (!ctx) ctx = this;
-
 		for (var i = this.items.length-1; i >= 0; i--)
-			if (hdl.call (ctx, this.items[i], i) === false) break;
+			if (callback (this.items[i], i, this) === false) break;
 
 		return this;
 	},
 
-	forEachRevCall: function (method)
+	/*
+	**	Exactly the same as forEachCall but in reverse order.
+	*/
+	forEachRevCall: function (method, ...args)
 	{
 		if (this.isEmpty())
 			return this;
 
-		var args = new Array ();
-
-		for (var i = 1; i < arguments.length; i++)
-			args.push(arguments[i]);
-
 		for (var i = this.items.length-1; i >= 0; i--)
-			if (this.items[i][method].apply (this.items[i], args) === false) break;
+			if (this.items[i][method] (...args) === false) break;
 
 		return this;
 	},
 
-	onBeforeItemAdd: function (item)
+	/*
+	**	Handler for the beforeItemAdded event. If returns false the item will not be added.
+	*/
+	onBeforeItemAdded: function (item)
 	{
 		return true;
 	},
 
+	/*
+	**	Handler for the itemAdded event.
+	*/
 	onItemAdded: function (item)
 	{
 	},
 
+	/*
+	**	Handler for the itemRemoved event.
+	*/
 	onItemRemoved: function (item)
 	{
 	}

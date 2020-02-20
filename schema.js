@@ -23,9 +23,9 @@ let Rin = require('./alpha');
 
 let Schema = module.exports =
 {
-	Type: function (data)
+	Type: function (proto)
     {
-		var o =
+		var tmp =
 		{
             flatten: function (value, context) {
                 return value;
@@ -36,12 +36,13 @@ let Schema = module.exports =
             }
         };
 
-        return data ? Rin.override(o, data) : o;
+        return proto ? Rin.override(tmp, proto) : tmp;
     },
 
 	String: function()
 	{
-		return Schema.Type({
+		return Schema.Type
+		({
 			flatten: function (value, context) {
 				return value != null ? value.toString() : null;
 			},
@@ -54,7 +55,8 @@ let Schema = module.exports =
 
 	Integer: function()
 	{
-		return Schema.Type({
+		return Schema.Type
+		({
 			flatten: function (value, context) {
 				return ~~value;
 			},
@@ -65,11 +67,27 @@ let Schema = module.exports =
 		});
 	},
 
-	Numeric: function()
+	Numeric: function (precision)
 	{
-		return Schema.Type({
-			flatten: function (value, context) {
-				return parseFloat(value);
+		return Schema.Type
+		({
+			_precision: precision,
+			_round: false,
+
+			precision: function (value)
+			{
+				this._precision = ~~value;
+				return this;
+			},
+
+			flatten: function (value, context)
+			{
+				value = parseFloat(value);
+
+				if (this._precision > 0)
+					value = (~~(value*Math.pow(10, this._precision))) / Math.pow(10, this._precision);
+
+				return value;
 			},
 
 			unflatten: function (value, context) {
@@ -78,11 +96,21 @@ let Schema = module.exports =
 		});
 	},
 
-	Bool: function()
+	Bool: function (compact)
 	{
-		return Schema.Type({
+		return Schema.Type
+		({
+			_compact: compact,
+
+			compact: function(value)
+			{
+				this._compact = value;
+				return this;
+			},
+
 			flatten: function (value, context) {
-				return (~~value) ? true : false;
+				value = ~~value;
+				return this._compact ? (value > 0 ? 1 : 0) : (value > 0 ? true : false);
 			},
 
 			unflatten: function (value, context) {
@@ -123,11 +151,11 @@ let Schema = module.exports =
         });
     },
 
-	Array: function()
+	Array: function (type)
     {
         return Schema.Type({
 
-            itemType: null,
+            itemType: type,
 
             of: function (type) {
                 this.itemType = type;
@@ -204,8 +232,8 @@ let Schema = module.exports =
 
     Class: function (classConstructor)
     {
-        return Schema.Type({
-
+		return Schema.Type
+		({
             _constructor: classConstructor,
 
             constructor: function (classConstructor)

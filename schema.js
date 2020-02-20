@@ -204,12 +204,24 @@ let Schema = module.exports =
             {
 				if (value == null) return null;
 
-                var o = [ ];
+				if (context.symbolic === true)
+				{
+					var o = { };
 
-                for (var i = 0; i < this.properties.length; i++)
-                {
-                    o.push(this.properties[i].type.flatten(value[this.properties[i].name], context));
-                }
+					for (var i = 0; i < this.properties.length; i++)
+					{
+						o[this.properties[i].name] = this.properties[i].type.flatten(value[this.properties[i].name], context);
+					}
+				}
+				else
+				{
+					var o = [ ];
+
+					for (var i = 0; i < this.properties.length; i++)
+					{
+						o.push(this.properties[i].type.flatten(value[this.properties[i].name], context));
+					}
+				}
 
                 return o;
             },
@@ -218,12 +230,23 @@ let Schema = module.exports =
             {
 				if (value == null) return null;
 
-                var o = { };
-                
-                for (var i = 0; i < this.properties.length; i++)
-                {
-                    o[this.properties[i].name] = this.properties[i].type.unflatten(value[i], context);
-                }
+				var o = { };
+
+				if (context.symbolic === true)
+				{
+					for (var i = 0; i < this.properties.length; i++)
+					{
+						o[this.properties[i].name] = this.properties[i].type.unflatten(value[this.properties[i].name], context);
+					}
+				}
+				else
+				{
+				
+					for (var i = 0; i < this.properties.length; i++)
+					{
+						o[this.properties[i].name] = this.properties[i].type.unflatten(value[i], context);
+					}
+				}
 
                 return o;
             }

@@ -15,7 +15,6 @@
 */
 
 let Class = require('./class');
-let Schema = require('./schema');
 
 /**
 **	Flattenable class used to add flattening and unflattening capabilities to any object.

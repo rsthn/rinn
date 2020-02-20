@@ -37,35 +37,13 @@ module.exports = Flattenable.extend
 	/**
 	**	Constructs the collection.
 	*/
-	__ctor: function ()
+	__ctor: function (typeSchema)
 	{
-		this.typeSchema = Schema.Array().of(this.typeSchema);
+		if (typeSchema) {
+			this.typeSchema = Schema.Object().property('items', Schema.Array.of(typeSchema));
+		}
+
 		this.reset();
-	},
-
-	/*
-	**	Sets the item type schema.
-	*/
-	setType: function (typeSchema)
-	{
-		this.typeSchema = Schema.Array().of(typeSchema);
-		return this;
-	},
-
-	/*
-	**	Returns a flattened version of the collection.
-	*/
-	flatten: function (context)
-	{
-		return this.typeSchema.flatten (this.items, context);
-	},
-
-	/*
-	**	Unflattens the value and adds all items to the collection.
-	*/
-	unflatten: function (value, context)
-	{
-		return this.addItems (this.typeSchema.unflatten (value, context));
 	},
 
 	/*

@@ -202,7 +202,7 @@ Rin.arrayFind = function (arr, o, getObject)
 
 /*
 **	Traverses the given object attempting to find the index/key that does an identical match with the specified value,
-**	if not found returns null, otherwise the index/key where the value was found.
+**	if not found returns -1, otherwise the index/key where the value was found.
 **
 **	>> int indexOf (array container, T value)
 **	>> string indexOf (object container, T value)
@@ -215,7 +215,7 @@ Rin.indexOf = function (container, value)
 			return i;
 	}
 
-	return null;
+	return -1;
 };
 
 

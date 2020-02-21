@@ -119,13 +119,17 @@ Class.inherit = function (proto)
 
 	if (Rin.typeOf(proto) == "function")
 	{
+		// Move constants (uppercased properties) to the class-level instead of prototype-level.
 		for (let i in proto._class)
 			if (!/^[A-Z]/.test(i)) self[i] = proto._class[i];
 
+		// Combine methods and properties.
 		Rin.override (self.prototype, proto._class.prototype);
 
+		// Combine super methods.
 		Rin.override (_super, proto._class._super);
 
+		// Add new super reference if className specified in inherited prototypes.
 		if (proto._class.prototype.className)
 			_super[proto._class.prototype.className] = proto._class;
 	}

@@ -30,6 +30,11 @@ module.exports = Flattenable.extend
 	className: "Collection",
 
 	/**
+	**	Describes the type schema of the underlying items.
+	*/
+	itemTypeSchema: null,
+
+	/**
 	**	Array of items.
 	*/
 	items: null, /* Array */
@@ -37,11 +42,12 @@ module.exports = Flattenable.extend
 	/**
 	**	Constructs the collection.
 	*/
-	__ctor: function (typeSchema)
+	__ctor: function (itemTypeSchema)
 	{
-		if (typeSchema) {
-			this.typeSchema = Schema.Object().property('items', Schema.Array.of(typeSchema));
-		}
+		if (!itemTypeSchema) itemTypeSchema = this.itemTypeSchema;
+
+		if (itemTypeSchema)
+			this.typeSchema = Schema.Property('items').is(Schema.Array().of(itemTypeSchema));
 
 		this.reset();
 	},

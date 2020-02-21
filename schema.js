@@ -25,7 +25,7 @@ let Schema = module.exports =
 {
 	Type: function (proto)
     {
-		var tmp =
+		let tmp =
 		{
             flatten: function (value, context) {
                 return value;
@@ -166,9 +166,9 @@ let Schema = module.exports =
 			{
 				if (value == null) return null;
 
-                var o = [ ];
+                let o = [ ];
                 
-                for (var i = 0; i < value.length; i++)
+                for (let i = 0; i < value.length; i++)
                     o.push(this.itemType.flatten(value[i], context));
 
                 return o;
@@ -178,9 +178,9 @@ let Schema = module.exports =
 			{
 				if (value == null) return null;
 
-                var o = [ ];
+                let o = [ ];
 
-                for (var i = 0; i < value.length; i++)
+                for (let i = 0; i < value.length; i++)
                     o.push(this.itemType.unflatten(value[i], context));
 
                 return o;
@@ -204,20 +204,22 @@ let Schema = module.exports =
             {
 				if (value == null) return null;
 
+				let o;
+
 				if (context.symbolic === true)
 				{
-					var o = { };
+					o = { };
 
-					for (var i = 0; i < this.properties.length; i++)
+					for (let i = 0; i < this.properties.length; i++)
 					{
 						o[this.properties[i].name] = this.properties[i].type.flatten(value[this.properties[i].name], context);
 					}
 				}
 				else
 				{
-					var o = [ ];
+					o = [ ];
 
-					for (var i = 0; i < this.properties.length; i++)
+					for (let i = 0; i < this.properties.length; i++)
 					{
 						o.push(this.properties[i].type.flatten(value[this.properties[i].name], context));
 					}
@@ -230,11 +232,11 @@ let Schema = module.exports =
             {
 				if (value == null) return null;
 
-				var o = { };
+				let o = { };
 
 				if (context.symbolic === true)
 				{
-					for (var i = 0; i < this.properties.length; i++)
+					for (let i = 0; i < this.properties.length; i++)
 					{
 						o[this.properties[i].name] = this.properties[i].type.unflatten(value[this.properties[i].name], context);
 					}
@@ -242,7 +244,7 @@ let Schema = module.exports =
 				else
 				{
 				
-					for (var i = 0; i < this.properties.length; i++)
+					for (let i = 0; i < this.properties.length; i++)
 					{
 						o[this.properties[i].name] = this.properties[i].type.unflatten(value[i], context);
 					}
@@ -275,5 +277,62 @@ let Schema = module.exports =
 				return value == null ? null : (new this._constructor()).unflatten(value, context);
             }
         });
-    }
+	},
+
+	/*
+	**	Used when you want to specify just a single property.
+	*/
+    Property: function(name, type)
+    {
+        return Schema.Type({
+
+			property: name,
+			type: type,
+
+			name: function (name)
+			{
+				this.property = name;
+				return this;
+			},
+
+			is: function (type)
+			{
+				this.type = type;
+				return this;
+			},
+
+            flatten: function (value, context)
+            {
+				if (value == null) return null;
+
+				let o;
+
+				if (context.symbolic === true)
+				{
+					o = { };
+					o[this.property] = this.type.flatten(value[this.property], context);
+				}
+				else
+				{
+					o = this.type.flatten(value[this.property], context);
+				}
+
+                return o;
+            },
+
+            unflatten: function (value, context)
+            {
+				if (value == null) return null;
+
+				let o = { };
+
+				if (context.symbolic === true)
+					o[this.property] = this.type.unflatten(value[this.property], context);
+				else
+					o[this.property] = this.type.unflatten(value, context);
+
+                return o;
+            }
+        });
+	}
 };

@@ -470,6 +470,7 @@ Template.filters =
 	**	Expression filters.
 	*/
 	'not': function(args) { return !args[1]; },
+	'notnull': function(args) { return !!args[1]; },
 	'int': function(args) { return ~~args[1]; },
 	'eq': function(args) { return args[1] == args[2]; },
 	'ne': function(args) { return args[1] != args[2]; },

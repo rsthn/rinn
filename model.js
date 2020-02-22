@@ -44,7 +44,7 @@ let _Model = module.exports = EventDispatcher.extend
 	/**
 	**	Properties of the model.
 	*/
-	properties: null,
+	data: null,
 
 	/**
 	**	Array with the name of the properties that have changed. Populated prior modelChanged event.
@@ -72,7 +72,7 @@ let _Model = module.exports = EventDispatcher.extend
 	{
 		this._super.EventDispatcher.__ctor();
 
-		this.properties = { };
+		this.data = { };
 
 		if (defaults != null)
 		{
@@ -133,9 +133,9 @@ let _Model = module.exports = EventDispatcher.extend
 		}
 
 		if (Rin.typeOf(this.defaults) == "function")
-			this.properties = this.defaults();
+			this.data = this.defaults();
 		else
-			this.properties = Rin.clone(this.defaults);
+			this.data = Rin.clone(this.defaults);
 
 		return (nsilent === false || defaults === false) ? this : this.update(null, true);
 	},
@@ -216,13 +216,13 @@ let _Model = module.exports = EventDispatcher.extend
 	{
 		if (!this.constraints || !this.constraints[name])
 		{
-			this.properties[name] = value;
+			this.data[name] = value;
 			return value;
 		}
 
 		var constraints = this.constraints[name];
 
-		var cvalue = this.properties[name];
+		var cvalue = this.data[name];
 		var nvalue = value;
 
 		for (var ctname in constraints)
@@ -245,7 +245,7 @@ let _Model = module.exports = EventDispatcher.extend
 			}
 		}
 
-		return (this.properties[name] = nvalue);
+		return (this.data[name] = nvalue);
 	},
 
 	/**
@@ -263,7 +263,7 @@ let _Model = module.exports = EventDispatcher.extend
 		if (!direct)
 			temp.value = this._set (name, temp.value);
 		else
-			this.properties[name] = temp.value;
+			this.data[name] = temp.value;
 
 		if (evt != null && evt.ret.length && evt.ret[0] === false)
 			return;
@@ -302,10 +302,10 @@ let _Model = module.exports = EventDispatcher.extend
 
 		if (n == 2)
 		{
-			if (this.properties[arguments[0]] != arguments[1] || force)
+			if (this.data[arguments[0]] != arguments[1] || force)
 			{
 				if (!this._silent && !silent)
-					this._propertyEvent (arguments[0], this.properties[arguments[0]], this._validate (arguments[0], arguments[1]));
+					this._propertyEvent (arguments[0], this.data[arguments[0]], this._validate (arguments[0], arguments[1]));
 				else
 					this._set (arguments[0], arguments[1]);
 			}
@@ -314,10 +314,10 @@ let _Model = module.exports = EventDispatcher.extend
 		{
 			for (var i in arguments[0])
 			{
-				if (this.properties[i] != arguments[0][i] || force)
+				if (this.data[i] != arguments[0][i] || force)
 				{
 					if (!this._silent && !silent)
-						this._propertyEvent (i, this.properties[i], this._validate (i, arguments[0][i]));
+						this._propertyEvent (i, this.data[i], this._validate (i, arguments[0][i]));
 					else
 						this._set (i, arguments[0][i]);
 				}
@@ -344,15 +344,15 @@ let _Model = module.exports = EventDispatcher.extend
 	get: function (name, def)
 	{
 		if (arguments.length == 0 || name === false)
-			return this.properties;
+			return this.data;
 
 		if (arguments.length == 1 && name === true)
 			return this.flatten ();
 
 		if (arguments.length == 2)
-			return this.properties[name] === undefined ? def : this.properties[name];
+			return this.data[name] === undefined ? def : this.data[name];
 
-		return this.properties[name];
+		return this.data[name];
 	},
 
 	/**
@@ -363,9 +363,9 @@ let _Model = module.exports = EventDispatcher.extend
 	getInt: function (name, def)
 	{
 		if (arguments.length == 2)
-			return this.properties[name] === undefined ? def : parseInt (this.properties[name]);
+			return this.data[name] === undefined ? def : parseInt (this.data[name]);
 
-		return parseInt (this.properties[name]);
+		return parseInt (this.data[name]);
 	},
 
 	/**
@@ -376,9 +376,9 @@ let _Model = module.exports = EventDispatcher.extend
 	getFloat: function (name, def)
 	{
 		if (arguments.length == 2)
-			return this.properties[name] === undefined ? def : parseFloat (this.properties[name]);
+			return this.data[name] === undefined ? def : parseFloat (this.data[name]);
 
-		return parseFloat (this.properties[name]);
+		return parseFloat (this.data[name]);
 	},
 
 	/**
@@ -390,9 +390,9 @@ let _Model = module.exports = EventDispatcher.extend
 	getBool: function (name, def)
 	{
 		if (arguments.length == 2)
-			name = this.properties[name] === undefined ? def : this.properties[name];
+			name = this.data[name] === undefined ? def : this.data[name];
 		else
-			name = this.properties[name];
+			name = this.data[name];
 
 		if (name === "true" || name === true)
 			return true;
@@ -479,7 +479,7 @@ let _Model = module.exports = EventDispatcher.extend
 		}
 
 		if (!this.constraints && !this.defaults)
-			return this.properties;
+			return this.data;
 
 		if (!this.isCompliant())
 			return { };
@@ -489,7 +489,7 @@ let _Model = module.exports = EventDispatcher.extend
 
 		var data = { };
 
-		for (var i in this.properties)
+		for (var i in this.data)
 		{
 			if (!(i in keys)) continue;
 
@@ -499,7 +499,7 @@ let _Model = module.exports = EventDispatcher.extend
 
 				if (ct.model)
 				{
-					data[i] = this.properties[i] ? this.properties[i].flatten(rsafe) : null;
+					data[i] = this.data[i] ? this.data[i].flatten(rsafe) : null;
 					continue;
 				}
 
@@ -507,20 +507,20 @@ let _Model = module.exports = EventDispatcher.extend
 				{
 					data[i] = [];
 
-					for (var j = 0; j < this.properties[i].length; j++)
-						data[i][j] = this.properties[i][j] ? this.properties[i][j].flatten(rsafe) : null;
+					for (var j = 0; j < this.data[i].length; j++)
+						data[i][j] = this.data[i][j] ? this.data[i][j].flatten(rsafe) : null;
 
 					continue;
 				}
 
 				if (ct.cls)
 				{
-					data[i] = this.properties[i] ? this.properties[i].flatten() : null;
+					data[i] = this.data[i] ? this.data[i].flatten() : null;
 					continue;
 				}
 			}
 
-			data[i] = this.properties[i];
+			data[i] = this.data[i];
 		}
 
 		return data;
@@ -537,14 +537,14 @@ let _Model = module.exports = EventDispatcher.extend
 		if (Rin.typeOf(name) == "array")
 		{
 			for (var i = 0; i < name.length; i++)
-				delete this.properties[name[i]];
+				delete this.data[name[i]];
 
 			if (nsilent !== false && !this._silent)
 				this.dispatchEvent ("propertyRemoved", { fields: name });
 		}
 		else
 		{
-			delete this.properties[name];
+			delete this.data[name];
 
 			if (nsilent !== false && !this._silent)
 				this.dispatchEvent ("propertyRemoved", { fields: [name] });
@@ -573,16 +573,16 @@ let _Model = module.exports = EventDispatcher.extend
 
 		if (fields && Rin.typeOf(fields) == "string")
 		{
-			this._propertyEvent (fields, this.properties[fields], this.properties[fields], direct);
+			this._propertyEvent (fields, this.data[fields], this.data[fields], direct);
 		}
 		else
 		{
-			for (var i in this.properties)
+			for (var i in this.data)
 			{
 				if (fields && Rin.indexOf(fields, i) == -1)
 					continue;
 
-				this._propertyEvent (i, this.properties[i], this.properties[i], direct);
+				this._propertyEvent (i, this.data[i], this.data[i], direct);
 			}
 		}
 
@@ -606,16 +606,16 @@ let _Model = module.exports = EventDispatcher.extend
 
 		if (fields && Rin.typeOf(fields) == "string")
 		{
-			this._set (fields, this.properties[fields])
+			this._set (fields, this.data[fields])
 		}
 		else
 		{
-			for (var i in this.properties)
+			for (var i in this.data)
 			{
 				if (fields && Rin.indexOf(fields, i) == -1)
 					continue;
 
-				this._set (i, this.properties[i])
+				this._set (i, this.data[i])
 			}
 		}
 
@@ -634,8 +634,8 @@ let _Model = module.exports = EventDispatcher.extend
 
 		try
 		{
-			for (var i in this.properties)
-				this._validate (i, this.properties[i]);
+			for (var i in this.data)
+				this._validate (i, this.data[i]);
 
 			return true;
 		}

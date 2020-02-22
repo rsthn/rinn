@@ -66,7 +66,7 @@ module.exports = Model.extend
 	{
 		this._eventGroup = "ModelList_" + Date.now() + ":modelChanged";
 
-		this.contents = this.properties.contents;
+		this.contents = this.data.contents;
 	},
 
 	/**
@@ -109,7 +109,7 @@ module.exports = Model.extend
 	*/
 	count: function ()
 	{
-		return this.properties.contents.length;
+		return this.data.contents.length;
 	},
 
 	/**
@@ -119,10 +119,10 @@ module.exports = Model.extend
 	*/
 	clear: function ()
 	{
-		for (var i = 0; i < this.properties.contents; i++)
-			this._unbind (this.properties.contents[i]);
+		for (var i = 0; i < this.data.contents; i++)
+			this._unbind (this.data.contents[i]);
 
-		this.properties.contents = [];
+		this.data.contents = [];
 
 		this.prepareEvent ("itemCleared")
 		.enqueue (this.prepareEvent ("modelChanged", { fields: ["contents"] })).resume ();
@@ -144,7 +144,7 @@ module.exports = Model.extend
 			var item = Rin.ensureTypeOf(this.itemt, data[i]);
 			this._bind (i, item);
 
-			this.properties.contents.push (item);
+			this.data.contents.push (item);
 		}
 
 		this.prepareEvent ("itemsChanged")
@@ -158,7 +158,7 @@ module.exports = Model.extend
 	*/
 	getData: function ()
 	{
-		return this.properties.contents;
+		return this.data.contents;
 	},
 
 	/**
@@ -168,10 +168,10 @@ module.exports = Model.extend
 	*/
 	getAt: function (index)
 	{
-		if (index < 0 || index >= this.properties.contents.length)
+		if (index < 0 || index >= this.data.contents.length)
 			return null;
 
-		return Rin.ensureTypeOf(this.itemt, this.properties.contents[index]);
+		return Rin.ensureTypeOf(this.itemt, this.data.contents[index]);
 	},
 
 	/**
@@ -181,10 +181,10 @@ module.exports = Model.extend
 	*/
 	removeAt: function (index)
 	{
-		if (index < 0 || index >= this.properties.contents.length)
+		if (index < 0 || index >= this.data.contents.length)
 			return null;
 
-		var item = Rin.ensureTypeOf(this.itemt, this.properties.contents.splice(index, 1)[0]);
+		var item = Rin.ensureTypeOf(this.itemt, this.data.contents.splice(index, 1)[0]);
 		this._unbind (item);
 
 		this.prepareEvent ("itemRemoved", { index: index, item: item })
@@ -201,12 +201,12 @@ module.exports = Model.extend
 	*/
 	setAt: function (index, item)
 	{
-		if (index < 0 || index >= this.properties.contents.length)
+		if (index < 0 || index >= this.data.contents.length)
 			return false;
 
 		item = Rin.ensureTypeOf(this.itemt, item);
 
-		this.properties.contents[index] = item;
+		this.data.contents[index] = item;
 		this._bind (index, item);
 
 		this.prepareEvent ("itemChanged", { index: index, item: item })
@@ -222,10 +222,10 @@ module.exports = Model.extend
 	*/
 	updateAt: function (index)
 	{
-		if (index < 0 || index >= this.properties.contents.length)
+		if (index < 0 || index >= this.data.contents.length)
 			return false;
 
-		this.prepareEvent ("itemChanged", { index: index, item: this.properties.contents[index] })
+		this.prepareEvent ("itemChanged", { index: index, item: this.data.contents[index] })
 		.enqueue (this.prepareEvent ("modelChanged", { fields: ["contents"] })).resume ();
 
 		return true;
@@ -244,10 +244,10 @@ module.exports = Model.extend
 
 		item = Rin.ensureTypeOf(this.itemt, item);
 
-		this.properties.contents.push (item);
-		this._bind (this.properties.contents.length-1, item);
+		this.data.contents.push (item);
+		this._bind (this.data.contents.length-1, item);
 
-		this.prepareEvent ("itemAdded", { index: this.properties.contents.length-1, item: item })
+		this.prepareEvent ("itemAdded", { index: this.data.contents.length-1, item: item })
 		.enqueue (this.prepareEvent ("modelChanged", { fields: ["contents"] })).resume ();
 
 		return item;
@@ -260,7 +260,7 @@ module.exports = Model.extend
 	*/
 	pop: function ()
 	{
-		return this._unbind (Rin.ensureTypeOf(this.itemt, this.properties.contents.pop()));
+		return this._unbind (Rin.ensureTypeOf(this.itemt, this.data.contents.pop()));
 	},
 
 	/**
@@ -276,7 +276,7 @@ module.exports = Model.extend
 
 		item = Rin.ensureTypeOf(this.itemt, item);
 
-		this.properties.contents.unshift (item);
+		this.data.contents.unshift (item);
 		this._bind (0, item);
 
 		this.prepareEvent ("itemAdded", { index: 0, item: item })
@@ -292,7 +292,7 @@ module.exports = Model.extend
 	*/
 	shift: function ()
 	{
-		return this._unbind (Rin.ensureTypeOf(this.itemt, this.properties.contents.shift()));
+		return this._unbind (Rin.ensureTypeOf(this.itemt, this.data.contents.shift()));
 	},
 
 	/**
@@ -304,11 +304,11 @@ module.exports = Model.extend
 	*/
 	find: function (data, retObject)
 	{
-		var contents = this.properties.contents;
+		var contents = this.data.contents;
 
 		for (var i = 0; i < contents.length; i++)
 		{
-			if (Rin.partialCompare (contents[i].properties, data))
+			if (Rin.partialCompare (contents[i].data, data))
 				return retObject ? contents[i] : i;
 		}
 

@@ -584,7 +584,7 @@ Template.filters =
 		for (let i = 0; i < args.length; i += 2)
 		{
 			if (i+1 < args.length)
-				attr += ` ${args[0]}="${args[1]}"`;
+				attr += ` ${args[i]}="${args[i+1]}"`;
 			else
 				text = args[i];
 		}

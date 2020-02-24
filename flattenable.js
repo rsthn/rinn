@@ -46,6 +46,15 @@ module.exports = Class.extend
 	unflatten: function (value, context)
 	{
 		Object.assign(this, this.typeSchema.unflatten(value, context));
+		this.onUnflattened();
+
 		return this;
+	},
+
+	/*
+	**	Executed when the unflatten() method is called on the object.
+	*/
+	onUnflattened: function ()
+	{
 	}
 });

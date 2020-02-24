@@ -569,6 +569,30 @@ Template.filters =
 	},
 
 	/**
+	**	Returns the expression inside an XML tag named 'tag-name', attributes are supported.
+	**
+	**	%% <tag-name> [<attr> <value>]* [<content>]
+	*/
+	'%%': function(args)
+	{
+		args.shift();
+		var name = args.shift();
+
+		let attr = '';
+		let text = '';
+
+		for (let i = 0; i < args.length; i += 2)
+		{
+			if (i+1 < args.length)
+				attr += ` ${args[0]}="${args[1]}"`;
+			else
+				text = args[i];
+		}
+
+		return text ? `<${name}${attr}>${text}</${name}>` : `<${name}${attr}/>`;
+	},
+
+	/**
 	**	Joins the given array expression into a string. The provided string-expr will be used as separator.
 	**
 	**	join <string-expr> <array-expr>

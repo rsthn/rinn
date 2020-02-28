@@ -53,6 +53,18 @@ module.exports = Flattenable.extend
 	},
 
 	/*
+	**	Executed after the collection has been unflattened, re-adds the items to ensure onItemAdded() is called.
+	*/
+	onUnflattened: function()
+	{
+		let items = this.items;
+		this.reset();
+
+		for (let i of items)
+			this.add(i);
+	},
+
+	/*
 	**	Resets the collection to empty. Note that onItemRemoved will not be called.
 	*/
 	reset: function ()

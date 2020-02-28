@@ -577,12 +577,15 @@ let _Model = module.exports = EventDispatcher.extend
 		}
 		else
 		{
-			for (var i in this.data)
+			if (fields)
 			{
-				if (fields && Rin.indexOf(fields, i) == -1)
-					continue;
-
-				this._propertyEvent (i, this.data[i], this.data[i], direct);
+				for (var i of fields)
+					this._propertyEvent (i, this.data[i], this.data[i], direct);
+			}
+			else
+			{
+				for (var i in this.data)
+					this._propertyEvent (i, this.data[i], this.data[i], direct);
 			}
 		}
 

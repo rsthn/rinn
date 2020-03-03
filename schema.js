@@ -334,5 +334,44 @@ let Schema = module.exports =
                 return o;
             }
         });
+	},
+
+    Map: function()
+    {
+        return Schema.Type({
+
+            flatten: function (value, context)
+            {
+				if (value == null) return null;
+
+				if (context.symbolic === true)
+					return value;
+
+				let o = [ ];
+
+				for (let i in value)
+				{
+					o.push(i);
+					o.push(value[i]);
+				}
+
+                return o;
+            },
+
+            unflatten: function (value, context)
+            {
+				if (value == null) return null;
+
+				if (context.symbolic === true)
+					return value;
+
+				let o = { };
+
+				for (let i = 0; i < value.length; i += 2)
+					o[value[i]] = value[i+1];
+
+                return o;
+            }
+        });
 	}
 };

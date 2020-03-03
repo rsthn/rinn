@@ -647,7 +647,8 @@ Template.filters =
 	/**
 	**	Constructs an array obtained by expanding the given template for each of the items in the list-expr, the optional varname
 	**	parameter (defaults to 'i') indicates the name of the variable that will contain the data of each item as the list-expr is
-	**	traversed, also the default variable i# (suffix '#') is introduced to denote the index/key of the current item.
+	**	traversed. The default variables i# and i## (suffix '#' and '##') are introduced to denote the index/key and numeric index
+	**	of the current item respectively, note that the later will always have a numeric value.
 	**
 	**	each <list-expr> [<varname:i>] <template>
 	*/
@@ -662,10 +663,12 @@ Template.filters =
 			var_name = args[k++];
 
 		let s = [];
+		let j = 0;
 
 		for (let i in list)
 		{
 			data[var_name] = list[i];
+			data[var_name + '##'] = j++;
 			data[var_name + '#'] = i;
 
 			for (let j = k; j < parts.length; j++)

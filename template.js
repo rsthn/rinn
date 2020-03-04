@@ -480,6 +480,7 @@ Template.filters =
 	'ge': function(args) { return args[1] >= args[2]; },
 	'and': function(args) { for (let i = 1; i < args.length; i++) if (!args[i]) return false; return true; },
 	'or': function(args) { for (let i = 1; i < args.length; i++) if (~~args[i]) return true; return false; },
+	'char': function(args) { return String.fromCharCode(args[1]); },
 
 	/**
 	**	Returns the JSON representation of the expression.
@@ -739,14 +740,21 @@ Template.filters =
 	/**
 	**	Repeats the specified template for a number of times.
 	**
-	**	repeat <count> [<varname:i>] <template>
+	**	repeat [<from>] <count> [<varname:i>] <template>
 	*/
 	'repeat': function(args, parts, data)
 	{
 		let var_name = 'i';
-		let count = ~~(args[1]);
+		let count = ~~args[1];
+		let from = 0;
 
 		let k = 2;
+
+		if (args[k] && args[k].match(/^[0-9]+$/) != null)
+		{
+			from = count;
+			count = ~~args[k++];
+		}
 
 		if (args[k] && args[k].match(/^[A-Za-z0-9_-]+$/) != null)
 			var_name = args[k++];

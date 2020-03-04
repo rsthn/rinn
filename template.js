@@ -753,7 +753,7 @@ Template.filters =
 		if (args[k] && args[k].match(/^[0-9]+$/) != null)
 		{
 			from = count;
-			count = ~~args[k++];
+			count = from + ~~args[k++];
 		}
 
 		if (args[k] && args[k].match(/^[A-Za-z0-9_-]+$/) != null)
@@ -761,7 +761,7 @@ Template.filters =
 
 		let s = [];
 
-		for (let i = 0; i < count; i++)
+		for (let i = from; i < count; i++)
 		{
 			data[var_name] = i;
 

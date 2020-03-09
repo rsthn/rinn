@@ -33,7 +33,7 @@ module.exports = Class.extend
 	typeSchema: null,
 
 	/**
-	**	Returns a flattened contents of the object.
+	**	Returns the flattened contents of the object.
 	*/
 	flatten: function (context)
 	{
@@ -43,18 +43,17 @@ module.exports = Class.extend
 	/**
 	**	Unflattens the given object and overrides the local contents.
 	*/
-	unflatten: function (value, context)
+	unflatten: async function (value, context)
 	{
-		Object.assign(this, this.typeSchema.unflatten(value, context));
-		this.onUnflattened();
-
+		Object.assign(this, await this.typeSchema.unflatten(value, context));
+		await this.onUnflattened();
 		return this;
 	},
 
 	/*
 	**	Executed when the unflatten() method is called on the object.
 	*/
-	onUnflattened: function ()
+	onUnflattened: async function ()
 	{
 	}
 });

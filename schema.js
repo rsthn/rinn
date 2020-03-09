@@ -155,7 +155,13 @@ let Schema = module.exports =
     {
         return Schema.Type({
 
-            itemType: type,
+			itemType: type,
+			_debug: false,
+
+			debug: function(v) {
+				this._debug = v;
+				return this;
+			},
 
             of: function (type) {
                 this.itemType = type;
@@ -174,14 +180,16 @@ let Schema = module.exports =
                 return o;
             },
 
-			unflatten: function (value, context)
+			unflatten: async function (value, context)
 			{
 				if (value == null) return null;
 
                 let o = [ ];
 
-                for (let i = 0; i < value.length; i++)
-                    o.push(this.itemType.unflatten(value[i], context));
+				for (let i = 0; i < value.length; i++)
+				{
+					o.push(await this.itemType.unflatten(value[i], context));
+				}
 
                 return o;
             }
@@ -228,7 +236,7 @@ let Schema = module.exports =
                 return o;
             },
             
-            unflatten: function (value, context)
+            unflatten: async function (value, context)
             {
 				if (value == null) return null;
 
@@ -238,7 +246,7 @@ let Schema = module.exports =
 				{
 					for (let i = 0; i < this.properties.length; i++)
 					{
-						o[this.properties[i].name] = this.properties[i].type.unflatten(value[this.properties[i].name], context);
+						o[this.properties[i].name] = await this.properties[i].type.unflatten(value[this.properties[i].name], context);
 					}
 				}
 				else
@@ -246,7 +254,7 @@ let Schema = module.exports =
 				
 					for (let i = 0; i < this.properties.length; i++)
 					{
-						o[this.properties[i].name] = this.properties[i].type.unflatten(value[i], context);
+						o[this.properties[i].name] = await this.properties[i].type.unflatten(value[i], context);
 					}
 				}
 
@@ -272,9 +280,9 @@ let Schema = module.exports =
                 return value == null ? null : value.flatten(context);
             },
 
-            unflatten: function (value, context)
+            unflatten: async function (value, context)
             {
-				return value == null ? null : (new this._constructor()).unflatten(value, context);
+				return value == null ? null : await (new this._constructor()).unflatten(value, context);
             }
         });
 	},
@@ -320,16 +328,16 @@ let Schema = module.exports =
                 return o;
             },
 
-            unflatten: function (value, context)
+            unflatten: async function (value, context)
             {
 				if (value == null) return null;
 
 				let o = { };
 
 				if (context.symbolic === true)
-					o[this.property] = this.type.unflatten(value[this.property], context);
+					o[this.property] = await this.type.unflatten(value[this.property], context);
 				else
-					o[this.property] = this.type.unflatten(value, context);
+					o[this.property] = await this.type.unflatten(value, context);
 
                 return o;
             }

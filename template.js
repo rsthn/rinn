@@ -558,7 +558,7 @@ Template.filters =
 
 		for (let i = 0; i < args.length; i++)
 		{
-			if (typeof(args[i]) != 'string')
+			if (typeof(args[i]) == 'object' && ('length' in args[i]))
 			{
 				for (let j = 0; j < args[i].length; j++)
 					s += `<${name}>${args[i][j]}</${name}>`;
@@ -654,15 +654,23 @@ Template.filters =
 	**
 	**	each <list-expr> [<varname:i>] <template>
 	*/
-	'each': function(args, parts, data)
+	'_each': function(parts, data)
 	{
 		let var_name = 'i';
-		let list = args[1];
+		let list = Template.expand(parts[1], data, 'arg');
 
 		let k = 2;
 
-		if (args[k] && args[k].match(/^[A-Za-z0-9_-]+$/) != null)
-			var_name = args[k++];
+		try {
+			let tmp = Template.expand(parts[k], data, 'arg');
+
+			if (tmp && tmp.match(/^[A-Za-z0-9_-]+$/) != null) {
+				var_name = tmp;
+				k++;
+			}
+		}
+		catch(e) {
+		}
 
 		let s = [];
 		let j = 0;
@@ -674,7 +682,7 @@ Template.filters =
 			data[var_name + '#'] = i;
 
 			for (let j = k; j < parts.length; j++)
-				s.push(Template.expand(parts[j], data, 'obj'));
+				s.push(Template.expand(parts[j], data, 'arg'));
 		}
 
 		delete data[var_name];

@@ -781,5 +781,24 @@ Template.filters =
 		delete data[var_name];
 
 		return s;
+	},
+
+	/**
+	**	Loads the contents of the expression (map or array) in the global data map, fields/indices in the map/array will
+	**	therefore be directly accessible afterwards.
+	**
+	**	load <expr>
+	*/
+	'_load': function(parts, data)
+	{
+		let obj = Template.expand(parts[1], data, 'arg');
+
+		if (typeof(obj) != 'object')
+			return '';
+
+		for (let i in obj)
+			data[i] = obj[i];
+
+		return '';
 	}
 };

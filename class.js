@@ -33,7 +33,7 @@ Class._class = Class;
 
 
 /**
-**	Contains the named constructors of each of the super classes.
+**	Contains the methods of each of the super classes.
 */
 Class._super = { };
 
@@ -45,7 +45,7 @@ Class.prototype.className = "Class";
 
 
 /**
-**	Instance constructor.
+**	Class constructor, should initialize the state of the instance. Invoked when the `new` keyword is used with the class.
 */
 Class.prototype.__ctor = function ()
 {
@@ -53,18 +53,20 @@ Class.prototype.__ctor = function ()
 
 
 /**
-**	Instance initialization.
+**	Class destructor, should clear the instance state and release any used resources, invoked when the global `dispose`
+**	function is called with the instance as parameter.
 */
-Class.prototype.__init = function ()
+Class.prototype.__dtor = function ()
 {
 };
 
 
 /**
-**	Returns true if the object is an instance of the specified class (verifies inheritance).
+**	Returns true if the object is an instance of the specified class (verifies inheritance), the `class` parameter can be a class
+**	name, a class constructor or a class instance, in any case the appropriate checks will be done.
 **
 **	>> bool isInstanceOf (string className);
-**	>> bool isInstanceOf (class classConstructor);
+**	>> bool isInstanceOf (constructor classConstructor);
 **	>> bool isInstanceOf (object classInstance);
 */
 Class.prototype.isInstanceOf = function (className)
@@ -103,11 +105,12 @@ Class.prototype._initSuperRefs = function ()
 
 
 /**
-**	Extends the class with the specified prototype. The prototype can be a function (class constructor) or an object. Note that
-**	the class will be modified (and returned) instead of creating a new class, must be called at the class-level (not instance level),
-**	when a class is provided all fields starting with uppercase at the class-level (not prototype) will not be inherited.
+**	Extends the class with the specified prototype. The prototype can be a function (class constructor) or an object. Note that the
+**	class will be modified (and returned) instead of creating a new class. Must be called at the class-level (**not** instance level).
+**	When a class is provided all fields starting with uppercase at the class-level will not be inherited, this is used to create constants
+**	on classes without having them to be copied to derived classes.
 **
-**	>> class inherit (function classConstructor);
+**	>> class inherit (constructor classConstructor);
 **	>> class inherit (object obj);
 */
 Class.inherit = function (proto)
@@ -178,9 +181,9 @@ Class.prototype._extend = function (base, protos)
 
 
 /**
-**	Creates a new class with the specified prototypes each of which can be a class constructor (function) or an object.
+**	Creates a new class with the specified prototypes each of which can be a class constructor or an object.
 **
-**	>> object extend (object... protos);
+**	>> constructor extend (object... protos);
 */
 Class.extend = function (...protos)
 {
@@ -189,7 +192,7 @@ Class.extend = function (...protos)
 
 
 /**
-**	Creates a new instance by extending the class first with the specified prototype.
+**	Creates a new instance of a class resulting from extending the self class with the specified prototype.
 **
 **	>> object create (object proto);
 */

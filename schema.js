@@ -67,7 +67,7 @@ let Schema = module.exports =
 		});
 	},
 
-	Numeric: function (precision)
+	Number: function (precision)
 	{
 		return Schema.Type
 		({

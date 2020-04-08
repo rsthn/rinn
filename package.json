@@ -1,10 +1,11 @@
 {
   "name": "@rsthn/rin",
-  "version": "2.0.8",
+  "version": "2.0.9",
   "description": "Rin Library",
   "main": "main.js",
   "scripts": {
-    "test": "echo Ok"
+	"test": "echo Ok",
+	"build": "browserify main-packed.js | uglifyjs > dist/rin.js"
   },
   "repository": {
     "type": "git",
@@ -24,5 +25,9 @@
   "dependencies": {
     "base-64": "^0.1.0",
     "node-fetch": "^2.6.0"
+  },
+  "devDependencies": {
+    "browserify": "^16.5.1",
+    "uglify-es": "^3.3.9"
   }
 }

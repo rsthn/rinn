@@ -17,7 +17,8 @@
 let Class = require('./class');
 
 /**
-**	Flattenable class used to add flattening and unflattening capabilities to any object.
+**	Class used to add flattening and unflattening capabilities to any object. A "flat" object is an object composed
+**	only of native types, that is: `null,` `boolean`, `integer`, `number`, `array` or `object`.
 */
 
 module.exports = Class.extend

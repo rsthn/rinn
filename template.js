@@ -429,7 +429,7 @@ let Template = module.exports =
 		{
 			if (s.length != 1)
 				return s.join('');
-	
+
 			return s[0];
 		}
 	
@@ -488,7 +488,7 @@ Template.filters =
 	**
 	**	json <expr>
 	*/
-	'json': function(args)
+	'json': function (args)
 	{
 		return JSON.stringify(args[1], null, 4);
 	},
@@ -498,7 +498,7 @@ Template.filters =
 	**
 	**	set <var-name> <expr>
 	*/
-	'set': function(args, parts, data)
+	'set': function (args, parts, data)
 	{
 		data[args[1]] = args[2];
 		return '';
@@ -509,7 +509,7 @@ Template.filters =
 	**
 	**	trim <expr>
 	*/
-	'trim': function(args)
+	'trim': function (args)
 	{
 		return args[1] ? (typeof(args[1]) == "object" ? args[1].map(e => e.trim()) : args[1].trim()) : '';
 	},
@@ -519,7 +519,7 @@ Template.filters =
 	**
 	**	upper <expr>
 	*/
-	'upper': function(args)
+	'upper': function (args)
 	{
 		return args[1] ? (typeof(args[1]) == "object" ? args[1].map(e => e.toUpperCase()) : args[1].toUpperCase()) : '';
 	},
@@ -529,7 +529,7 @@ Template.filters =
 	**
 	**	lower <expr>
 	*/
-	'lower': function(args)
+	'lower': function (args)
 	{
 		return args[1] ? (typeof(args[1]) == "object" ? args[1].map(e => e.toLowerCase()) : args[1].toLowerCase()) : '';
 	},
@@ -539,7 +539,7 @@ Template.filters =
 	**
 	**	nl2br <expr>
 	*/
-	'nl2br': function(args)
+	'nl2br': function (args)
 	{
 		return args[1] ? (typeof(args[1]) == "object" ? args[1].map(e => e.replace(/\n/g, "<br/>")) : args[1].replace(/\n/g, "<br/>")) : '';
 	},
@@ -549,7 +549,7 @@ Template.filters =
 	**
 	**	% <tag-name> <expr>
 	*/
-	'%': function(args)
+	'%': function (args)
 	{
 		args.shift();
 		var name = args.shift();
@@ -575,7 +575,7 @@ Template.filters =
 	**
 	**	%% <tag-name> [<attr> <value>]* [<content>]
 	*/
-	'%%': function(args)
+	'%%': function (args)
 	{
 		args.shift();
 		var name = args.shift();
@@ -599,7 +599,7 @@ Template.filters =
 	**
 	**	join <string-expr> <array-expr>
 	*/
-	'join': function(args)
+	'join': function (args)
 	{
 		if (args[2] && typeof(args[2]) == "object" && "join" in args[2])
 			return args[2].join(args[1]);
@@ -612,7 +612,7 @@ Template.filters =
 	**
 	**	split <string-expr> <expr>
 	*/
-	'split': function(args)
+	'split': function (args)
 	{
 		if (args[2] && typeof(args[2]) == "string")
 			return args[2].split(args[1]);
@@ -625,7 +625,7 @@ Template.filters =
 	**
 	**	keys <object-expr>
 	*/
-	'keys': function(args)
+	'keys': function (args)
 	{
 		if (args[1] && typeof(args[1]) == "object")
 			return Object.keys(args[1]);
@@ -638,7 +638,7 @@ Template.filters =
 	**
 	**	values <object-expr>
 	*/
-	'values': function(args)
+	'values': function (args)
 	{
 		if (args[1] && typeof(args[1]) == "object")
 			return Object.values(args[1]);
@@ -654,7 +654,7 @@ Template.filters =
 	**
 	**	each <list-expr> [<varname:i>] <template>
 	*/
-	'_each': function(parts, data)
+	'_each': function (parts, data)
 	{
 		let var_name = 'i';
 		let list = Template.expand(parts[1], data, 'arg');
@@ -682,7 +682,7 @@ Template.filters =
 			data[var_name + '#'] = i;
 
 			for (let j = k; j < parts.length; j++)
-				s.push(Template.expand(parts[j], data, 'arg'));
+				s.push(Template.expand(parts[j], data, 'text'));
 		}
 
 		delete data[var_name];
@@ -697,7 +697,7 @@ Template.filters =
 	**
 	**	? <expr> <valueA> [<valueB>]
 	*/
-	'_?': function(parts, data)
+	'_?': function (parts, data)
 	{
 		if (Template.expand(parts[1], data, 'arg'))
 			return Template.expand(parts[2], data, 'arg');
@@ -713,7 +713,7 @@ Template.filters =
 	**
 	**	if <expr> <value> [elif <expr> <value>] [else <value>]
 	*/
-	'_if': function(parts, data)
+	'_if': function (parts, data)
 	{
 		for (let i = 0; i < parts.length; i += 3)
 		{
@@ -732,7 +732,7 @@ Template.filters =
 	**
 	**	switch <expr> <case1> <value1> ... <caseN> <valueN> default <defvalue> 
 	*/
-	'_switch': function(parts, data)
+	'_switch': function (parts, data)
 	{
 		let value = Template.expand(parts[1], data, 'arg');
 
@@ -740,7 +740,7 @@ Template.filters =
 		{
 			let case_value = Template.expand(parts[i], data, 'arg');
 			if (case_value == value || case_value == 'default')
-				return Template.expand(parts[i+1], data, 'arg');
+				return Template.expand(parts[i+1], data, 'text');
 		}
 
 		return '';
@@ -751,7 +751,7 @@ Template.filters =
 	**
 	**	repeat [<from>] <count> [<varname:i>] <template>
 	*/
-	'repeat': function(args, parts, data)
+	'repeat': function (args, parts, data)
 	{
 		let var_name = 'i';
 		let count = ~~args[1];
@@ -775,7 +775,7 @@ Template.filters =
 			data[var_name] = i;
 
 			for (let j = k; j < parts.length; j++)
-				s.push(Template.expand(parts[j], data, 'obj'));
+				s.push(Template.expand(parts[j], data, 'text'));
 		}
 
 		delete data[var_name];
@@ -789,7 +789,7 @@ Template.filters =
 	**
 	**	load <expr>
 	*/
-	'_load': function(parts, data)
+	'_load': function (parts, data)
 	{
 		let obj = Template.expand(parts[1], data, 'arg');
 

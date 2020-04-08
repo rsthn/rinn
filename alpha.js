@@ -165,7 +165,7 @@ Rin.override = function (output, ...objs)
 
 
 /*
-**	Compares two objects and returns a boolean if all properties in "partial" find a match in "full".
+**	Compares two objects and returns `true` if all properties in "partial" find a match in "full".
 */
 Rin.partialCompare = function (full, partial)
 {
@@ -185,8 +185,9 @@ Rin.partialCompare = function (full, partial)
 
 
 /*
-**	Performs a partial search for an object (o) in the specified array and returns its index or false
-**	if the object was not found.
+**	Performs a partial search for an object (o) in the specified array and returns its index or `false` if the
+**	object was not found. When `getObject` is set to `true` the object will be returned instead of an index, or
+**	`null` if not found.
 */
 Rin.arrayFind = function (arr, o, getObject)
 {
@@ -231,7 +232,7 @@ Rin.escape = function (str)
 
 
 /**
-**	Verifies if the specified object is of class m, if not it will create a new instance.
+**	Verifies if the specified object is of class `m`, if not it will create a new instance of `m` passing `o` as parameter.
 **
 **	>> object ensureTypeOf (class m, object o);
 */
@@ -262,9 +263,9 @@ Rin.serialize = function (o)
 
 
 /**
-**	Deserializes a string in JSON format and returns an object.
+**	Deserializes a string in JSON format and returns the result.
 **
-**	>> object deserialize (string s);
+**	>> any deserialize (string s);
 */
 Rin.deserialize = function (s)
 {

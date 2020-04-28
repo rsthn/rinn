@@ -483,6 +483,16 @@ Template.filters =
 	'or': function(args) { for (let i = 1; i < args.length; i++) if (~~args[i]) return true; return false; },
 	'char': function(args) { return String.fromCharCode(args[1]); },
 
+	'neg': function(args) { return -args[1]; },
+	'*': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x *= args[i]; return x; },
+	'mul': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x *= args[i]; return x; },
+	'/': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x /= args[i]; return x; },
+	'div': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x /= args[i]; return x; },
+	'+': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x += args[i]; return x; },
+	'sum': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x += args[i]; return x; },
+	'-': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x -= args[i]; return x; },
+	'sub': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x -= args[i]; return x; },
+
 	/**
 	**	Returns the JSON representation of the expression.
 	**

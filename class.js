@@ -62,7 +62,7 @@ Class.prototype.__dtor = function ()
 
 
 /**
-**	Returns true if the object is an instance of the specified class (verifies inheritance), the `class` parameter can be a class
+**	Returns true if the object is an instance of the specified class (verifies inheritance), the parameter can be a class
 **	name, a class constructor or a class instance, in any case the appropriate checks will be done.
 **
 **	>> bool isInstanceOf (string className);

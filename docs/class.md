@@ -10,7 +10,7 @@ Base class used to easily create classes and sub-classes with complex multiple i
 
 ## Attributes
 
-#### _super: *object*
+#### `_super`: *object*
 
 Contains the methods of each of the super classes. For example, to call method `getValue` of a parent class named `Base` you would use something like:
 
@@ -22,7 +22,7 @@ console.log( myInstance._super.Base.getValue() );
 
 <br/>
 
-#### className: *string*
+#### `className`: *string*
 
 Name of the class, if none specified the class will be considered "final" and will not be inheritable.
 
@@ -31,9 +31,6 @@ Name of the class, if none specified the class will be considered "final" and wi
 <br/>
 
 ## Methods
-
-<br/>
-
 
 ### `__ctor` ()
 
@@ -59,7 +56,7 @@ Ensure you call the parent destructors when required because that is not automat
 ### `isInstanceOf` (classConstructor: *constructor*) &rarr; *bool*
 ### `isInstanceOf` (classInstance: *object*) &rarr; *bool*
 
-Returns true if the object is an instance of the specified class (verifies inheritance), the `class` parameter can be a class name, a class constructor or a class instance, in any case the appropriate checks will be done.
+Returns true if the object is an instance of the specified class (verifies inheritance), the parameter can be a class name, a class constructor or a class instance, in any case the appropriate checks will be done.
 
 
 

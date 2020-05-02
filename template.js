@@ -14,6 +14,8 @@
 **	USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+let Rin = require('./alpha');
+
 /**
 **	Templating module. The template formats available are shown below, note that the sym-open and sym-close symbols are by
 **	default the square brackets, however those can be modified since are just parameters.
@@ -21,7 +23,7 @@
 **	HTML Escaped Output:			[data.value]					Escapes HTML characters from the output.
 **	Raw Output:						[!data.value]					Does not escape HTML characters from the output (used to output direct HTML).
 **	Double-Quoted Escaped Output:	[$data.value]					Escapes HTML characters and surrounds with double quotes.
-**	Immediate Reparse:				[<....] OR [@....]				Reparses the contents as if parseTemplate() was called again.
+**	Immediate Reparse:				[<....] OR [@....] OR "..."		Reparses the contents as if parseTemplate() was called again.
 **	Immediate Output:				[:...]							Takes the contents and outputs exactly as-is without format and optionally surrounded by the
 **																	sym-open and sym-close symbols when the first character is not '<', sym_open or space.
 **	Filtered Output:				[filterName ... <expr> ...]		Runs a filter call, 'expr' can be any of the allowed formats shown here (nested if desired),
@@ -36,24 +38,99 @@ let Template = module.exports =
 	**
 	**	>> array parseTemplate (string template, char sym_open, char sym_close, bool is_tpl=false);
 	*/
-	parseTemplate: function (template, sym_open, sym_close, is_tpl)
+	parseTemplate: function (template, sym_open, sym_close, is_tpl, root=1)
 	{
 		let nflush = 'string', flush = null, state = 0, count = 0;
-		let str = '', nstr = '';
-		let parts = [], mparts = parts, nparts = false;
-	
+		let str = '', parts = [], mparts = parts, nparts = false;
+
 		if (is_tpl === true)
 		{
 			template = template.trim();
-			state = 2;
-	
+			nflush = 'identifier';
+			state = 10;
+
 			mparts.push(parts = []);
 		}
-	
+
 		template += "\0";
-	
+
+		function unescape (value)
+		{
+			if (typeof(value) == 'object')
+			{
+				if (value instanceof Array)
+				{
+					for (let i = 0; i < value.length; i++)
+						unescape(value[i]);
+				}
+				else
+				{
+					value.data = unescape(value.data);
+				}
+
+				return value;
+			}
+
+			for (let i = 0; i < value.length; i++)
+			{
+				if (value[i] == '\\')
+				{
+					let r = value[i+1];
+					value = value.substr(0, i) + r + value.substr(i+2);
+				}
+			}
+
+			return value;
+		}
+
+		function emit (type, data)
+		{
+			if (type == 'template')
+			{
+				data = Template.parseTemplate (data, sym_open, sym_close, true, 0);
+			}
+			else if (type == 'parse-string')
+			{
+				data = Template.parseTemplate (data, sym_open, sym_close, false, 0);
+				type = 'base-string';
+
+				if (Rin.typeOf(data) == 'array')
+				{
+					type = data[0].type;
+					data = data[0].data;
+				}
+			}
+			else if (type == 'parse-string-and-merge')
+			{
+				data = Template.parseTemplate (data, sym_open, sym_close, false, 0);
+			}
+
+			if (type == 'parse-string-and-merge')
+			{
+				for (let i = 0; i < data.length; i++)
+				{
+					parts.push(data[i]);
+				}
+			}
+			else
+				parts.push({ type: type, data: data });
+
+			if (nparts)
+			{
+				mparts.push(parts = []);
+				nparts = false;
+			}
+		}
+
 		for (let i = 0; i < template.length; i++)
 		{
+			if (template[i] == '\\')
+			{
+				str += '\\';
+				str += template[++i];
+				continue;
+			}
+
 			switch (state)
 			{
 				case 0:
@@ -63,29 +140,29 @@ let Template = module.exports =
 					}
 					else if (template[i] == sym_open && template[i+1] == '<')
 					{
-						state = count = 1;
+						state = 1; count = 1;
 						flush = 'string';
 						nflush = 'parse-string-and-merge';
 					}
 					else if (template[i] == sym_open && template[i+1] == '@')
 					{
-						state = count = 1;
+						state = 1; count = 1;
 						flush = 'string';
 						nflush = 'parse-string-and-merge';
 						i++;
 					}
 					else if (template[i] == sym_open && template[i+1] == ':')
 					{
-						state = 4; count = 1;
+						state = 12; count = 1;
 						flush = 'string';
 						nflush = 'string';
 						i++;
 					}
 					else if (template[i] == sym_open)
 					{
-						state = count = 1;
+						state = 1; count = 1;
 						flush = 'string';
-						nflush = 'parse-template';
+						nflush = 'template';
 					}
 					else
 					{
@@ -121,8 +198,8 @@ let Template = module.exports =
 	
 					str += template[i];
 					break;
-	
-				case 2:
+
+				case 10:
 					if (template[i] == '\0')
 					{
 						flush = nflush;
@@ -130,58 +207,63 @@ let Template = module.exports =
 					}
 					else if (template[i] == '.')
 					{
-						flush = nflush;
-						nflush = 'string';
+						emit (nflush, str);
+						emit ('access', '.');
+
+						nflush = 'identifier';
+						str = '';
 						break;
 					}
 					else if (template[i].match(/[\t\n\r\f\v ]/) != null)
 					{
 						flush = nflush;
-						nflush = 'string';
+						nflush = 'identifier';
 						nparts = true;
-	
+
 						while (template[i].match(/[\t\n\r\f\v ]/) != null) i++;
 						i--;
-	
+
 						break;
 					}
 					else if (template[i] == sym_open && template[i+1] == '<')
 					{
 						if (str) flush = nflush;
-						state = 3; count = 1; nflush = 'parse-string-and-merge';
+						state = 11; count = 1; nflush = 'parse-string-and-merge';
 						break;
 					}
 					else if (template[i] == sym_open && template[i+1] == '@')
 					{
 						if (str) flush = nflush;
-						state = 3; count = 1; nflush = 'parse-string-and-merge';
+						state = 11; count = 1; nflush = 'parse-string-and-merge';
 						i++;
+						break;
+					}
+					else if (template[i] == '"')
+					{
+						if (str) flush = nflush;
+						state = 14; count = 1; nflush = 'parse-string-and-merge';
 						break;
 					}
 					else if (template[i] == sym_open && template[i+1] == ':')
 					{
 						if (str) flush = nflush;
-						state = 5; count = 1; nflush = 'string';
+						state = 13; count = 1; nflush = 'string';
 						i++;
 						break;
 					}
 					else if (template[i] == sym_open)
 					{
-						if (str)
-						{
-							flush = nflush;
-							nstr = template[i];
-						}
+						if (str) emit(nflush, str);
 	
-						state = 3; count = 1; nflush = 'parse-string';
+						state = 11; count = 1; str = ''; nflush = 'parse-string';
 	
-						if (str) break;
+						if (flush) break;
 					}
 	
 					str += template[i];
 					break;
 	
-				case 3:
+				case 11:
 					if (template[i] == '\0')
 						throw new Error ("Parse error: Unexpected end of template");
 	
@@ -194,7 +276,7 @@ let Template = module.exports =
 
 						if (count == 0)
 						{
-							state = 2;
+							state = 10;
 	
 							if (nflush == 'parse-string-and-merge')
 								break;
@@ -208,7 +290,7 @@ let Template = module.exports =
 					str += template[i];
 					break;
 
-				case 4:
+				case 12:
 					if (template[i] == '\0')
 						throw new Error ("Parse error: Unexpected end of template");
 	
@@ -240,7 +322,7 @@ let Template = module.exports =
 					str += template[i];
 					break;
 
-				case 5:
+				case 13:
 					if (template[i] == '\0')
 						throw new Error ("Parse error: Unexpected end of template");
 
@@ -256,7 +338,7 @@ let Template = module.exports =
 							if (!(str[0] == '<' || str[0] == '[' || str[0] == ' '))
 								str = sym_open + str + sym_close;
 
-							state = 2;
+							state = 10;
 							break;
 						}
 					}
@@ -267,47 +349,67 @@ let Template = module.exports =
 	
 					str += template[i];
 					break;
-			}
-	
-			if (flush != null)
-			{
-				if (flush == 'parse-template')
-				{
-					str = Template.parseTemplate (str, sym_open, sym_close, true);
-				}
-				else if (flush == 'parse-string')
-				{
-					str = Template.parseTemplate (str, sym_open, sym_close, false);
-					str = str[0];
-				}
-				else if (flush == 'parse-string-and-merge')
-				{
-					str = Template.parseTemplate (str, sym_open, sym_close, false);
-				}
-	
-				if (typeof(str) != 'string' || str.length != 0)
-				{
-					if (flush == 'parse-string-and-merge')
+
+				case 14:
+					if (template[i] == '\0')
 					{
-						for (let i = 0; i < str.length; i++)
-							parts.push(str[i]);
+						throw new Error ("Parse error: Unexpected end of template");
 					}
-					else
-						parts.push(str);
-				}
 	
-				if (nparts)
-				{
-					mparts.push(parts = []);
-					nparts = false;
-				}
+					if (template[i] == '"')
+					{
+						count--;
 	
-				flush = null;
-				str = nstr;
-				nstr = '';
+						if (count < 0)
+							throw new Error ("Parse error: Unmatched " + '"');
+
+						if (count == 0)
+						{
+							state = 10;
+	
+							if (nflush == 'parse-string-and-merge')
+								break;
+						}
+					}
+
+					str += template[i];
+					break;
+			}
+
+			if (flush)
+			{
+				emit (flush, str);
+				flush = str = '';
 			}
 		}
-	
+
+		if (!is_tpl)
+		{
+			i = 0;
+			while (i < mparts.length)
+			{
+				if (mparts[i].type == 'string' && mparts[i].data == '')
+					mparts.splice(i, 1);
+				else
+					break;
+			}
+
+			i = mparts.length-1;
+			while (i > 0)
+			{
+				if (mparts[i].type == 'string' && mparts[i].data == '')
+					mparts.splice(i--, 1);
+				else
+					break;
+			}
+
+			if (mparts.length == 0)
+				mparts.push({ type: 'string', data: '' });
+		}
+
+		if (root)
+			unescape(mparts);
+
 		return mparts;
 	},
 
@@ -323,52 +425,93 @@ let Template = module.exports =
 	},
 
 	/**
-	**	Expands a template using the given data object, mode can be set to 'text' or 'obj' allowing to expand the template as
+	**	Expands a template using the given data object, ret can be set to 'text' or 'obj' allowing to expand the template as
 	**	a string (text) or an array of objects (obj) respectively. If none provided it will be expanded as text.
 	**
-	**	>> string/array expand (array parts, object data, string mode='text');
+	**	>> string/array expand (array parts, object data, string ret='text', string mode='base-string');
 	*/
-	expand: function (parts, data, mode)
+	expand: function (parts, data, ret='text', mode='base-string')
 	{
+		let s = [];
+
 		// Expand variable parts.
 		if (mode == 'var')
 		{
-			parts = Template.expand(parts, data, 'obj');
-
-			if (parts[0] == 'nl')
-				return '\n';
-
 			let escape = true;
 			let quote = false;
 
+			let root = data;
+			let last = null;
+			let str = '';
+
+			for (let i = 0; i < parts.length && data != null; i++)
+			{
+				switch (parts[i].type)
+				{
+					case 'identifier':
+					case 'string':
+						str += parts[i].data;
+						last = null;
+						break;
+
+					case 'template':
+						last = this.expand(parts[i].data, root, 'arg', 'template');
+						str += last;
+						break;
+
+					case 'base-string':
+						str += this.expand(parts[i].data, root, 'arg', 'base-string');
+						last = null;
+						break;
+
+					case 'access':
+						if (!last || typeof(last) != 'object')
+						{
+							while (true)
+							{
+								if (str[0] == '!')
+								{
+									str = str.substr(1);
+									escape = false;
+								}
+								else if (str[0] == '$')
+								{
+									str = str.substr(1);
+									quote = true;
+								}
+								else
+									break;
+							}
+
+							if (str != 'this')
+								data = data != null ? (str in data ? data[str] : null) : null;
+						}
+						else
+							data = last;
+
+						str = '';
+						break;
+				}
+			}
+
 			while (true)
 			{
-				if (parts[0][0] == '$')
+				if (str[0] == '!')
 				{
-					parts[0] = parts[0].substr(1);
-					quote = true;
-				}
-				else if (parts[0][0] == '!')
-				{
-					parts[0] = parts[0].substr(1);
+					str = str.substr(1);
 					escape = false;
+				}
+				else if (str[0] == '$')
+				{
+					str = str.substr(1);
+					quote = true;
 				}
 				else
 					break;
 			}
 
-			let i = 0;
-
-			if (parts[i] == 'this')
-				i++;
-
-			for (; i < parts.length && data != null; i++)
-			{
-				if (parts[i] in data)
-					data = data[parts[i]];
-				else
-					data = null;
-			}
+			if (str != 'this')
+				data = data != null ? (str in data ? data[str] : null) : null;
 
 			if (typeof(data) == 'string')
 			{
@@ -381,13 +524,13 @@ let Template = module.exports =
 
 			return data;
 		}
-	
+
 		// Expand function parts.
 		if (mode == 'fn')
 		{
 			var args = [];
 
-			args.push(Template.expand(parts[0], data, 'arg'));
+			args.push(Template.expand(parts[0], data, 'text', 'base-string'));
 
 			if ('_'+args[0] in Template.filters)
 				args[0] = '_'+args[0];
@@ -399,46 +542,65 @@ let Template = module.exports =
 				return Template.filters[args[0]] (parts, data);
 
 			for (let i = 1; i < parts.length; i++)
-				args.push(Template.expand(parts[i], data, 'arg'));
+				args.push(Template.expand(parts[i], data, 'arg', 'base-string'));
 
-			return Template.filters[args[0]] (args, parts, data);
+			s = Template.filters[args[0]] (args, parts, data);
 		}
-	
-		// Expand template parts.
-		if (mode == 'tpl')
+
+		// Template mode.
+		if (mode == 'template')
 		{
 			if (parts.length == 1)
-				return Template.expand(parts[0], data, 'var');
-	
-			return Template.expand(parts, data, 'fn');
+			{
+				if (parts[0].length == 1 && parts[0][0].type == 'string')
+					return parts[0][0].data;
+
+				return Template.expand(parts[0], data, ret, 'var');
+			}
+
+			return Template.expand(parts, data, ret, 'fn');
 		}
-	
-		// Expand string parts.
-		let s = [];
-	
-		for (let i = 0; i < parts.length; i++)
+
+		// Expand parts.
+		if (mode == 'base-string')
 		{
-			if (typeof(parts[i]) != 'string')
-				s.push(Template.expand(parts[i], data, 'tpl'));
-			else
-				s.push(parts[i]);
+			for (let i of parts)
+			{
+				switch (i.type)
+				{
+					case 'template':
+						s.push(Template.expand(i.data, data, ret, 'template'));
+						break;
+
+					case 'string': case 'identifier':
+						s.push(i.data);
+						break;
+
+					case 'base-string':
+						s.push(Template.expand(i.data, data, ret, 'base-string'));
+						break;
+				}
+			}
 		}
-	
+
 		// Return as argument ('object' if only one, or string if more than one), that is, the first item in the result.
-		if (mode == 'arg')
+		if (ret == 'arg')
 		{
+			if (typeof(s) == 'string')
+				return s;
+
 			if (s.length != 1)
 				return s.join('');
 
 			return s[0];
 		}
-	
-		if (mode != 'obj') /* AKA if (mode == 'text') */
+
+		if (ret != 'obj' && typeof(s) == 'object' && 'length' in s)
 		{
 			let f = (e => e != null && typeof(e) == 'object' ? ('map' in e ? e.map(f).join('') : ('join' in e ? e.join('') : e.toString())) : e);
 			s = s.map(f).join('');
 		}
-	
+
 		return s;
 	},
 
@@ -482,14 +644,15 @@ Template.filters =
 	'and': function(args) { for (let i = 1; i < args.length; i++) if (!args[i]) return false; return true; },
 	'or': function(args) { for (let i = 1; i < args.length; i++) if (~~args[i]) return true; return false; },
 	'char': function(args) { return String.fromCharCode(args[1]); },
+	'len': function(args) { return args[1].toString().length; },
 
 	'neg': function(args) { return -args[1]; },
 	'*': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x *= args[i]; return x; },
 	'mul': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x *= args[i]; return x; },
 	'/': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x /= args[i]; return x; },
 	'div': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x /= args[i]; return x; },
-	'+': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x += args[i]; return x; },
-	'sum': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x += args[i]; return x; },
+	'+': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x -= -args[i]; return x; },
+	'sum': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x -= -args[i]; return x; },
 	'-': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x -= args[i]; return x; },
 	'sub': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x -= args[i]; return x; },
 
@@ -568,7 +731,7 @@ Template.filters =
 
 		for (let i = 0; i < args.length; i++)
 		{
-			if (typeof(args[i]) == 'object' && ('length' in args[i]))
+			if (Rin.typeOf(args[i]) == 'array')
 			{
 				for (let j = 0; j < args[i].length; j++)
 					s += `<${name}>${args[i][j]}</${name}>`;
@@ -611,7 +774,7 @@ Template.filters =
 	*/
 	'join': function (args)
 	{
-		if (args[2] && typeof(args[2]) == "object" && "join" in args[2])
+		if (args[2] && Rin.typeof(args[2]) == 'array')
 			return args[2].join(args[1]);
 
 		return '';
@@ -691,8 +854,8 @@ Template.filters =
 			data[var_name + '##'] = j++;
 			data[var_name + '#'] = i;
 
-			for (let j = k; j < parts.length; j++)
-				s.push(Template.expand(parts[j], data, 'text'));
+			for (let k0 = k; k0 < parts.length; k0++)
+				s.push(Template.expand(parts[k0], data, 'text'));
 		}
 
 		delete data[var_name];
@@ -775,7 +938,7 @@ Template.filters =
 			count = from + ~~args[k++];
 		}
 
-		if (args[k] && args[k].match(/^[A-Za-z0-9_-]+$/) != null)
+		if (args[k] && parts[k][0].type == 'identifier' && args[k].match(/^[A-Za-z0-9_-]+$/) != null)
 			var_name = args[k++];
 
 		let s = [];

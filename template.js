@@ -76,6 +76,19 @@ let Template = module.exports =
 				if (value[i] == '\\')
 				{
 					let r = value[i+1];
+
+					switch (r)
+					{
+						case 'n': r = "\n"; break;
+						case 'r': r = "\r"; break;
+						case 'f': r = "\f"; break;
+						case 'v': r = "\v"; break;
+						case 't': r = "\t"; break;
+						case 's': r = "\s"; break;
+						case '"': r = "\""; break;
+						case "'": r = "\'"; break;
+					}
+
 					value = value.substr(0, i) + r + value.substr(i+2);
 				}
 			}
@@ -504,6 +517,8 @@ let Template = module.exports =
 					case 'access':
 						if (!last || typeof(last) != 'object')
 						{
+							if (!str) str = 'this';
+
 							while (true)
 							{
 								if (str[0] == '!')
@@ -531,7 +546,7 @@ let Template = module.exports =
 				}
 			}
 
-			while (true)
+			while (str != '')
 			{
 				if (str[0] == '!')
 				{

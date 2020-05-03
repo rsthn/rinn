@@ -23,7 +23,7 @@ let Rin = require('./alpha');
 **	HTML Escaped Output:			[data.value]					Escapes HTML characters from the output.
 **	Raw Output:						[!data.value]					Does not escape HTML characters from the output (used to output direct HTML).
 **	Double-Quoted Escaped Output:	[$data.value]					Escapes HTML characters and surrounds with double quotes.
-**	Immediate Reparse:				[<....] OR [@....] OR "..."		Reparses the contents as if parseTemplate() was called again.
+**	Immediate Reparse:				[<....] [@....] "..." '...'		Reparses the contents as if parseTemplate() was called again.
 **	Immediate Output:				[:...]							Takes the contents and outputs exactly as-is without format and optionally surrounded by the
 **																	sym-open and sym-close symbols when the first character is not '<', sym_open or space.
 **	Filtered Output:				[filterName ... <expr> ...]		Runs a filter call, 'expr' can be any of the allowed formats shown here (nested if desired),
@@ -38,7 +38,7 @@ let Template = module.exports =
 	**
 	**	>> array parseTemplate (string template, char sym_open, char sym_close, bool is_tpl=false);
 	*/
-	parseTemplate: function (template, sym_open, sym_close, is_tpl, root=1)
+	parseTemplate: function (template, sym_open, sym_close, is_tpl=false, root=1)
 	{
 		let nflush = 'string', flush = null, state = 0, count = 0;
 		let str = '', parts = [], mparts = parts, nparts = false;
@@ -244,6 +244,12 @@ let Template = module.exports =
 						state = 14; count = 1; nflush = 'parse-string-and-merge';
 						break;
 					}
+					else if (template[i] == '\'')
+					{
+						if (str) flush = nflush;
+						state = 15; count = 1; nflush = 'parse-string-and-merge';
+						break;
+					}
 					else if (template[i] == sym_open && template[i+1] == ':')
 					{
 						if (str) flush = nflush;
@@ -253,13 +259,19 @@ let Template = module.exports =
 					}
 					else if (template[i] == sym_open)
 					{
-						if (str) emit(nflush, str);
-	
+						if (str) emit (nflush, str);
 						state = 11; count = 1; str = ''; nflush = 'parse-string';
-	
-						if (flush) break;
+						str += template[i];
+						break;
 					}
-	
+
+					if (nflush != 'identifier')
+					{
+						emit (nflush, str);
+						str = '';
+						nflush = 'identifier';
+					}
+
 					str += template[i];
 					break;
 	
@@ -362,6 +374,31 @@ let Template = module.exports =
 	
 						if (count < 0)
 							throw new Error ("Parse error: Unmatched " + '"');
+
+						if (count == 0)
+						{
+							state = 10;
+	
+							if (nflush == 'parse-string-and-merge')
+								break;
+						}
+					}
+
+					str += template[i];
+					break;
+
+				case 15:
+					if (template[i] == '\0')
+					{
+						throw new Error ("Parse error: Unexpected end of template");
+					}
+	
+					if (template[i] == '\'')
+					{
+						count--;
+	
+						if (count < 0)
+							throw new Error ("Parse error: Unmatched " + '\'');
 
 						if (count == 0)
 						{
@@ -522,7 +559,7 @@ let Template = module.exports =
 					data = '"' + data + '"';
 			}
 
-			return data;
+			s.push(data);
 		}
 
 		// Expand function parts.
@@ -544,7 +581,7 @@ let Template = module.exports =
 			for (let i = 1; i < parts.length; i++)
 				args.push(Template.expand(parts[i], data, 'arg', 'base-string'));
 
-			s = Template.filters[args[0]] (args, parts, data);
+			s.push(Template.filters[args[0]] (args, parts, data));
 		}
 
 		// Template mode.
@@ -555,6 +592,14 @@ let Template = module.exports =
 				if (parts[0].length == 1 && parts[0][0].type == 'string')
 					return parts[0][0].data;
 
+				if (parts[0].length == 1 && parts[0][0].type == 'identifier')
+				{
+					let name = parts[0][0].data;
+
+					if (name in Template.filters || '_'+name in Template.filters)
+						return Template.expand(parts, data, ret, 'fn');
+				}
+	
 				return Template.expand(parts[0], data, ret, 'var');
 			}
 
@@ -586,16 +631,18 @@ let Template = module.exports =
 		// Return as argument ('object' if only one, or string if more than one), that is, the first item in the result.
 		if (ret == 'arg')
 		{
-			if (typeof(s) == 'string')
-				return s;
+			if (Rin.typeOf(s) == 'array')
+			{
+				if (s.length != 1)
+					return s.join('');
 
-			if (s.length != 1)
-				return s.join('');
+				return s[0];
+			}
 
-			return s[0];
+			return s;
 		}
 
-		if (ret != 'obj' && typeof(s) == 'object' && 'length' in s)
+		if (ret != 'obj' && Rin.typeOf(s) == 'array')
 		{
 			let f = (e => e != null && typeof(e) == 'object' ? ('map' in e ? e.map(f).join('') : ('join' in e ? e.join('') : e.toString())) : e);
 			s = s.map(f).join('');
@@ -613,9 +660,20 @@ let Template = module.exports =
 	{
 		template = Template.parse(template);
 
-		return function (data, mode) {
-			return Template.expand(template, data, mode);
+		return function (data=null, mode='text') {
+			return Template.expand(template, data ? data : { }, mode);
 		};
+	},
+
+	/**
+	**	Parses and expands the given template immediately.
+	**
+	**	>> object eval (string template, object data, string mode='text');
+	*/
+	eval: function (template, data=null, mode='text')
+	{
+		template = Template.parse(template);
+		return Template.expand(template, data ? data : { }, mode);
 	}
 };
 
@@ -733,8 +791,12 @@ Template.filters =
 		{
 			if (Rin.typeOf(args[i]) == 'array')
 			{
+				s += `<${name}>`;
+				
 				for (let j = 0; j < args[i].length; j++)
-					s += `<${name}>${args[i][j]}</${name}>`;
+					s += args[i][j];
+
+				s += `</${name}>`;
 			}
 			else
 				s += `<${name}>${args[i]}</${name}>`;
@@ -835,9 +897,10 @@ Template.filters =
 		let k = 2;
 
 		try {
+
 			let tmp = Template.expand(parts[k], data, 'arg');
 
-			if (tmp && tmp.match(/^[A-Za-z0-9_-]+$/) != null) {
+			if (tmp && parts[k][0].type == 'identifier' && tmp.match(/^[A-Za-z0-9_-]+$/) != null) {
 				var_name = tmp;
 				k++;
 			}
@@ -973,5 +1036,62 @@ Template.filters =
 			data[i] = obj[i];
 
 		return '';
-	}
+	},
+
+	/**
+	**	Constructs a list from the given arguments and returns it.
+	**
+	**	list <expr> [<expr>...]
+	*/
+	'_list': function (parts, data)
+	{
+		let s = [];
+
+		for (let i = 1; i < parts.length; i++)
+			s.push(Template.expand(parts[i], data, 'arg'));
+
+		return s;
+	},
+
+	/**
+	**	Writes the specified arguments to the console.
+	**
+	**	echo <expr> [<expr>...]
+	*/
+	'_echo': function (parts, data)
+	{
+		for (let i = 1; i < parts.length; i++)
+			console.log(Template.expand(parts[i], data, 'arg'));
+
+		return '';
+	},
+
+
+	/**
+	**	Constructs an associative array (dictionary) and returns it.
+	**
+	**	dict <name>: <expr> [<name>: <expr>...]
+	*/
+	'_dict': function (parts, data)
+	{
+		let s = { };
+		let key = null;
+
+		for (let i = 1; i < parts.length; i++)
+		{
+			let tmp = Template.expand(parts[i], data, 'arg');
+			if (tmp.substr(-1) == ':')
+			{
+				key = tmp.substr(0, tmp.length-1);
+				continue;
+			}
+
+			if (!key) continue;
+
+			s[key] = tmp;
+			key = null;
+		}
+
+		return s;
+	},
 };

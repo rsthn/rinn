@@ -102,7 +102,7 @@ let Template = module.exports =
 			{
 				data = Template.parseTemplate (data, sym_open, sym_close, true, 0);
 			}
-			else if (type == 'parse-string')
+			else if (type == 'parse')
 			{
 				data = Template.parseTemplate (data, sym_open, sym_close, false, 0);
 				type = 'base-string';
@@ -113,12 +113,16 @@ let Template = module.exports =
 					data = data[0].data;
 				}
 			}
-			else if (type == 'parse-string-and-merge')
+			else if (type == 'parse-trim-merge')
+			{
+				data = Template.parseTemplate (data.trim().split('\n').map(i => i.trim()).join("\n"), sym_open, sym_close, false, 0);
+			}
+			else if (type == 'parse-merge')
 			{
 				data = Template.parseTemplate (data, sym_open, sym_close, false, 0);
 			}
 
-			if (type == 'parse-string-and-merge')
+			if (type == 'parse-merge' || type == 'parse-trim-merge')
 			{
 				for (let i = 0; i < data.length; i++)
 				{
@@ -155,13 +159,13 @@ let Template = module.exports =
 					{
 						state = 1; count = 1;
 						flush = 'string';
-						nflush = 'parse-string-and-merge';
+						nflush = 'parse-merge';
 					}
 					else if (template[i] == sym_open && template[i+1] == '@')
 					{
 						state = 1; count = 1;
 						flush = 'string';
-						nflush = 'parse-string-and-merge';
+						nflush = 'parse-trim-merge';
 						i++;
 					}
 					else if (template[i] == sym_open && template[i+1] == ':')
@@ -241,26 +245,26 @@ let Template = module.exports =
 					else if (template[i] == sym_open && template[i+1] == '<')
 					{
 						if (str) flush = nflush;
-						state = 11; count = 1; nflush = 'parse-string-and-merge';
+						state = 11; count = 1; nflush = 'parse-merge';
 						break;
 					}
 					else if (template[i] == sym_open && template[i+1] == '@')
 					{
 						if (str) flush = nflush;
-						state = 11; count = 1; nflush = 'parse-string-and-merge';
+						state = 11; count = 1; nflush = 'parse-trim-merge';
 						i++;
 						break;
 					}
 					else if (template[i] == '"')
 					{
 						if (str) flush = nflush;
-						state = 14; count = 1; nflush = 'parse-string-and-merge';
+						state = 14; count = 1; nflush = 'parse-merge';
 						break;
 					}
 					else if (template[i] == '\'')
 					{
 						if (str) flush = nflush;
-						state = 15; count = 1; nflush = 'parse-string-and-merge';
+						state = 15; count = 1; nflush = 'parse-merge';
 						break;
 					}
 					else if (template[i] == sym_open && template[i+1] == ':')
@@ -273,7 +277,7 @@ let Template = module.exports =
 					else if (template[i] == sym_open)
 					{
 						if (str) emit (nflush, str);
-						state = 11; count = 1; str = ''; nflush = 'parse-string';
+						state = 11; count = 1; str = ''; nflush = 'parse';
 						str += template[i];
 						break;
 					}
@@ -303,7 +307,7 @@ let Template = module.exports =
 						{
 							state = 10;
 	
-							if (nflush == 'parse-string-and-merge')
+							if (nflush == 'parse-merge' || nflush == 'parse-trim-merge')
 								break;
 						}
 					}
@@ -392,7 +396,7 @@ let Template = module.exports =
 						{
 							state = 10;
 	
-							if (nflush == 'parse-string-and-merge')
+							if (nflush == 'parse-merge' || nflush == 'parse-trim-merge')
 								break;
 						}
 					}
@@ -417,7 +421,7 @@ let Template = module.exports =
 						{
 							state = 10;
 	
-							if (nflush == 'parse-string-and-merge')
+							if (nflush == 'parse-merge' || nflush == 'parse-trim-merge')
 								break;
 						}
 					}
@@ -492,6 +496,7 @@ let Template = module.exports =
 
 			let root = data;
 			let last = null;
+			let first = true;
 			let str = '';
 
 			for (let i = 0; i < parts.length && data != null; i++)
@@ -506,7 +511,7 @@ let Template = module.exports =
 
 					case 'template':
 						last = this.expand(parts[i].data, root, 'arg', 'template');
-						str += last;
+						str += typeof(last) == 'string' ? last : '';
 						break;
 
 					case 'base-string':
@@ -515,7 +520,7 @@ let Template = module.exports =
 						break;
 
 					case 'access':
-						if (!last || typeof(last) != 'object')
+						if (!last || typeof(last) == 'string')
 						{
 							if (!str) str = 'this';
 
@@ -535,8 +540,19 @@ let Template = module.exports =
 									break;
 							}
 
-							if (str != 'this')
-								data = data != null ? (str in data ? data[str] : null) : null;
+							if (str != 'this' && data != null)
+							{
+								let tmp = data;
+								data = (str in data) ? data[str] : null;
+
+								if (data === null && first)
+								{
+									if (str in Template.filters)
+										data = Template.filters[str] (null, null, tmp);
+								}
+
+								first = false;
+							}
 						}
 						else
 							data = last;
@@ -689,6 +705,16 @@ let Template = module.exports =
 	{
 		template = Template.parse(template);
 		return Template.expand(template, data ? data : { }, mode);
+	},
+
+	/**
+	**	Registers an expression filter.
+	**
+	**	>> object register (string name, function filter);
+	*/
+	register: function (name, filter)
+	{
+		Template.filters[name] = filter;
 	}
 };
 
@@ -736,7 +762,7 @@ Template.filters =
 	*/
 	'json': function (args)
 	{
-		return JSON.stringify(args[1], null, 4);
+		return JSON.stringify(args[1]);
 	},
 
 	/**
@@ -1075,9 +1101,12 @@ Template.filters =
 	*/
 	'_echo': function (parts, data)
 	{
-		for (let i = 1; i < parts.length; i++)
-			console.log(Template.expand(parts[i], data, 'arg'));
+		let s = '';
 
+		for (let i = 1; i < parts.length; i++)
+			s += Template.expand(parts[i], data, 'arg');
+
+		console.log(s);
 		return '';
 	},
 

@@ -26,13 +26,18 @@ let Rin = require('./alpha');
 **	Immediate Reparse:				[<....] [@....] "..." '...'		Reparses the contents as if parseTemplate() was called again.
 **	Immediate Output:				[:...]							Takes the contents and outputs exactly as-is without format and optionally surrounded by the
 **																	sym-open and sym-close symbols when the first character is not '<', sym_open or space.
-**	Filtered Output:				[filterName ... <expr> ...]		Runs a filter call, 'expr' can be any of the allowed formats shown here (nested if desired),
-**																	filterName should map to one of the available filter functions in the Rin.Template.filters map,
-**																	each of which have their own parameters.
+**	Filtered Output:				[functionName ... <expr> ...]	Runs a function call, 'expr' can be any of the allowed formats shown here (nested if desired),
+**																	functionName should map to one of the available expression functions registered in the
+**																	Rin.Template.functions map, each of which have their own parameters.
 */
 
 let Template = module.exports =
 {
+	/*
+	**	Strict mode flag. When set, any undefined expression function will trigger an exception.
+	*/
+	strict: false,
+
 	/**
 	**	Parses a template and returns the compiled 'parts' structure to be used by the 'expand' method.
 	**
@@ -511,7 +516,7 @@ let Template = module.exports =
 
 					case 'template':
 						last = this.expand(parts[i].data, root, 'arg', 'template');
-						str += typeof(last) == 'string' ? last : '';
+						str += typeof(last) != 'object' ? last : '';
 						break;
 
 					case 'base-string':
@@ -520,7 +525,7 @@ let Template = module.exports =
 						break;
 
 					case 'access':
-						if (!last || typeof(last) == 'string')
+						if (!last || typeof(last) != 'object')
 						{
 							if (!str) str = 'this';
 
@@ -547,8 +552,8 @@ let Template = module.exports =
 
 								if (data === null && first)
 								{
-									if (str in Template.filters)
-										data = Template.filters[str] (null, null, tmp);
+									if (str in Template.functions)
+										data = Template.functions[str] (null, null, tmp);
 								}
 
 								first = false;
@@ -579,7 +584,28 @@ let Template = module.exports =
 			}
 
 			if (str != 'this')
-				data = data != null ? (str in data ? data[str] : null) : null;
+			{
+				let failed = false;
+
+				if (data != null)
+				{
+					if (!(str in data))
+					{
+						failed = true;
+						data = null;
+					}
+					else
+						data = data[str];
+				}
+				else
+					failed = true;
+
+				if (failed && parts.length == 1)
+				{
+					if (Template.strict == true)
+						throw new Error ('Expression function `'+str+'` not found.');
+				}
+			}
 
 			if (typeof(data) == 'string')
 			{
@@ -600,19 +626,24 @@ let Template = module.exports =
 
 			args.push(Template.expand(parts[0], data, 'text', 'base-string'));
 
-			if ('_'+args[0] in Template.filters)
+			if ('_'+args[0] in Template.functions)
 				args[0] = '_'+args[0];
 
-			if (!(args[0] in Template.filters))
+			if (!(args[0] in Template.functions))
+			{
+				if (Template.strict == true)
+					throw new Error ('Expression function `'+args[0]+'` not found.');
+
 				return `(Unknown: ${args[0]})`;
+			}
 
 			if (args[0][0] == '_')
-				return Template.filters[args[0]] (parts, data);
+				return Template.functions[args[0]] (parts, data);
 
 			for (let i = 1; i < parts.length; i++)
 				args.push(Template.expand(parts[i], data, 'arg', 'base-string'));
 
-			s.push(Template.filters[args[0]] (args, parts, data));
+			s.push(Template.functions[args[0]] (args, parts, data));
 		}
 
 		// Template mode.
@@ -627,7 +658,7 @@ let Template = module.exports =
 				{
 					let name = parts[0][0].data;
 
-					if (name in Template.filters || '_'+name in Template.filters)
+					if (name in Template.functions || '_'+name in Template.functions)
 						return Template.expand(parts, data, ret, 'fn');
 				}
 	
@@ -708,32 +739,44 @@ let Template = module.exports =
 	},
 
 	/**
-	**	Registers an expression filter.
+	**	Registers an expression function.
 	**
-	**	>> object register (string name, function filter);
+	**	>> object register (string name, function fn);
 	*/
-	register: function (name, filter)
+	register: function (name, fn)
 	{
-		Template.filters[name] = filter;
+		Template.functions[name] = fn;
 	}
 };
 
 
 /**
-**	Template filters, functions that are used to format data. Each function takes three parameters (args, parts and data). By default the filter arguments
-**	are expanded and passed via 'args' for convenience, however if the filter name starts with '_' the 'args' parameter will be skipped and only (parts, data)
+**	Template functions, functions that are used to format data. Each function takes three parameters (args, parts and data). By default the function arguments
+**	are expanded and passed via 'args' for convenience, however if the function name starts with '_' the 'args' parameter will be skipped and only (parts, data)
 **	will be available, each 'part' must be expanded manually by calling Template.expand.
 */
 
-Template.filters =
+Template.functions =
 {
 	/**
-	**	Expression filters.
+	**	Expression functions.
 	*/
-	'not': function(args) { return !args[1]; },
-	'notnull': function(args) { return !!args[1]; },
-	'null': function(args) { return !args[1]; },
+	'null': function(args) { return null; },
+	'true': function(args) { return true; },
+	'false': function(args) { return false; },
+
+	'len': function(args) { return args[1].toString().length; },
+
 	'int': function(args) { return ~~args[1]; },
+	'str': function(args) { return args[1].toString(); },
+	'float': function(args) { return parseFloat(args[1]); },
+	'chr': function(args) { return String.fromCharCode(args[1]); },
+	'ord': function(args) { return args[1].toString().charCodeAt(0); },
+
+	'not': function(args) { return !args[1]; },
+	'neg': function(args) { return -args[1]; },
+	'abs': function(args) { return Math.abs(args[1]); },
+
 	'eq': function(args) { return args[1] == args[2]; },
 	'ne': function(args) { return args[1] != args[2]; },
 	'lt': function(args) { return args[1] < args[2]; },
@@ -742,10 +785,10 @@ Template.filters =
 	'ge': function(args) { return args[1] >= args[2]; },
 	'and': function(args) { for (let i = 1; i < args.length; i++) if (!args[i]) return false; return true; },
 	'or': function(args) { for (let i = 1; i < args.length; i++) if (~~args[i]) return true; return false; },
-	'char': function(args) { return String.fromCharCode(args[1]); },
-	'len': function(args) { return args[1].toString().length; },
 
-	'neg': function(args) { return -args[1]; },
+	'isnotnull': function(args) { return !!args[1]; },
+	'isnull': function(args) { return !args[1]; },
+
 	'*': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x *= args[i]; return x; },
 	'mul': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x *= args[i]; return x; },
 	'/': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x /= args[i]; return x; },
@@ -969,7 +1012,7 @@ Template.filters =
 	},
 
 	/**
-	**	Returns the valueA if the expression is true otherwise valueB, this is a short version of the 'if' filter with the
+	**	Returns the valueA if the expression is true otherwise valueB, this is a short version of the 'if' function with the
 	**	difference that the result is 'obj' instead of text.
 	**
 	**	? <expr> <valueA> [<valueB>]
@@ -986,7 +1029,7 @@ Template.filters =
 	},
 
 	/**
-	**	Returns the value if the expression is true, supports 'elif' and 'else' as well. The result of this filter is always text.
+	**	Returns the value if the expression is true, supports 'elif' and 'else' as well. The result of this function is always text.
 	**
 	**	if <expr> <value> [elif <expr> <value>] [else <value>]
 	*/
@@ -1080,21 +1123,6 @@ Template.filters =
 	},
 
 	/**
-	**	Constructs a list from the given arguments and returns it.
-	**
-	**	list <expr> [<expr>...]
-	*/
-	'_list': function (parts, data)
-	{
-		let s = [];
-
-		for (let i = 1; i < parts.length; i++)
-			s.push(Template.expand(parts[i], data, 'arg'));
-
-		return s;
-	},
-
-	/**
 	**	Writes the specified arguments to the console.
 	**
 	**	echo <expr> [<expr>...]
@@ -1110,13 +1138,27 @@ Template.filters =
 		return '';
 	},
 
+	/**
+	**	Constructs a list from the given arguments and returns it.
+	**
+	**	# <expr> [<expr>...]
+	*/
+	'_#': function (parts, data)
+	{
+		let s = [];
+
+		for (let i = 1; i < parts.length; i++)
+			s.push(Template.expand(parts[i], data, 'arg'));
+
+		return s;
+	},
 
 	/**
 	**	Constructs an associative array (dictionary) and returns it.
 	**
-	**	dict <name>: <expr> [<name>: <expr>...]
+	**	& <name>: <expr> [<name>: <expr>...]
 	*/
-	'_dict': function (parts, data)
+	'_&': function (parts, data)
 	{
 		let s = { };
 		let key = null;

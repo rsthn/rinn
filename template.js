@@ -126,8 +126,12 @@ let Template = module.exports =
 			{
 				data = Template.parseTemplate (data, sym_open, sym_close, false, 0);
 			}
+			else if (type == 'parse-merge-alt')
+			{
+				data = Template.parseTemplate (data, '{', '}', false, 0);
+			}
 
-			if (type == 'parse-merge' || type == 'parse-trim-merge')
+			if (type == 'parse-merge' || type == 'parse-merge-alt' || type == 'parse-trim-merge')
 			{
 				for (let i = 0; i < data.length; i++)
 				{
@@ -272,6 +276,12 @@ let Template = module.exports =
 						state = 15; count = 1; nflush = 'parse-merge';
 						break;
 					}
+					else if (template[i] == '`')
+					{
+						if (str) flush = nflush;
+						state = 16; count = 1; nflush = 'parse-merge-alt';
+						break;
+					}
 					else if (template[i] == sym_open && template[i+1] == ':')
 					{
 						if (str) flush = nflush;
@@ -312,7 +322,7 @@ let Template = module.exports =
 						{
 							state = 10;
 	
-							if (nflush == 'parse-merge' || nflush == 'parse-trim-merge')
+							if (nflush == 'parse-merge' || nflush == 'parse-merge-alt' || nflush == 'parse-trim-merge')
 								break;
 						}
 					}
@@ -401,7 +411,7 @@ let Template = module.exports =
 						{
 							state = 10;
 	
-							if (nflush == 'parse-merge' || nflush == 'parse-trim-merge')
+							if (nflush == 'parse-merge' || nflush == 'parse-merge-alt' || nflush == 'parse-trim-merge')
 								break;
 						}
 					}
@@ -426,7 +436,32 @@ let Template = module.exports =
 						{
 							state = 10;
 	
-							if (nflush == 'parse-merge' || nflush == 'parse-trim-merge')
+							if (nflush == 'parse-merge' || nflush == 'parse-merge-alt' || nflush == 'parse-trim-merge')
+								break;
+						}
+					}
+
+					str += template[i];
+					break;
+
+				case 16:
+					if (template[i] == '\0')
+					{
+						throw new Error ("Parse error: Unexpected end of template");
+					}
+	
+					if (template[i] == '`')
+					{
+						count--;
+	
+						if (count < 0)
+							throw new Error ("Parse error: Unmatched " + '`');
+
+						if (count == 0)
+						{
+							state = 10;
+	
+							if (nflush == 'parse-merge' || nflush == 'parse-merge-alt' || nflush == 'parse-trim-merge')
 								break;
 						}
 					}
@@ -966,31 +1001,17 @@ Template.functions =
 	},
 
 	/**
-	**	Constructs an array obtained by expanding the given template for each of the items in the list-expr, the optional varname
-	**	parameter (defaults to 'i') indicates the name of the variable that will contain the data of each item as the list-expr is
-	**	traversed. The default variables i# and i## (suffix '#' and '##') are introduced to denote the index/key and numeric index
+	**	Constructs an array obtained by expanding the given template for each of the items in the list-expr, the mandatory varname
+	**	parameter (namely 'i') indicates the name of the variable that will contain the data of each item as the list-expr is
+	**	traversed. Extra variables i# and i## (suffix '#' and '##') are introduced to denote the index/key and numeric index
 	**	of the current item respectively, note that the later will always have a numeric value.
 	**
-	**	each <list-expr> [<varname:i>] <template>
+	**	each <varname> <list-expr> <template>
 	*/
 	'_each': function (parts, data)
 	{
-		let var_name = 'i';
-		let list = Template.expand(parts[1], data, 'arg');
-
-		let k = 2;
-
-		try {
-
-			let tmp = Template.expand(parts[k], data, 'arg');
-
-			if (tmp && parts[k][0].type == 'identifier' && tmp.match(/^[A-Za-z0-9_-]+$/) != null) {
-				var_name = tmp;
-				k++;
-			}
-		}
-		catch(e) {
-		}
+		let var_name = Template.expand(parts[1], data, 'arg');
+		let list = Template.expand(parts[2], data, 'arg');
 
 		let s = [];
 		let j = 0;
@@ -1001,11 +1022,12 @@ Template.functions =
 			data[var_name + '##'] = j++;
 			data[var_name + '#'] = i;
 
-			for (let k0 = k; k0 < parts.length; k0++)
+			for (let k0 = 3; k0 < parts.length; k0++)
 				s.push(Template.expand(parts[k0], data, 'text'));
 		}
 
 		delete data[var_name];
+		delete data[var_name + '##'];
 		delete data[var_name + '#'];
 
 		return s;

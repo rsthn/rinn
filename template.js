@@ -706,24 +706,51 @@ let Template = module.exports =
 		// Expand parts.
 		if (mode == 'base-string')
 		{
+			let index = -1;
+
 			for (let i of parts)
 			{
+				let tmp = null;
+				index++;
+
 				switch (i.type)
 				{
 					case 'template':
-						s.push(Template.expand(i.data, data, ret, 'template'));
+						tmp = Template.expand(i.data, data, ret, 'template');
 						break;
 
 					case 'string': case 'identifier':
-						s.push(i.data);
+						tmp = i.data;
 						break;
 
 					case 'base-string':
-						s.push(Template.expand(i.data, data, ret, 'base-string'));
+						tmp = Template.expand(i.data, data, ret, 'base-string');
 						break;
 				}
+
+				if (ret == 'void')
+					continue;
+
+				if (ret == 'last' && index != parts.length-1)
+					continue;
+
+				s.push(tmp);
 			}
 		}
+
+		// Return types for direct objects.
+		if (ret == 'obj') return s;
+
+		if (ret == 'last')
+		{
+			if (typeOf(s) == 'Rose\\Arry')
+				s = s[0];
+
+			return s;
+		}
+
+		// When the output is not really needed.
+		if (ret == 'void') return null;
 
 		// Return as argument ('object' if only one, or string if more than one), that is, the first item in the result.
 		if (ret == 'arg')
@@ -739,7 +766,7 @@ let Template = module.exports =
 			return s;
 		}
 
-		if (ret != 'obj' && Rin.typeOf(s) == 'array')
+		if (ret == 'text' && Rin.typeOf(s) == 'array')
 		{
 			let f = (e => e != null && typeof(e) == 'object' ? ('map' in e ? e.map(f).join('') : ('join' in e ? e.join('') : e.toString())) : e);
 			s = s.map(f).join('');
@@ -1176,6 +1203,21 @@ Template.functions =
 	},
 
 	/**
+	**	Constructs a non-expanded list from the given arguments and returns it.
+	**
+	**	## <expr> [<expr>...]
+	*/
+	'_##': function (parts, data)
+	{
+		let s = [];
+
+		for (let i = 1; i < parts.length; i++)
+			s.push(parts[i]);
+
+		return s;
+	},
+
+	/**
 	**	Constructs an associative array (dictionary) and returns it.
 	**
 	**	& <name>: <expr> [<name>: <expr>...]
@@ -1183,21 +1225,35 @@ Template.functions =
 	'_&': function (parts, data)
 	{
 		let s = { };
-		let key = null;
 
-		for (let i = 1; i < parts.length; i++)
+		for (let i = 1; i < parts.length; i += 2)
 		{
-			let tmp = Template.expand(parts[i], data, 'arg');
-			if (tmp.substr(-1) == ':')
-			{
-				key = tmp.substr(0, tmp.length-1);
-				continue;
-			}
+			let key = Template.expand(parts[i], data, 'arg');
+			if (key.substr(-1) == ':')
+				key = key.substr(0, key.length-1);
 
-			if (!key) continue;
+			s[key] = Template.expand(parts[i+1], data, 'arg');
+		}
 
-			s[key] = tmp;
-			key = null;
+		return s;
+	},
+
+	/**
+	**	Constructs a non-expanded associative array (dictionary) and returns it.
+	**
+	**	&& <name>: <expr> [<name>: <expr>...]
+	*/
+	'_&&': function (parts, data)
+	{
+		let s = { };
+
+		for (let i = 1; i < parts.length; i += 2)
+		{
+			let key = Template.expand(parts[i], data, 'arg');
+			if (key.substr(-1) == ':')
+				key = key.substr(0, key.length-1);
+
+			s[key] = parts[i+1];
 		}
 
 		return s;

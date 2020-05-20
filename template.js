@@ -654,6 +654,92 @@ let Template = module.exports =
 			s.push(data);
 		}
 
+		// Expand variable parts and returns a reference to it.
+		if (ret == 'varref')
+		{
+			let root = data;
+			let last = null;
+			let first = true;
+			let str = '';
+
+			for (let i = 0; i < parts.length && data != null; i++)
+			{
+				switch (parts[i].type)
+				{
+					case 'identifier':
+					case 'string':
+						str += parts[i].data;
+						last = null;
+						break;
+
+					case 'template':
+						last = this.expand(parts[i].data, root, 'arg', 'template');
+						str += typeof(last) != 'object' ? last : '';
+						break;
+
+					case 'base-string':
+						str += this.expand(parts[i].data, root, 'arg', 'base-string');
+						last = null;
+						break;
+
+					case 'access':
+						if (!last || typeof(last) != 'object')
+						{
+							if (!str) str = 'this';
+
+							while (true)
+							{
+								if (str[0] == '!')
+								{
+									str = str.substr(1);
+								}
+								else if (str[0] == '$')
+								{
+									str = str.substr(1);
+								}
+								else
+									break;
+							}
+
+							if (str != 'this' && data != null)
+							{
+								let tmp = data;
+								data = (str in data) ? data[str] : null;
+
+								if (data === null && first)
+								{
+									if (str in Template.functions)
+										data = Template.functions[str] (null, null, tmp);
+								}
+
+								first = false;
+							}
+						}
+						else
+							data = last;
+
+						str = '';
+						break;
+				}
+			}
+
+			while (str != '')
+			{
+				if (str[0] == '!')
+				{
+					str = str.substr(1);
+				}
+				else if (str[0] == '$')
+				{
+					str = str.substr(1);
+				}
+				else
+					break;
+			}
+
+			return str != 'this' ? [data, str] : null;
+		}
+
 		// Expand function parts.
 		if (mode == 'fn')
 		{
@@ -877,6 +963,13 @@ Template.functions =
 	*/
 	'set': function (args, parts, data)
 	{
+		if (parts[1].length > 1)
+		{
+			let ref = Template.expand(parts[1], data, 'varref');
+			if (ref != null) ref[0][ref[1]] = args[2];
+			return '';
+		}
+	
 		data[args[1]] = args[2];
 		return '';
 	},

@@ -1351,4 +1351,65 @@ Template.functions =
 
 		return s;
 	},
+
+	/**
+	**	Returns true if the specified map has all the specified keys. If it fails the global variable `err` will contain an error message.
+	**
+	**	has <expr> <name> [<name>...]
+	*/
+	'has': function (args, parts, data)
+	{
+		let value = args[1];
+
+		if (typeof(value) != 'object')
+		{
+			data.err = 'Argument is not a Map';
+			return false;
+		}
+
+		let s = '';
+
+		for (let i = 2; i < args.length; i++)
+		{
+			if (!(args[i] in value))
+				s += ', '+args[i];
+		}
+
+		if (s != '')
+		{
+			data.err = s.substr(1);
+			return false;
+		}
+
+		return true;
+	},
+
+	/**
+	**	Transforms each value of the array to something else (evaluating the template). Just as in 'each', the i# and i## variables be available.
+	**
+	**	map <varname> <list-expr> <template>
+	*/
+	'_map': function (parts, data)
+	{
+		let var_name = Template.expand(parts[1], data, 'arg');
+		let list = Template.expand(parts[2], data, 'arg');
+
+		let s = [];
+		let j = 0;
+
+		for (let i in list)
+		{
+			data[var_name] = list[i];
+			data[var_name + '##'] = j++;
+			data[var_name + '#'] = i;
+
+			list[i] = Template.expand(parts[3], data, 'arg');
+		}
+
+		delete data[var_name];
+		delete data[var_name + '##'];
+		delete data[var_name + '#'];
+
+		return s;
+	}
 };

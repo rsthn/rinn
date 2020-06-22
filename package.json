@@ -1,12 +1,17 @@
 {
     "name": "@rsthn/rin",
-    "version": "2.0.12",
+    "version": "2.0.13",
     "description": "Rin Library",
     "main": "main.js",
+    "exports": {
+        ".": {
+            "require": "./main.js",
+            "default": "./main.mjs"
+        }
+    },
     "scripts": {
         "test": "echo Ok",
-        "build": "browserify main-packed.js | uglifyjs > dist/rin.js",
-        "vup": "node ./scripts/version-up.js"
+        "deploy": "node ./scripts/deploy.js"
     },
     "repository": {
         "type": "git",
@@ -20,15 +25,12 @@
     "homepage": "https://github.com/rsthn/rin#readme",
     "files": [
         "*.js",
+        "*.mjs",
         "LICENSE",
         "README.md"
     ],
     "dependencies": {
         "base-64": "^0.1.0",
         "node-fetch": "^2.6.0"
-    },
-    "devDependencies": {
-        "browserify": "^16.5.1",
-        "uglify-es": "^3.3.9"
     }
 }

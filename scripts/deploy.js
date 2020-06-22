@@ -42,7 +42,6 @@ run('svn-msg "Published: v'+package.version+'"')
 .then(r => run('git add .'))
 .then(r => run('git commit -F .svn\\messages.log'))
 .then(r => run('git push'))
-.then(r => run('svn-commit'))
 
 .then(() => {
 	console.log();

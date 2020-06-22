@@ -23,7 +23,7 @@ Rin.Event = require('./event');
 Rin.EventDispatcher = require('./event-dispatcher');
 
 Rin.Model = require('./model');
-Rin.Model.List = require('./model-list');
+Rin.ModelList = require('./model-list');
 
 Rin.Schema = require('./schema');
 Rin.Flattenable = require('./flattenable');

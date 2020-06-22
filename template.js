@@ -1005,6 +1005,39 @@ Template.functions =
 	},
 
 	/**
+	**	Returns a sub-string of the given string.
+	**
+	**	substr <start> <count> <string>
+	**	substr <start> <string>
+	*/
+	'substr': function (args)
+	{
+		let s = args[args.length-1].toString();
+
+		let start = 0;
+		let count = null;
+
+		if (args.length == 4)
+		{
+			start = ~~(args[1]);
+			count = ~~(args[2]);
+		}
+		else
+		{
+			start = ~~(args[1]);
+			count = null;
+		}
+
+		if (start < 0) start += s.length;
+		if (count < 0) count += s.length;
+
+		if (count === null)
+			count = s.length - start;
+
+		return s.substr(start, count);
+	},
+
+	/**
 	**	Converts all new-line chars in the expression to <br/>, the expression can be a string or an array.
 	**
 	**	nl2br <expr>
@@ -1411,5 +1444,16 @@ Template.functions =
 		delete data[var_name + '#'];
 
 		return s;
+	},
+
+	/**
+	**	Expands the specified template string with the given data. The sym_open and sym_close will be '{' and '}' respectively.
+	**	If no data is provided, current data parameter will be used.
+	**
+	**	expand <template> <data>
+	*/
+	'expand': function (args, parts, data)
+	{
+		return Template.expand (Template.parseTemplate (args[1], '{', '}'), args.length == 3 ? args[2] : data);
 	}
 };

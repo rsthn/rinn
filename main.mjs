@@ -14,13 +14,24 @@
 **	USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-export const Rin = require('./alpha.js');
-export const Class = require('./class.js');
-export const Event = require('./event.js');
-export const EventDispatcher = require('./event-dispatcher.js');
-export const Model = require('./model.js');
-export const ModelList = require('./model-list.js');
-export const Schema = require('./schema.js');
-export const Flattenable = require('./flattenable.js');
-export const Collection = require('./collection.js');
-export const Template = require('./template.js');
+import _Rin from './alpha.js';
+import _Class from './class.js';
+import _Event from './event.js';
+import _EventDispatcher from './event-dispatcher.js';
+import _Model from './model.js';
+import _ModelList from './model-list.js';
+import _Schema from './schema.js';
+import _Flattenable from './flattenable.js';
+import _Collection from './collection.js';
+import _Template from './template.js';
+
+export const Rin = _Rin;
+export const Class = _Class;
+export const Event = _Event;
+export const EventDispatcher = _EventDispatcher;
+export const Model = _Model;
+export const ModelList = _ModelList;
+export const Schema = _Schema;
+export const Flattenable = _Flattenable;
+export const Collection = _Collection;
+export const Template = _Template;

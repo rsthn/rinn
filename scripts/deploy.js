@@ -42,8 +42,10 @@ run('svn-msg "Published: v'+package.version+'"')
 .then(r => run('git add .'))
 .then(r => run('git commit -F .svn\\messages.log'))
 .then(r => run('git push'))
+.then(r => run('git tag v' + package.version))
+.then(r => run('git push origin refs/tags/v'+package.version))
 
 .then(() => {
 	console.log();
-	console.log('\x1B[93m * Version increased to: '+package.version+'.\x1B[0m');
+	console.log('\x1B[93m * Published: '+package.version+'.\x1B[0m');
 });

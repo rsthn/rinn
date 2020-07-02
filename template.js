@@ -887,6 +887,16 @@ let Template = module.exports =
 	},
 
 	/**
+	**	Expands the template as 'arg' and returns the result.
+	**
+	**	>> object value (string parts, object data);
+	*/
+	value: function (parts, data=null)
+	{
+		return Rin.typeOf(parts) != 'array' ? parts : Template.expand(parts, data ? data : { }, 'arg');
+	},
+
+	/**
 	**	Registers an expression function.
 	**
 	**	>> object register (string name, function fn);
@@ -961,16 +971,18 @@ Template.functions =
 	**
 	**	set <var-name> <expr>
 	*/
-	'set': function (args, parts, data)
+	'_set': function (parts, data)
 	{
+		let value = Template.value(parts[2], data);
+
 		if (parts[1].length > 1)
 		{
 			let ref = Template.expand(parts[1], data, 'varref');
-			if (ref != null) ref[0][ref[1]] = args[2];
+			if (ref != null) ref[0][ref[1]] = value;
 			return '';
 		}
 	
-		data[args[1]] = args[2];
+		data[Template.value(parts[1], data)] = value;
 		return '';
 	},
 

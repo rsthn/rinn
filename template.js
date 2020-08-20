@@ -1216,6 +1216,19 @@ Template.functions =
 	},
 
 	/**
+	**	Returns the valueA if it is not null (or empty or zero), otherwise returns valueB.
+	**
+	**	?? <valueA> <valueB>
+	*/
+	'_??': function (parts, data)
+	{
+		let value = Template.expand(parts[1], data, 'arg');
+		if (value) return value;
+	
+		return Template.expand(parts[2], data, 'arg');
+	},
+
+	/**
 	**	Returns the value if the expression is true, supports 'elif' and 'else' as well. The result of this function is always text.
 	**
 	**	if <expr> <value> [elif <expr> <value>] [else <value>]

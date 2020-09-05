@@ -955,6 +955,9 @@ Template.functions =
 	'sum': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x -= -args[i]; return x; },
 	'-': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x -= args[i]; return x; },
 	'sub': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x -= args[i]; return x; },
+	'mod': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x %= args[i]; return x; },
+	'**': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x = Math.pow(x, args[i]); return x; },
+	'pow': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x = Math.pow(x, args[i]); return x; },
 
 	/**
 	**	Returns the JSON representation of the expression.
@@ -1120,7 +1123,7 @@ Template.functions =
 	*/
 	'join': function (args)
 	{
-		if (args[2] && Rin.typeof(args[2]) == 'array')
+		if (args[2] && Rin.typeOf(args[2]) == 'array')
 			return args[2].join(args[1]);
 
 		return '';
@@ -1443,16 +1446,19 @@ Template.functions =
 	},
 
 	/**
-	**	Transforms each value of the array to something else (evaluating the template). Just as in 'each', the i# and i## variables be available.
+	**	Returns a new array/map contaning the transformed values of the array/map (evaluating the template). And just as in 'each', the i# and i## variables be available.
 	**
 	**	map <varname> <list-expr> <template>
 	*/
 	'_map': function (parts, data)
 	{
 		let var_name = Template.expand(parts[1], data, 'arg');
-		let list = Template.expand(parts[2], data, 'arg');
 
-		let s = [];
+		let list = Template.expand(parts[2], data, 'arg');
+		if (!list) return list;
+
+		let arrayMode = Rin.typeOf(list) == 'array' ? true : false;
+		let output = arrayMode ? [] : {};
 		let j = 0;
 
 		for (let i in list)
@@ -1461,14 +1467,55 @@ Template.functions =
 			data[var_name + '##'] = j++;
 			data[var_name + '#'] = i;
 
-			list[i] = Template.expand(parts[3], data, 'arg');
+			if (arrayMode)
+				output.push(Template.expand(parts[3], data, 'arg'));
+			else
+				output[i] = Template.expand(parts[3], data, 'arg');
 		}
 
 		delete data[var_name];
 		delete data[var_name + '##'];
 		delete data[var_name + '#'];
 
-		return s;
+		return output;
+	},
+
+	/**
+	**	Returns a new array/map contaning the elements where the template evaluates to non-zero. Just as in 'each', the i# and i## variables be available.
+	**
+	**	filter <varname> <list-expr> <template>
+	*/
+	'_filter': function (parts, data)
+	{
+		let var_name = Template.expand(parts[1], data, 'arg');
+
+		let list = Template.expand(parts[2], data, 'arg');
+		if (!list) return list;
+
+		let arrayMode = Rin.typeOf(list) == 'array' ? true : false;
+		let output = arrayMode ? [] : {};
+		let j = 0;
+
+		for (let i in list)
+		{
+			data[var_name] = list[i];
+			data[var_name + '##'] = j++;
+			data[var_name + '#'] = i;
+
+			if (~~Template.expand(parts[3], data, 'arg'))
+			{
+				if (arrayMode)
+					output.push(list[i]);
+				else
+					output[i] = list[i];
+			}
+		}
+
+		delete data[var_name];
+		delete data[var_name + '##'];
+		delete data[var_name + '#'];
+
+		return output;
 	},
 
 	/**
@@ -1480,5 +1527,25 @@ Template.functions =
 	'expand': function (args, parts, data)
 	{
 		return Template.expand (Template.parseTemplate (args[1], '{', '}'), args.length == 3 ? args[2] : data);
-	}
+	},
+
+	/**
+	**	Calls a function described by the given parameter.
+	**
+	**	call <function> <args...>
+	*/
+	'_call': function (parts, data)
+	{
+		let ref = Template.expand(parts[1], data, 'varref');
+
+		if (!ref || typeof(ref[0][ref[1]]) != 'function')
+			throw new Error ('Expression is not a function: ' + Template.expand(parts[1], data, 'obj').map(i => i == null ? '.' : i).join(''));
+
+		let args = [];
+
+		for (let i = 2; i < parts.length; i++)
+			args.push(Template.value(parts[i], data));
+
+		return ref[0][ref[1]] (...args);
+	},
 };

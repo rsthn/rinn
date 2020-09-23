@@ -22,7 +22,7 @@ let Rin = require('./alpha');
 **
 **	HTML Escaped Output:			[data.value]					Escapes HTML characters from the output.
 **	Raw Output:						[!data.value]					Does not escape HTML characters from the output (used to output direct HTML).
-**	Double-Quoted Escaped Output:	[$data.value]					Escapes HTML characters and surrounds with double quotes.
+**	Double-Quoted Escaped Output:	[data.value]					Escapes HTML characters and surrounds with double quotes.
 **	Immediate Reparse:				[<....] [@....] "..." '...'		Reparses the contents as if parseTemplate() was called again.
 **	Immediate Output:				[:...]							Takes the contents and outputs exactly as-is without format and optionally surrounded by the
 **																	sym-open and sym-close symbols when the first character is not '<', sym_open or space.
@@ -924,7 +924,6 @@ Template.functions =
 	'false': function(args) { return false; },
 
 	'len': function(args) { return args[1].toString().length; },
-
 	'int': function(args) { return ~~args[1]; },
 	'str': function(args) { return args[1].toString(); },
 	'float': function(args) { return parseFloat(args[1]); },
@@ -1050,6 +1049,16 @@ Template.functions =
 			count = s.length - start;
 
 		return s.substr(start, count);
+	},
+
+	/**
+	**	Replaces a matching string with the given replacement string in a given text.
+	**
+	**	replace <search> <replacement> <text>
+	*/
+	'replace': function (args)
+	{
+		return args[3].split(args[1]).join(args[2]);
 	},
 
 	/**
@@ -1190,8 +1199,7 @@ Template.functions =
 			data[var_name + '##'] = j++;
 			data[var_name + '#'] = i;
 
-			for (let k0 = 3; k0 < parts.length; k0++)
-				s.push(Template.expand(parts[k0], data, 'text'));
+			s.push(Template.expand(parts[3], data, 'text'));
 		}
 
 		delete data[var_name];
@@ -1270,59 +1278,224 @@ Template.functions =
 	},
 
 	/**
-	**	Repeats the specified template for a number of times.
+	**	Exits the current inner most loop.
 	**
-	**	repeat [<from>] <count> [<varname:i>] <template>
+	**	break
 	*/
-	'repeat': function (args, parts, data)
+	'_break': function (parts, data)
 	{
-		let var_name = 'i';
-		let count = ~~args[1];
-		let from = 0;
-
-		let k = 2;
-
-		if (args[k] && args[k].match(/^[0-9]+$/) != null)
-		{
-			from = count;
-			count = from + ~~args[k++];
-		}
-
-		if (args[k] && parts[k][0].type == 'identifier' && args[k].match(/^[A-Za-z0-9_-]+$/) != null)
-			var_name = args[k++];
-
-		let s = [];
-
-		for (let i = from; i < count; i++)
-		{
-			data[var_name] = i;
-
-			for (let j = k; j < parts.length; j++)
-				s.push(Template.expand(parts[j], data, 'text'));
-		}
-
-		delete data[var_name];
-
-		return s;
+		throw new Error('EXC_BREAK');
 	},
 
 	/**
-	**	Loads the contents of the expression (map or array) in the global data map, fields/indices in the map/array will
-	**	therefore be directly accessible afterwards.
+	**	Skips execution and continues the next cycle of the current inner most loop.
 	**
-	**	load <expr>
+	**	continue
 	*/
-	'_load': function (parts, data)
+	'_continue': function (parts, data)
 	{
-		let obj = Template.expand(parts[1], data, 'arg');
+		throw new Error('EXC_CONTINUE');
+	},
 
-		if (typeof(obj) != 'object')
-			return '';
+	/**
+	**	Constructs an array with the results of repeating the specified template for a number of times.
+	**
+	**	repeat <varname:i> [from <number>] [to <number>] [count <number>] [step <number>] <template>
+	*/
+	'_repeat': function (parts, data)
+	{
+		if (parts.length < 3 || (parts.length & 1) != 1)
+			return '(`repeat`: Wrong number of parameters)';
 
-		for (let i in obj)
-			data[i] = obj[i];
+		let var_name = Template.value(parts[1], data);
+		let count = null;
+		let from = 0, to = null;
+		let step = null;
 
-		return '';
+		for (let i = 2; i < parts.length-1; i+=2)
+		{
+			let value = Template.value(parts[i], data);
+
+			switch (value.toLowerCase())
+			{
+				case 'from':
+					from = parseFloat(Template.value(parts[i+1], data));
+					break;
+
+				case 'to':
+					to = parseFloat(Template.value(parts[i+1], data));
+					break;
+
+				case 'count':
+					count = parseFloat(Template.value(parts[i+1], data));
+					break;
+
+				case 'step':
+					step = parseFloat(Template.value(parts[i+1], data));
+					break;
+			}
+		}
+
+		let tpl = parts[parts.length-1];
+		let arr = [];
+
+		if (to !== null)
+		{
+			if (step === null)
+				step = from > to ? -1 : 1;
+
+			if (step < 0)
+			{
+				for (let i = from; i >= to; i += step)
+				{
+					try {
+						data[var_name] = i;
+						arr.push(Template.value(tpl, data));
+					} catch (e) {
+						let name = e.message;
+						if (name == 'EXC_BREAK') break;
+						if (name == 'EXC_CONTINUE') continue;
+						throw e;
+					}
+				}
+			}
+			else
+			{
+				for (let i = from; i <= to; i += step)
+				{
+					try {
+						data[var_name] = i;
+						arr.push(Template.value(tpl, data));
+					} catch (e) {
+						let name = e.message;
+						if (name == 'EXC_BREAK') break;
+						if (name == 'EXC_CONTINUE') continue;
+						throw e;
+					}
+				}
+			}
+		}
+		else if (count !== null)
+		{
+			if (step === null)
+				step = 1;
+
+			for (let i = from; count > 0; count--, i += step)
+			{
+				try {
+					data[var_name] = i;
+					arr.push(Template.value(tpl, data));
+				} catch (e) {
+					let name = e.message;
+					if (name == 'EXC_BREAK') break;
+					if (name == 'EXC_CONTINUE') continue;
+					throw e;
+				}
+			}
+		}
+
+		delete data[var_name];
+		return arr;
+	},
+
+	/**
+	**	Repeats the specified template for a number of times.
+	**
+	**	for <varname:i> [from <number>] [to <number>] [count <number>] [step <number>] <template>
+	*/
+	'_for': function (parts, data)
+	{
+		if (parts.length < 3 || (parts.length & 1) != 1)
+			return '(`for`: Wrong number of parameters)';
+
+		let var_name = Template.value(parts[1], data);
+		let count = null;
+		let from = 0; to = null;
+		let step = null;
+
+		for (let i = 2; i < parts.length-1; i+=2)
+		{
+			value = Template.value(parts[i], data);
+
+			switch (value.toLowerCase())
+			{
+				case 'from':
+					from = parseFloat(Template.value(parts[i+1], data));
+					break;
+
+				case 'to':
+					to = parseFloat(Template.value(parts[i+1], data));
+					break;
+
+				case 'count':
+					count = parseFloat(Template.value(parts[i+1], data));
+					break;
+
+				case 'step':
+					step = parseFloat(Template.value(parts[i+1], data));
+					break;
+			}
+		}
+
+		let tpl = parts[parts.length-1];
+
+		if (to !== null)
+		{
+			if (step === null)
+				step = from > to ? -1 : 1;
+
+			if (step < 0)
+			{
+				for (let i = from; i >= to; i += step)
+				{
+					try {
+						data[var_name] = i;
+						Template.value(tpl, data);
+					} catch (e) {
+						let name = e.message;
+						if (name == 'EXC_BREAK') break;
+						if (name == 'EXC_CONTINUE') continue;
+						throw e;
+					}
+				}
+			}
+			else
+			{
+				for (let i = from; i <= to; i += step)
+				{
+					try {
+						data[var_name] = i;
+						Template.value(tpl, data);
+					} catch (e) {
+						let name = e.message;
+						if (name == 'EXC_BREAK') break;
+						if (name == 'EXC_CONTINUE') continue;
+						throw e;
+					}
+				}
+			}
+		}
+		else if (count !== null)
+		{
+			if (step === null)
+				step = 1;
+
+			for (let i = from; count > 0; count--, i += step)
+			{
+				try {
+					data[var_name] = i;
+					Template.value(tpl, data);
+				} catch (e) {
+					let name = e.message;
+					if (name == 'EXC_BREAK') break;
+					if (name == 'EXC_CONTINUE') continue;
+					throw e;
+				}
+			}
+		}
+
+		delete data[var_name];
+		return null;
 	},
 
 	/**
@@ -1414,11 +1587,11 @@ Template.functions =
 	},
 
 	/**
-	**	Returns true if the specified map has all the specified keys. If it fails the global variable `err` will contain an error message.
+	**	Returns true if the specified map contains all the specified keys. If it fails the global variable `err` will contain an error message.
 	**
-	**	has <expr> <name> [<name>...]
+	**	contains <expr> <name> [<name>...]
 	*/
-	'has': function (args, parts, data)
+	'contains': function (args, parts, data)
 	{
 		let value = args[1];
 
@@ -1443,6 +1616,21 @@ Template.functions =
 		}
 
 		return true;
+	},
+
+	/**
+	**	Returns true if the specified map has the specified key. Returns boolean.
+	**
+	**	has <name> <expr>
+	*/
+	'has': function (args, parts, data)
+	{
+		let value = args[2];
+
+		if (Rin.typeOf(value) != 'object')
+			return false;
+
+		return args[1] in value;
 	},
 
 	/**

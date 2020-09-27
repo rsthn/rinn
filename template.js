@@ -1193,6 +1193,8 @@ Template.functions =
 		let s = [];
 		let j = 0;
 
+		if (!list) return s;
+
 		for (let i in list)
 		{
 			data[var_name] = list[i];
@@ -1207,6 +1209,40 @@ Template.functions =
 		delete data[var_name + '#'];
 
 		return s;
+	},
+
+	/**
+	**	Expands the given template for each of the items in the list-expr, the mandatory varname parameter (namely 'i') indicates the name of the variable
+	**	that will contain the data of each item as the list-expr is traversed. Extra variables i# and i## (suffix '#' and '##') are introduced to denote
+	**	the index/key and numeric index of the current item respectively, note that the later will always have a numeric value.
+	**
+	**	Does not produce any output (returns null).
+	**
+	**	foreach <varname> <list-expr> <template>
+	*/
+	'_foreach': function (parts, data)
+	{
+		let var_name = Template.expand(parts[1], data, 'arg');
+		let list = Template.expand(parts[2], data, 'arg');
+
+		let j = 0;
+
+		if (!list) return null;
+
+		for (let i in list)
+		{
+			data[var_name] = list[i];
+			data[var_name + '##'] = j++;
+			data[var_name + '#'] = i;
+
+			Template.expand(parts[3], data, 'text');
+		}
+
+		delete data[var_name];
+		delete data[var_name + '##'];
+		delete data[var_name + '#'];
+
+		return null;
 	},
 
 	/**

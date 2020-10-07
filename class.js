@@ -21,7 +21,7 @@ let Rin = require('./alpha');
 **	support for calls to parent class methods.
 */
 
-module.exports = Class = function ()
+let Class = module.exports = function ()
 {
 };
 

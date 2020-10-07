@@ -479,7 +479,7 @@ let Template = module.exports =
 
 		if (!is_tpl)
 		{
-			i = 0;
+			let i = 0;
 			while (i < mparts.length)
 			{
 				if (mparts[i].type == 'string' && mparts[i].data == '')

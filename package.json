@@ -1,6 +1,6 @@
 {
     "name": "@rsthn/rin",
-    "version": "2.0.17",
+    "version": "2.0.18",
     "description": "Rin Library",
     "main": "main.js",
     "exports": {
@@ -11,7 +11,8 @@
     },
     "scripts": {
         "test": "echo Ok",
-        "deploy": "node ./scripts/deploy.js"
+        "deploy": "node ./scripts/deploy.js",
+        "build": "parcel build ./main.js -o rin.js --global rin"
     },
     "repository": {
         "type": "git",
@@ -23,6 +24,9 @@
         "url": "https://github.com/rsthn/rin/issues"
     },
     "homepage": "https://github.com/rsthn/rin#readme",
+    "browserslist": [
+        "since 2019-01"
+    ],
     "files": [
         "*.js",
         "*.mjs",

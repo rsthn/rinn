@@ -945,6 +945,7 @@ Template.functions =
 
 	'isnotnull': function(args) { return !!args[1]; },
 	'isnull': function(args) { return !args[1]; },
+	'typeof': function(args) { return Rin.typeOf(args[1]); },
 
 	'*': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x *= args[i]; return x; },
 	'mul': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x *= args[i]; return x; },

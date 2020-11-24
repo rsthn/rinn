@@ -1,6 +1,6 @@
 {
     "name": "@rsthn/rin",
-    "version": "2.0.18",
+    "version": "2.0.19",
     "description": "Rin Library",
     "main": "main.js",
     "exports": {
@@ -34,7 +34,7 @@
         "README.md"
     ],
     "dependencies": {
-        "base-64": "^0.1.0",
-        "node-fetch": "^2.6.0"
+        "base-64": "^1.0.0",
+        "node-fetch": "^2.6.1"
     }
 }

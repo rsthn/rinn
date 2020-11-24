@@ -28,6 +28,19 @@ Rin.invokeLater = function (fn)
 
 
 /**
+**	Waits for the specified amount of milliseconds. Returns a Promise.
+**
+**	>> Promise wait (int millis);
+*/
+Rin.wait = function (millis)
+{
+	return new Promise(function (resolve, reject) {
+		setTimeout (resolve, millis);
+	});
+};
+
+
+/**
 **	Returns the type of an element 'o', properly detects arrays and null types. The return string is always in lowercase.
 **
 **	>> string typeOf (any o);

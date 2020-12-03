@@ -44,6 +44,7 @@ run('svn-msg "Published: v'+package.version+'"')
 .then(r => run('git push'))
 .then(r => run('git tag v' + package.version))
 .then(r => run('git push origin refs/tags/v'+package.version))
+.then(r => run('npm publish'))
 
 .then(() => {
 	console.log();

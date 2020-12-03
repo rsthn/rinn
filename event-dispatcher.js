@@ -35,6 +35,11 @@ module.exports = Class.extend
 	listeners: null,
 
 	/**
+	**	Namespace for event dispatching. Defaults to null. Can be modified using setNamespace().
+	*/
+	namespace: null,
+
+	/**
 	**	Initializes the event dispatcher.
 	**
 	**	EventDispatcher __ctor ();
@@ -42,6 +47,17 @@ module.exports = Class.extend
 	__ctor: function ()
 	{
 		this.listeners = { };
+	},
+
+	/**
+	**	Sets the event dispatching namespace. Used to force all events dispatched to have the specified namespace.
+	**
+	**	EventDispatcher setNamespace (value: string);
+	*/
+	setNamespace: function (value)
+	{
+		this.namespace = value;
+		return this;
 	},
 
 	/**
@@ -219,6 +235,6 @@ module.exports = Class.extend
 	*/
 	dispatchEvent: function (eventName, eventArgs, cbHandler, cbContext)
 	{
-		return this.prepareEvent(eventName, eventArgs, cbHandler, cbContext).resume();
+		return this.prepareEvent(this.namespace ? this.namespace+':'+eventName: eventName, eventArgs, cbHandler, cbContext).resume();
 	}
 });

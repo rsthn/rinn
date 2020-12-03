@@ -558,6 +558,7 @@ let _Model = module.exports = EventDispatcher.extend
 	**
 	**	>> Model update (array fields);
 	**	>> Model update (string name);
+	**	>> Model update (bool forceModelChanged);
 	**	>> Model update ();
 	*/
 	update: function (fields, direct)
@@ -571,25 +572,22 @@ let _Model = module.exports = EventDispatcher.extend
 
 		this._level++;
 
-		if (fields && Rin.typeOf(fields) == "string")
+		if (fields && Rin.typeOf(fields) == 'string')
 		{
 			this._propertyEvent (fields, this.data[fields], this.data[fields], direct);
 		}
+		else if (fields && Rin.typeOf(fields) == 'array')
+		{
+			for (var i of fields)
+				this._propertyEvent (i, this.data[i], this.data[i], direct);
+		}
 		else
 		{
-			if (fields)
-			{
-				for (var i of fields)
-					this._propertyEvent (i, this.data[i], this.data[i], direct);
-			}
-			else
-			{
-				for (var i in this.data)
-					this._propertyEvent (i, this.data[i], this.data[i], direct);
-			}
+			for (var i in this.data)
+				this._propertyEvent (i, this.data[i], this.data[i], direct);
 		}
 
-		if (!--this._level && this.changedList.length && !this._silent)
+		if (!--this._level && !this._silent && (this.changedList.length != 0 || fields === true))
 			this.dispatchEvent ("modelChanged", { fields: this.changedList });
 
 		return this;

@@ -1,6 +1,6 @@
 {
     "name": "@rsthn/rin",
-    "version": "2.0.19",
+    "version": "2.0.20",
     "description": "Rin Library",
     "main": "main.js",
     "exports": {

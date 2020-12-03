@@ -221,11 +221,22 @@ Rin.arrayFind = function (arr, o, getObject)
 **	>> int indexOf (array container, T value)
 **	>> string indexOf (object container, T value)
 */
-Rin.indexOf = function (container, value)
+Rin.indexOf = function (container, value, forceArray=false)
 {
+	if (forceArray)
+	{
+		for (let i = 0; i < container.length; i++)
+		{
+			if (container[i] === value)
+				return i;
+		}
+	
+		return -1;
+	}
+
 	for (let i in container)
 	{
-		if (container[i] == value)
+		if (container[i] === value)
 			return i;
 	}
 

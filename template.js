@@ -904,6 +904,51 @@ let Template = module.exports =
 	register: function (name, fn)
 	{
 		Template.functions[name] = fn;
+	},
+
+	/**
+	**	Calls an expression function.
+	**
+	**	>> object call (string name, object args, object data);
+	*/
+	'call': function (name, args, data=null)
+	{
+		if (name in Template.functions)
+			return Template.functions[name] (args, null, data);
+
+		return null;
+	},
+
+	/**
+	**	Returns a map given a 'parts' array having values of the form "name: value" or ":name value".
+	**
+	**	>> Map getNamedValues (array parts, object data, int i=1, bool expanded=true);
+	*/
+	getNamedValues: function (parts, data, i=1, expanded=true)
+	{
+		let s = { };
+		let mode = 0;
+	
+		for (; i < parts.length; i += 2)
+		{
+			let key = Template.expand(parts[i], data, 'arg');
+
+			if (!mode) {
+				if (key.startsWith(':')) mode = 1; else mode = key.endsWith(':') ? 2 : 3;
+			}
+
+			if (mode == 1)
+				key = key.substr(1);
+			else if (mode == 2)
+				key = key.substr(0, key.length-1);
+
+			if (expanded)
+				s[key] = Template.expand(parts[i+1], data, 'arg');
+			else
+				s[key] = parts[i+1];
+		}
+
+		return s;
 	}
 };
 
@@ -1585,42 +1630,22 @@ Template.functions =
 	**	Constructs an associative array (dictionary) and returns it.
 	**
 	**	& <name>: <expr> [<name>: <expr>...]
+	**	& :<name> <expr> [:<name> <expr>...]
 	*/
 	'_&': function (parts, data)
 	{
-		let s = { };
-
-		for (let i = 1; i < parts.length; i += 2)
-		{
-			let key = Template.expand(parts[i], data, 'arg');
-			if (key.substr(-1) == ':')
-				key = key.substr(0, key.length-1);
-
-			s[key] = Template.expand(parts[i+1], data, 'arg');
-		}
-
-		return s;
+		return Template.getNamedValues (parts, data, 1, true);
 	},
 
 	/**
 	**	Constructs a non-expanded associative array (dictionary) and returns it.
 	**
 	**	&& <name>: <expr> [<name>: <expr>...]
+	**	&& :<name> <expr> [:<name> <expr>...]
 	*/
 	'_&&': function (parts, data)
 	{
-		let s = { };
-
-		for (let i = 1; i < parts.length; i += 2)
-		{
-			let key = Template.expand(parts[i], data, 'arg');
-			if (key.substr(-1) == ':')
-				key = key.substr(0, key.length-1);
-
-			s[key] = parts[i+1];
-		}
-
-		return s;
+		return Template.getNamedValues (parts, data, 1, false);
 	},
 
 	/**

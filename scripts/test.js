@@ -9,7 +9,9 @@ try {
 	console.log(
 		template.eval(`
 
-[join ' ' [map i [repeat i from 1 count 20 [if [lt [i] 4] [i] else [break]]  ] [* 2 [i]]]]
+A = [json [& name: 'A' last: 'B']]
+B = [json [& name 'A' last 'B']]
+C = [json [& :name 'A' :last 'B']]
 
 		`, data)
 	);

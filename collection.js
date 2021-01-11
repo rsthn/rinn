@@ -74,7 +74,7 @@ module.exports = Flattenable.extend
 	},
 
 	/*
-	**	Clears the contents of the collection.
+	**	Clears the contents of the collection (removes each item manually, onItemRemoved will be called).
 	*/
 	clear: function ()
 	{
@@ -155,6 +155,22 @@ module.exports = Flattenable.extend
 	},
 
 	/*
+	**	Returns the first item in the collection.
+	*/
+	first: function ()
+	{
+		return this.isEmpty() ? null : this.items[0];
+	},
+
+	/*
+	**	Returns the last item in the collection.
+	*/
+	last: function ()
+	{
+		return this.isEmpty() ? null : this.items[this.items.length-1];
+	},
+
+	/*
 	**	Adds an item to the collection, onBeforeItemAdded and onItemAdded will be triggered.
 	*/
 	add: function (item)
@@ -221,29 +237,31 @@ module.exports = Flattenable.extend
 	},
 
 	/*
-	**	Returns the item at the specified index, or null if not found.
+	**	Returns the item at the specified index, or null if not found. When `relative` is true, negative offsets are allowed, where -1 would refer to the last item.
 	*/
-	getAt: function (index, rel)
+	getAt: function (index, relative=false)
 	{
-		if (index < 0 && rel == true)
+		if (index < 0 && relative == true)
 			index += this.items.length;
 
 		return index >= 0 && index < this.items.length ? this.items[index] : null;
 	},
 
 	/*
-	**	Removes the item at the specified index.
+	**	Removes the item at the specified index. When `relative` is true, negative offsets are allowed, where -1 would refer to the last item.
 	*/
-	removeAt: function (index)
+	removeAt: function (index, relative=false)
 	{
+		if (index < 0 && relative == true)
+			index += this.items.length;
+
 		if (index < 0 || index >= this.items.length)
 			return this;
 
 		var item = this.items[index];
-
 		this.items.splice (index, 1);
-
 		this.onItemRemoved (item, index);
+
 		return this;
 	},
 

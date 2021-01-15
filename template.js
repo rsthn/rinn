@@ -979,17 +979,29 @@ Template.functions =
 	'neg': function(args) { return -args[1]; },
 	'abs': function(args) { return Math.abs(args[1]); },
 
+	'and': function(args) { for (let i = 1; i < args.length; i++) if (!args[i]) return false; return true; },
+	'or': function(args) { for (let i = 1; i < args.length; i++) if (~~args[i]) return true; return false; },
+
 	'eq': function(args) { return args[1] == args[2]; },
 	'ne': function(args) { return args[1] != args[2]; },
 	'lt': function(args) { return args[1] < args[2]; },
 	'le': function(args) { return args[1] <= args[2]; },
 	'gt': function(args) { return args[1] > args[2]; },
 	'ge': function(args) { return args[1] >= args[2]; },
-	'and': function(args) { for (let i = 1; i < args.length; i++) if (!args[i]) return false; return true; },
-	'or': function(args) { for (let i = 1; i < args.length; i++) if (~~args[i]) return true; return false; },
-
 	'isnotnull': function(args) { return !!args[1]; },
 	'isnull': function(args) { return !args[1]; },
+	'iszero': function(args) { return parseInt(args[1]) == 0; },
+
+	'eq?': function(args) { return args[1] == args[2]; },
+	'ne?': function(args) { return args[1] != args[2]; },
+	'lt?': function(args) { return args[1] < args[2]; },
+	'le?': function(args) { return args[1] <= args[2]; },
+	'gt?': function(args) { return args[1] > args[2]; },
+	'ge?': function(args) { return args[1] >= args[2]; },
+	'notnull?': function(args) { return !!args[1]; },
+	'null?': function(args) { return !args[1]; },
+	'zero?': function(args) { return parseInt(args[1]) == 0; },
+
 	'typeof': function(args) { return Rin.typeOf(args[1]); },
 
 	'*': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x *= args[i]; return x; },

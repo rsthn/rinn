@@ -155,11 +155,30 @@ module.exports = Flattenable.extend
 	},
 
 	/*
+	**	Returns the index of the specified item, or -1 if not found.
+	*/
+	indexOf: function (item)
+	{
+		return this.items.indexOf(item);
+	},
+
+	/*
+	**	Returns the item at the specified index, or null if not found. When `relative` is true, negative offsets are allowed such that -1 refers to the last item.
+	*/
+	getAt: function (index, relative=false)
+	{
+		if (index < 0 && relative == true)
+			index += this.items.length;
+
+		return index >= 0 && index < this.items.length ? this.items[index] : null;
+	},
+
+	/*
 	**	Returns the first item in the collection.
 	*/
 	first: function ()
 	{
-		return this.isEmpty() ? null : this.items[0];
+		return this.getAt(0);
 	},
 
 	/*
@@ -167,21 +186,7 @@ module.exports = Flattenable.extend
 	*/
 	last: function ()
 	{
-		return this.isEmpty() ? null : this.items[this.items.length-1];
-	},
-
-	/*
-	**	Adds an item to the collection, onBeforeItemAdded and onItemAdded will be triggered.
-	*/
-	add: function (item)
-	{
-		if (!item || !this.onBeforeItemAdded(item))
-			return this;
-
-		this.items.push (item);
-		this.onItemAdded (item);
-
-		return this;
+		return this.getAt(-1, true);
 	},
 
 	/*
@@ -216,39 +221,31 @@ module.exports = Flattenable.extend
 	},
 
 	/*
-	**	Traverses the given array and adds all items to the collection.
+	**	Adds an item to the start of the collection, onBeforeItemAdded and onItemAdded will be triggered.
 	*/
-	addItems: function (list)
+	unshift: function (item)
 	{
-		if (!list) return this;
-
-		for (var i = 0; i < list.length; i++)
-			this.add (list[i]);
-
-		return this;
+		return this.addAt(0, item);
 	},
 
 	/*
-	**	Returns the index of the specified item, or -1 if not found.
+	**	Adds an item to the end of the collection, onBeforeItemAdded and onItemAdded will be triggered.
 	*/
-	indexOf: function (item)
+	push: function (item)
 	{
-		return this.items.indexOf(item);
+		return this.addAt(this.items.length, item);
 	},
 
 	/*
-	**	Returns the item at the specified index, or null if not found. When `relative` is true, negative offsets are allowed, where -1 would refer to the last item.
+	**	Adds an item to the end of the collection, onBeforeItemAdded and onItemAdded will be triggered.
 	*/
-	getAt: function (index, relative=false)
+	add: function (item)
 	{
-		if (index < 0 && relative == true)
-			index += this.items.length;
-
-		return index >= 0 && index < this.items.length ? this.items[index] : null;
+		return this.push(item);
 	},
 
 	/*
-	**	Removes the item at the specified index. When `relative` is true, negative offsets are allowed, where -1 would refer to the last item.
+	**	Removes the item at the specified index. When `relative` is true, negative offsets are allowed such that -1 refers to the last item.
 	*/
 	removeAt: function (index, relative=false)
 	{
@@ -256,21 +253,37 @@ module.exports = Flattenable.extend
 			index += this.items.length;
 
 		if (index < 0 || index >= this.items.length)
-			return this;
+			return null;
 
 		var item = this.items[index];
 		this.items.splice (index, 1);
 		this.onItemRemoved (item, index);
 
-		return this;
+		return item;
 	},
 
 	/*
-	**	Removes the specified item.
+	**	Removes an item from the end of the collection.
+	*/
+	pop: function (item)
+	{
+		return this.removeAt(-1, true);
+	},
+
+	/*
+	**	Removes an item from the start of the collection.
+	*/
+	shift: function (item)
+	{
+		return this.removeAt(0);
+	},
+
+	/*
+	**	Removes the specified item from the collection.
 	*/
 	remove: function (item)
 	{
-		this.removeAt (this.indexOf(item));
+		return this.removeAt (this.indexOf(item));
 	},
 
 	/*

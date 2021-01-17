@@ -1027,24 +1027,49 @@ Template.functions =
 	},
 
 	/**
-	**	Sets a variable in the data context.
+	**	Sets one or more variables in the data context.
 	**
-	**	set <var-name> <expr>
+	**	set <var-name> <expr> [<var-name> <expr>]*
 	*/
 	'_set': function (parts, data)
 	{
-		let value = Template.value(parts[2], data);
-
-		if (parts[1].length > 1)
+		for (let i = 1; i+1 < parts.length; i += 2)
 		{
-			let ref = Template.expand(parts[1], data, 'varref');
-			if (ref != null) ref[0][ref[1]] = value;
-			return '';
+			let value = Template.value(parts[i+1], data);
+
+			if (parts[i].length > 1)
+			{
+				let ref = Template.expand(parts[i], data, 'varref');
+				if (ref != null) ref[0][ref[1]] = value;
+			}
+			else
+				data[Template.value(parts[i], data)] = value;
 		}
-	
-		data[Template.value(parts[1], data)] = value;
+
 		return '';
 	},
+
+	/**
+	**	Removes one or more variables from the data context.
+	**
+	**	unset <var-name> [<var-name>]*
+	*/
+	'_unset': function (parts, data)
+	{
+		for (let i = 1; i < parts.length; i++)
+		{
+			if (parts[i].length > 1)
+			{
+				let ref = Template.expand(parts[i], data, 'varref');
+				if (ref != null) delete ref[0][ref[1]];
+			}
+			else
+				delete data[Template.value(parts[i], data)];
+		}
+
+		return null;
+	},
+
 
 	/**
 	**	Returns the expression without white-space on the left or right. The expression can be a string or an array.
@@ -1487,6 +1512,25 @@ Template.functions =
 				}
 			}
 		}
+		else
+		{
+			if (step === null)
+				step = 1;
+	
+			for (let i = from; ; i += step)
+			{
+				try {
+					data[var_name] = i;
+					arr.push(Template.value(tpl, data));
+				}
+				catch (e) {
+					let name = e.message;
+					if (name == 'EXC_BREAK') break;
+					if (name == 'EXC_CONTINUE') continue;
+					throw e;
+				}
+			}
+		}
 
 		delete data[var_name];
 		return arr;
@@ -1587,8 +1631,55 @@ Template.functions =
 				}
 			}
 		}
+		else
+		{
+			if (step === null)
+				step = 1;
+	
+			for (let i = from; ; i += step)
+			{
+				try {
+					data[var_name] = i;
+					Template.value(tpl, data);
+				}
+				catch (e) {
+					let name = e.message;
+					if (name == 'EXC_BREAK') break;
+					if (name == 'EXC_CONTINUE') continue;
+					throw e;
+				}
+			}
+		}
 
 		delete data[var_name];
+		return null;
+	},
+
+	/**
+	**	Repeats the specified template infinitely until a "break" is found.
+	**
+	**	loop <template>
+	*/
+	'_loop': function (parts, data)
+	{
+		if (parts.length < 2)
+			return '(`loop`: Wrong number of parameters)';
+
+		let tpl = parts[1];
+
+		while (true)
+		{
+			try {
+				Template.value(tpl, data);
+			}
+			catch (e) {
+				let name = e.message;
+				if (name == 'EXC_BREAK') break;
+				if (name == 'EXC_CONTINUE') continue;
+				throw e;
+			}
+		}
+
 		return null;
 	},
 

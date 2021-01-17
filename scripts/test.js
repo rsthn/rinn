@@ -8,11 +8,8 @@ let data = {
 try {
 	console.log(
 		template.eval(`
-
-A = [json [& name: 'A' last: 'B']]
-B = [json [& name 'A' last 'B']]
-C = [json [& :name 'A' :last 'B']]
-
+[unset name]
+[name] [last]
 		`, data)
 	);
 }

@@ -295,3 +295,75 @@ Rin.deserialize = function (s)
 {
 	return JSON.parse(s);
 };
+
+
+/**
+**	Chains a new function to an existing one on some object, such that invoking the function on the object will cause
+**	both functions to run (order would be oldFunction then newFunction).
+**
+**	If the `conditional` flag is set to `true`, the second function will be run only if the first one returns non-false.
+**	Returns an object with a single method 'unhook' which will revert the changes to leave only the original function.
+**
+**	>> object{function unhook} hook (Object object, String functionName, function newFunction, bool conditional=false);
+*/
+Rin.hookAppend = function (object, functionName, newFunction, conditional=true)
+{
+	const oldFunction = object[functionName].bind(object);
+
+	if (conditional)
+	{
+		object[functionName] = (...args) => {
+			if (oldFunction (...args) !== false)
+				newFunction (...args);
+		};
+	}
+	else
+	{
+		object[functionName] = (...args) => {
+			oldFunction (...args);
+			newFunction (...args);
+		};
+	}
+
+	return { 
+		unhook: function() {
+			object[functionName] = oldFunction;
+		}
+	};
+};
+
+
+/**
+**	Chains a new function to an existing one on some object, such that invoking the function on the object will cause
+**	both functions to run (order would be oldFunction then newFunction).
+**
+**	If the `conditional` flag is set to `true`, the second function will be run only if the first one returns non-false.
+**	Returns an object with a single method 'unhook' which will revert the changes to leave only the original function.
+**
+**	>> object{function unhook} hook (Object object, String functionName, function newFunction, bool conditional=false);
+*/
+Rin.hookPrepend = function (object, functionName, newFunction, conditional=true)
+{
+	const oldFunction = object[functionName].bind(object);
+
+	if (conditional)
+	{
+		object[functionName] = (...args) => {
+			if (newFunction (...args) !== false)
+				oldFunction (...args);
+		};
+	}
+	else
+	{
+		object[functionName] = (...args) => {
+			newFunction (...args);
+			oldFunction (...args);
+		};
+	}
+
+	return { 
+		unhook: function() {
+			object[functionName] = oldFunction;
+		}
+	};
+};

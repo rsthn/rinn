@@ -314,14 +314,14 @@ Rin.hookAppend = function (object, functionName, newFunction, conditional=true)
 	{
 		object[functionName] = (...args) => {
 			if (oldFunction (...args) !== false)
-				newFunction (...args);
+				return newFunction (...args);
 		};
 	}
 	else
 	{
 		object[functionName] = (...args) => {
 			oldFunction (...args);
-			newFunction (...args);
+			return newFunction (...args);
 		};
 	}
 
@@ -350,14 +350,14 @@ Rin.hookPrepend = function (object, functionName, newFunction, conditional=true)
 	{
 		object[functionName] = (...args) => {
 			if (newFunction (...args) !== false)
-				oldFunction (...args);
+				return oldFunction (...args);
 		};
 	}
 	else
 	{
 		object[functionName] = (...args) => {
 			newFunction (...args);
-			oldFunction (...args);
+			return oldFunction (...args);
 		};
 	}
 

@@ -202,9 +202,9 @@ let Schema = module.exports =
 
             properties: [ ],
 
-            property: function (name, type)
+            property: function (name, type, defvalue=null)
             {
-                this.properties.push({ name: name, type: type });
+                this.properties.push({ name: name, type: type, defvalue: defvalue });
                 return this;
             },
 
@@ -246,7 +246,7 @@ let Schema = module.exports =
 				{
 					for (let i = 0; i < this.properties.length; i++)
 					{
-						o[this.properties[i].name] = await this.properties[i].type.unflatten(value[this.properties[i].name], context);
+						o[this.properties[i].name] = await this.properties[i].type.unflatten(this.properties[i].name in value ? value[this.properties[i].name] : this.properties[i].defvalue, context);
 					}
 				}
 				else
@@ -254,7 +254,7 @@ let Schema = module.exports =
 				
 					for (let i = 0; i < this.properties.length; i++)
 					{
-						o[this.properties[i].name] = await this.properties[i].type.unflatten(value[i], context);
+						o[this.properties[i].name] = await this.properties[i].type.unflatten(i in value ? value[i] : this.properties[i].defvalue, context);
 					}
 				}
 

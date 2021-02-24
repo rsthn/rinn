@@ -26,7 +26,7 @@ module.exports = Model.extend
 	/**
 	**	Name of the class.
 	*/
-	className: "List",
+	className: "ModelList",
 
 	/**
 	**	Class of the items in the list, can be overriden by child classes to impose a more strict constraint.
@@ -37,6 +37,16 @@ module.exports = Model.extend
 	**	Mirror of properties.contents
 	*/
 	contents: null,
+
+	/**
+	**	IDs of every item in the contents.
+	*/
+	itemId: null,
+
+	/**
+	**	Autoincremental ID for the next item to be added.
+	*/
+	nextId: null,
 
 	/**
 	**	Default properties of the model.
@@ -72,11 +82,11 @@ module.exports = Model.extend
 	/**
 	**	Connects the event handlers to the item.
 	**
-	**	>> Model _bind (int index, Model item);
+	**	>> Model _bind (int iid, Model item);
 	*/
-	_bind: function (index, item)
+	_bind: function (iid, item)
 	{
-		if (item && item.addEventListener) item.addEventListener (this._eventGroup, this._onItemEvent, this, index);
+		if (item && item.addEventListener) item.addEventListener (this._eventGroup, this._onItemEvent, this, iid);
 		return item;
 	},
 
@@ -94,20 +104,20 @@ module.exports = Model.extend
 	/**
 	**	Handler for item events.
 	**
-	**	>> Model _onItemEvent (Event evt, object args, object data);
+	**	>> Model _onItemEvent (Event evt, object args, int iid);
 	*/
-	_onItemEvent: function (evt, args, data)
+	_onItemEvent: function (evt, args, iid)
 	{
-		this.prepareEvent ("itemChanged", { index: data, item: evt.source }).from (evt)
+		this.prepareEvent ("itemChanged", { id: iid, item: evt.source }).from (evt)
 		.enqueue (this.prepareEvent ("modelChanged", { fields: ["contents"] })).resume ();
 	},
 
 	/**
 	**	Returns the number of items in the list.
 	**
-	**	>> int count ();
+	**	>> int length ();
 	*/
-	count: function ()
+	length: function ()
 	{
 		return this.data.contents.length;
 	},
@@ -122,9 +132,12 @@ module.exports = Model.extend
 		for (var i = 0; i < this.data.contents; i++)
 			this._unbind (this.data.contents[i]);
 
+		this.itemId = [];
+		this.nextId = 0;
+
 		this.data.contents = [];
 
-		this.prepareEvent ("itemCleared")
+		this.prepareEvent ("itemsCleared")
 		.enqueue (this.prepareEvent ("modelChanged", { fields: ["contents"] })).resume ();
 	},
 
@@ -136,15 +149,17 @@ module.exports = Model.extend
 	*/
 	setData: function (data)
 	{
-		this.clear ();
+		this.clear();
 		if (!data) return;
 
 		for (var i = 0; i < data.length; i++)
 		{
 			var item = Rin.ensureTypeOf(this.itemt, data[i]);
-			this._bind (i, item);
 
-			this.data.contents.push (item);
+			this.itemId.push(this.nextId++);
+			this.data.contents.push(item);
+
+			this._bind(this.nextId-1, item);
 		}
 
 		this.prepareEvent ("itemsChanged")
@@ -171,7 +186,7 @@ module.exports = Model.extend
 		if (index < 0 || index >= this.data.contents.length)
 			return null;
 
-		return Rin.ensureTypeOf(this.itemt, this.data.contents[index]);
+		return this.data.contents[index];
 	},
 
 	/**
@@ -184,11 +199,13 @@ module.exports = Model.extend
 		if (index < 0 || index >= this.data.contents.length)
 			return null;
 
-		var item = Rin.ensureTypeOf(this.itemt, this.data.contents.splice(index, 1)[0]);
+		let item = this.data.contents.splice(index, 1)[0];
+		let id = this.itemId.splice(index, 1)[0];
+
 		this._unbind (item);
 
-		this.prepareEvent ("itemRemoved", { index: index, item: item })
-		.enqueue (this.prepareEvent ("modelChanged", { fields: ["contents"] })).resume ();
+		this.prepareEvent ("itemRemoved", { id: id, item: item })
+		.enqueue (this.prepareEvent ("modelChanged", { fields: ["contents"] })).resume();
 
 		return item;
 	},
@@ -206,10 +223,11 @@ module.exports = Model.extend
 
 		item = Rin.ensureTypeOf(this.itemt, item);
 
+		this._unbind(this.data.contents[index]);
 		this.data.contents[index] = item;
-		this._bind (index, item);
+		this._bind(this.itemId[index], item);
 
-		this.prepareEvent ("itemChanged", { index: index, item: item })
+		this.prepareEvent ("itemChanged", { id: this.itemId[index], item: item })
 		.enqueue (this.prepareEvent ("modelChanged", { fields: ["contents"] })).resume ();
 
 		return true;
@@ -225,7 +243,7 @@ module.exports = Model.extend
 		if (index < 0 || index >= this.data.contents.length)
 			return false;
 
-		this.prepareEvent ("itemChanged", { index: index, item: this.data.contents[index] })
+		this.prepareEvent ("itemChanged", { id: this.itemId[index], item: this.data.contents[index] })
 		.enqueue (this.prepareEvent ("modelChanged", { fields: ["contents"] })).resume ();
 
 		return true;
@@ -244,10 +262,11 @@ module.exports = Model.extend
 
 		item = Rin.ensureTypeOf(this.itemt, item);
 
+		this.itemId.push(this.nextId++);
 		this.data.contents.push (item);
-		this._bind (this.data.contents.length-1, item);
+		this._bind(this.nextId-1, item);
 
-		this.prepareEvent ("itemAdded", { index: this.data.contents.length-1, item: item })
+		this.prepareEvent ("itemAdded", { id: this.itemId[this.itemId.length-1], item: item, position: 'tail' })
 		.enqueue (this.prepareEvent ("modelChanged", { fields: ["contents"] })).resume ();
 
 		return item;
@@ -260,7 +279,7 @@ module.exports = Model.extend
 	*/
 	pop: function ()
 	{
-		return this._unbind (Rin.ensureTypeOf(this.itemt, this.data.contents.pop()));
+		return this._unbind(this.data.contents.pop());
 	},
 
 	/**
@@ -276,10 +295,11 @@ module.exports = Model.extend
 
 		item = Rin.ensureTypeOf(this.itemt, item);
 
+		this.itemId.unshift(this.nextId++);
 		this.data.contents.unshift (item);
-		this._bind (0, item);
+		this._bind(this.nextId-1, item);
 
-		this.prepareEvent ("itemAdded", { index: 0, item: item })
+		this.prepareEvent ("itemAdded", { id: this.itemId[0], item: item, position: 'head' })
 		.enqueue (this.prepareEvent ("modelChanged", { fields: ["contents"] })).resume ();
 
 		return item;
@@ -292,7 +312,7 @@ module.exports = Model.extend
 	*/
 	shift: function ()
 	{
-		return this._unbind (Rin.ensureTypeOf(this.itemt, this.data.contents.shift()));
+		return this._unbind(this.data.contents.shift());
 	},
 
 	/**

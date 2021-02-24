@@ -519,6 +519,25 @@ let Template = module.exports =
 	},
 
 	/**
+	**	Removes all static parts from a parsed template.
+	**
+	**	>> array clean (array parts);
+	*/
+	clean: function (parts)
+	{
+		for (let i = 0; i < parts.length; i++)
+		{
+			if (parts[i].type != 'template')
+			{
+				parts.splice(i, 1);
+				i--;
+			}
+		}
+
+		return parts;
+	},
+
+	/**
 	**	Expands a template using the given data object, ret can be set to 'text' or 'obj' allowing to expand the template as
 	**	a string (text) or an array of objects (obj) respectively. If none provided it will be expanded as text.
 	**
@@ -1005,15 +1024,14 @@ Template.functions =
 	'typeof': function(args) { return Rin.typeOf(args[1]); },
 
 	'*': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x *= args[i]; return x; },
-	'mul': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x *= args[i]; return x; },
 	'/': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x /= args[i]; return x; },
-	'div': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x /= args[i]; return x; },
 	'+': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x -= -args[i]; return x; },
-	'sum': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x -= -args[i]; return x; },
 	'-': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x -= args[i]; return x; },
+	'mul': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x *= args[i]; return x; },
+	'div': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x /= args[i]; return x; },
+	'sum': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x -= -args[i]; return x; },
 	'sub': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x -= args[i]; return x; },
 	'mod': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x %= args[i]; return x; },
-	'**': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x = Math.pow(x, args[i]); return x; },
 	'pow': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x = Math.pow(x, args[i]); return x; },
 
 	/**

@@ -141,7 +141,7 @@ module.exports = Flattenable.extend
 	/*
 	**	Returns the number of items in the collection.
 	*/
-	count: function ()
+	length: function ()
 	{
 		return this.items.length;
 	},

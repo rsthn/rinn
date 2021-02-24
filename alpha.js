@@ -276,6 +276,26 @@ Rin.ensureTypeOf = function (m, o)
 
 
 /**
+**	Verifies if the specified object is of class `m`, returns boolean.
+**
+**	>> bool isTypeOf (class m, object o);
+*/
+Rin.isTypeOf = function (m, o)
+{
+	if (!o || !m || o instanceof m)
+		return true;
+
+	if (o.isInstanceOf && m.prototype.className)
+	{
+		if (o.isInstanceOf (m.prototype.className))
+			return true;
+	}
+
+	return false;
+};
+
+
+/**
 **	Serializes an object and returns its JSON string representation.
 **
 **	>> string serialize (object o);

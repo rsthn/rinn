@@ -114,6 +114,17 @@ module.exports = Class.extend
 	},
 
 	/**
+	**	Changes the source of the event.
+	**
+	**	Event setSource (object value);
+	*/
+	setSource: function (value)
+	{
+		this.source = value;
+		return this;
+	},
+
+	/**
 	**	Sets the internal asynchronous flag. Should be called before a handler returns. If a handler
 	**	calls this method it should also call resume() when async operations are finished.
 	**

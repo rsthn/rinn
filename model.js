@@ -331,6 +331,16 @@ let _Model = module.exports = EventDispatcher.extend
 	},
 
 	/**
+	**	Returns true if the given key exists in the model.
+	**
+	**	>> boolean has (string name);
+	*/
+	has: function (name)
+	{
+		return name in this.data;
+	},
+
+	/**
 	**	Returns the value of a property. If no name is specified the whole map of properties will be returned.
 	**	If a boolean value of "true" is provided the properties map will be returned but first will be compacted
 	**	using the default data to ensure only valid properties are present.

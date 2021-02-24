@@ -1,6 +1,6 @@
 {
     "name": "@rsthn/rin",
-    "version": "2.0.25",
+    "version": "2.0.26",
     "description": "Rin Library",
     "main": "main.js",
     "exports": {
@@ -12,7 +12,7 @@
     "scripts": {
         "test": "echo Ok",
         "requirements": "yarn global add --ignore-optional parcel-bundler",
-        "deploy": "node ./local/deploy.js",
+        "deploy": "npm run build && node ./local/deploy.js",
         "build": "parcel build ./main.js -o rin.js --global rin"
     },
     "repository": {

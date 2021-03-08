@@ -34,7 +34,7 @@ module.exports = Model.extend
 	itemt: Model,
 
 	/**
-	**	Mirror of properties.contents
+	**	Mirror of data.contents
 	*/
 	contents: null,
 
@@ -68,9 +68,18 @@ module.exports = Model.extend
 	},
 
 	/**
+	**	Constructor.
+	*/
+	__ctor: function (...args)
+	{
+		this.itemId = [];
+		this.nextId = 0;
+
+		this._super.Model.__ctor(...args);
+	},
+
+	/**
 	**	Initialization epilogue. Called after initialization and after model properties are set.
-	**
-	**	>> void ready ();
 	*/
 	ready: function ()
 	{

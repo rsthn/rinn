@@ -581,7 +581,7 @@ let Template = module.exports =
 					case 'access':
 						if (!last || typeof(last) != 'object')
 						{
-							if (!str) str = 'this';
+							if (str == '') str = 'this';
 
 							while (true)
 							{
@@ -704,7 +704,7 @@ let Template = module.exports =
 					case 'access':
 						if (!last || typeof(last) != 'object')
 						{
-							if (!str) str = 'this';
+							if (str == '') str = 'this';
 
 							while (true)
 							{

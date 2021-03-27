@@ -328,20 +328,20 @@ Rin.deserialize = function (s)
 */
 Rin.hookAppend = function (object, functionName, newFunction, conditional=true)
 {
-	const oldFunction = object[functionName].bind(object);
+	const oldFunction = object[functionName];
 
 	if (conditional)
 	{
-		object[functionName] = (...args) => {
-			if (oldFunction (...args) !== false)
-				return newFunction (...args);
+		object[functionName] = function (...args) {
+			if (oldFunction.apply (this, args) !== false)
+				return newFunction.apply (this, args);
 		};
 	}
 	else
 	{
-		object[functionName] = (...args) => {
-			oldFunction (...args);
-			return newFunction (...args);
+		object[functionName] = function (...args) {
+			oldFunction.apply (this, args);
+			return newFunction.apply (this, args);
 		};
 	}
 
@@ -364,20 +364,20 @@ Rin.hookAppend = function (object, functionName, newFunction, conditional=true)
 */
 Rin.hookPrepend = function (object, functionName, newFunction, conditional=true)
 {
-	const oldFunction = object[functionName].bind(object);
+	const oldFunction = object[functionName];
 
 	if (conditional)
 	{
-		object[functionName] = (...args) => {
-			if (newFunction (...args) !== false)
-				return oldFunction (...args);
+		object[functionName] = function (...args) {
+			if (newFunction.apply (this, args) !== false)
+				return oldFunction.apply (this, args);
 		};
 	}
 	else
 	{
-		object[functionName] = (...args) => {
-			newFunction (...args);
-			return oldFunction (...args);
+		object[functionName] = function (...args) {
+			newFunction.apply (this, args);
+			return oldFunction.apply (this, args);
 		};
 	}
 

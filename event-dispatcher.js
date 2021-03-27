@@ -235,6 +235,6 @@ module.exports = Class.extend
 	*/
 	dispatchEvent: function (eventName, eventArgs, cbHandler, cbContext)
 	{
-		return this.prepareEvent(this.namespace ? this.namespace+':'+eventName: eventName, eventArgs, cbHandler, cbContext).resume();
+		return this.prepareEvent(this.namespace ? this.namespace+':'+eventName : eventName, eventArgs, cbHandler, cbContext).resume();
 	}
 });

@@ -2,7 +2,7 @@
 **	rin/alpha
 **
 **	Copyright (c) 2013-2020, RedStar Technologies, All rights reserved.
-**	https://www.rsthn.com/
+**	https://rsthn.com/
 **
 **	THIS LIBRARY IS PROVIDED BY REDSTAR TECHNOLOGIES "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
 **	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A 
@@ -14,7 +14,8 @@
 **	USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-let Rin = module.exports = { };
+let Rin = { };
+export default Rin;
 
 /**
 **	Invokes the specified function 'fn' 10ms later.

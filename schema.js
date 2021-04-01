@@ -2,7 +2,7 @@
 **	rin/schema
 **
 **	Copyright (c) 2013-2020, RedStar Technologies, All rights reserved.
-**	https://www.rsthn.com/
+**	https://rsthn.com/
 **
 **	THIS LIBRARY IS PROVIDED BY REDSTAR TECHNOLOGIES "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
 **	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A 
@@ -14,14 +14,14 @@
 **	USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-let Rin = require('./alpha');
+import Rin from './alpha.js';
 
 /**
 **	The utility functions in this module allow to create a very strict serialization/deserialization schema
 **	to ensure that all values are of the specific type when stored in string format.
 */
 
-let Schema = module.exports =
+let Schema =
 {
 	Type: function (proto)
     {
@@ -383,3 +383,5 @@ let Schema = module.exports =
         });
 	}
 };
+
+export default Schema;

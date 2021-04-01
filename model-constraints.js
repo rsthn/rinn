@@ -2,7 +2,7 @@
 **	rin/model-constraints
 **
 **	Copyright (c) 2013-2020, RedStar Technologies, All rights reserved.
-**	https://www.rsthn.com/
+**	https://rsthn.com/
 **
 **	THIS LIBRARY IS PROVIDED BY REDSTAR TECHNOLOGIES "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
 **	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A 
@@ -14,15 +14,15 @@
 **	USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-let Rin = require('./alpha');
-let Regex = require('./model-regex');
+import Rin from './alpha.js';
+import Regex from './model-regex.js';
 
 /**
 **	Map of model constraint handlers. Each function should accept parameters (in order): the model object (model), the constraint value (ctval),
 **	the property name (name), the property value (value) and return the corrected value once verified or throw an exception if errors occur.
 */
 
-module.exports =
+export default
 {
 	/**
 	**	Utility function (not a handler) to get the real value given a reference string. If the value is not a string, the value itself will

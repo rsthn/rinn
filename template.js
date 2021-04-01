@@ -2,7 +2,7 @@
 **	rin/template
 **
 **	Copyright (c) 2013-2020, RedStar Technologies, All rights reserved.
-**	https://www.rsthn.com/
+**	https://rsthn.com/
 **
 **	THIS LIBRARY IS PROVIDED BY REDSTAR TECHNOLOGIES "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
 **	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A 
@@ -14,7 +14,7 @@
 **	USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-let Rin = require('./alpha');
+import Rin from './alpha.js';
 
 /**
 **	Templating module. The template formats available are shown below, note that the sym-open and sym-close symbols are by
@@ -31,7 +31,7 @@ let Rin = require('./alpha');
 **																	Rin.Template.functions map, each of which have their own parameters.
 */
 
-let Template = module.exports =
+let Template =
 {
 	/*
 	**	Strict mode flag. When set, any undefined expression function will trigger an exception.
@@ -1920,3 +1920,5 @@ Template.functions =
 		return ref[0][ref[1]] (...args);
 	},
 };
+
+export default Template;

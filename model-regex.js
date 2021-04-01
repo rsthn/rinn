@@ -2,7 +2,7 @@
 **	rin/model-regex
 **
 **	Copyright (c) 2013-2020, RedStar Technologies, All rights reserved.
-**	https://www.rsthn.com/
+**	https://rsthn.com/
 **
 **	THIS LIBRARY IS PROVIDED BY REDSTAR TECHNOLOGIES "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
 **	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A 
@@ -18,7 +18,7 @@
 **	Common regular expressions for pattern validation.
 */
 
-module.exports =
+export default
 {
 	email: /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)+$/i,
 	url: /^[\w-]+:\/\/[\w-]+(\.\w+)+.*$/,

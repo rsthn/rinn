@@ -2,7 +2,7 @@
 **	rin/event-dispatcher
 **
 **	Copyright (c) 2013-2020, RedStar Technologies, All rights reserved.
-**	https://www.rsthn.com/
+**	https://rsthn.com/
 **
 **	THIS LIBRARY IS PROVIDED BY REDSTAR TECHNOLOGIES "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
 **	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A 
@@ -14,15 +14,15 @@
 **	USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-let Class = require('./class');
-let Event = require('./event');
+import Class from './class.js';
+import Event from './event.js';
 
 /**
 **	Event dispatcher allows several event listeners to be attached, these will be invoked whenever the
 **	event that is being listened to is triggered.
 */
 
-module.exports = Class.extend
+export default Class.extend
 ({
 	/**
 	**	Name of the class.

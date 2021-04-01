@@ -2,7 +2,7 @@
 **	rin/class
 **
 **	Copyright (c) 2013-2020, RedStar Technologies, All rights reserved.
-**	https://www.rsthn.com/
+**	https://rsthn.com/
 **
 **	THIS LIBRARY IS PROVIDED BY REDSTAR TECHNOLOGIES "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
 **	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A 
@@ -14,16 +14,18 @@
 **	USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-let Rin = require('./alpha');
+import Rin from './alpha.js';
 
 /**
 **	Base class used to easily create classes and sub-classes with complex multiple inheritance and
 **	support for calls to parent class methods.
 */
 
-let Class = module.exports = function ()
+let Class = function ()
 {
 };
+
+export default Class;
 
 
 /**

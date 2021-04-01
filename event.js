@@ -2,7 +2,7 @@
 **	rin/event
 **
 **	Copyright (c) 2013-2020, RedStar Technologies, All rights reserved.
-**	https://www.rsthn.com/
+**	https://rsthn.com/
 **
 **	THIS LIBRARY IS PROVIDED BY REDSTAR TECHNOLOGIES "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
 **	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A 
@@ -14,15 +14,15 @@
 **	USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-let Rin = require('./alpha');
-let Class = require('./class');
+import Rin from './alpha.js';
+import Class from './class.js';
 
 /**
 **	Holds the information about a triggered event. It also provides a mechanism to allow asynchronous
 **	event propagation to ensure the event chain order.
 */
 
-module.exports = Class.extend
+export default Class.extend
 ({
 	/**
 	**	Name of the class.

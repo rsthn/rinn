@@ -2,7 +2,7 @@
 **	rin/main
 **
 **	Copyright (c) 2013-2020, RedStar Technologies, All rights reserved.
-**	https://www.rsthn.com/
+**	https://rsthn.com/
 **
 **	THIS LIBRARY IS PROVIDED BY REDSTAR TECHNOLOGIES "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
 **	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A 
@@ -14,22 +14,24 @@
 **	USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-let Rin = require('./alpha');
+import _Rin from './alpha.js';
+import _Class from './class.js';
+import _Event from './event.js';
+import _EventDispatcher from './event-dispatcher.js';
+import _Model from './model.js';
+import _ModelList from './model-list.js';
+import _Schema from './schema.js';
+import _Flattenable from './flattenable.js';
+import _Collection from './collection.js';
+import _Template from './template.js';
 
-Rin.Rin = Rin;
-Rin.Class = require('./class');
-
-Rin.Event = require('./event');
-Rin.EventDispatcher = require('./event-dispatcher');
-
-Rin.Model = require('./model');
-Rin.ModelList = require('./model-list');
-
-Rin.Schema = require('./schema');
-Rin.Flattenable = require('./flattenable');
-Rin.Collection = require('./collection');
-
-Rin.Template = require('./template');
-
-/* ---- */
-Object.assign (module.exports, Rin);
+export const Rin = _Rin;
+export const Class = _Class;
+export const Event = _Event;
+export const EventDispatcher = _EventDispatcher;
+export const Model = _Model;
+export const ModelList = _ModelList;
+export const Schema = _Schema;
+export const Flattenable = _Flattenable;
+export const Collection = _Collection;
+export const Template = _Template;

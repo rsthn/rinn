@@ -1,19 +1,14 @@
 {
     "name": "@rsthn/rin",
-    "version": "2.0.28",
+    "version": "2.0.29",
     "description": "Rin Library",
+    "type": "module",
     "main": "main.js",
-    "exports": {
-        ".": {
-            "require": "./main.js",
-            "default": "./main.mjs"
-        }
-    },
     "scripts": {
         "test": "echo Ok",
         "requirements": "yarn global add --ignore-optional parcel-bundler",
         "deploy": "npm run build && node ./local/deploy.js",
-        "build": "parcel build ./main.js -o rin.js --global rin"
+        "build": "parcel build ./main.js -o rin.js --global rin --no-source-maps"
     },
     "repository": {
         "type": "git",
@@ -30,7 +25,6 @@
     ],
     "files": [
         "*.js",
-        "*.mjs",
         "LICENSE",
         "README.md"
     ],

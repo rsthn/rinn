@@ -2,7 +2,7 @@
 **	rin/model
 **
 **	Copyright (c) 2013-2020, RedStar Technologies, All rights reserved.
-**	https://www.rsthn.com/
+**	https://rsthn.com/
 **
 **	THIS LIBRARY IS PROVIDED BY REDSTAR TECHNOLOGIES "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
 **	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A 
@@ -14,15 +14,15 @@
 **	USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-let Rin = require('./alpha');
-let EventDispatcher = require('./event-dispatcher');
+import Rin from './alpha.js';
+import EventDispatcher from './event-dispatcher.js';
 
 /**
 **	A model is a high-integrity data object used to store properties and more importantly to provide event support to notify of any
 **	kind of change that occurs to the model's properties. Integrity of the model is maintained by optionally using property constraints.
 */
 
-let _Model = module.exports = EventDispatcher.extend
+let _Model = EventDispatcher.extend
 ({
 	/**
 	**	Name of the class.
@@ -692,4 +692,7 @@ let _Model = module.exports = EventDispatcher.extend
 **	Import model constraints.
 */
 
-_Model.Constraints = require('./model-constraints');
+import Constraints from './model-constraints.js';
+_Model.Constraints = Constraints;
+
+export default _Model;

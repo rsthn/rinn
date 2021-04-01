@@ -2,7 +2,7 @@
 **	rin/collection
 **
 **	Copyright (c) 2013-2020, RedStar Technologies, All rights reserved.
-**	https://www.rsthn.com/
+**	https://rsthn.com/
 **
 **	THIS LIBRARY IS PROVIDED BY REDSTAR TECHNOLOGIES "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
 **	INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A 
@@ -14,15 +14,15 @@
 **	USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-let Flattenable = require('./flattenable');
-let Schema = require('./schema');
-let Rin = require('./alpha');
+import Flattenable from './flattenable.js';
+import Schema from './schema.js';
+import Rin from './alpha.js';
 
 /**
 **	Flattenable collection class, used to store items and manipulate them. The items should also be flattenable.
 */
 
-module.exports = Flattenable.extend
+export default Flattenable.extend
 ({
 	/**
 	**	Name of the class.

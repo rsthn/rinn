@@ -144,7 +144,7 @@ export default Model.extend
 		this.itemId = [];
 		this.nextId = 0;
 
-		this.data.contents = [];
+		this.contents = this.data.contents = [];
 
 		this.prepareEvent ("itemsCleared")
 		.enqueue (this.prepareEvent ("modelChanged", { fields: ["contents"] })).resume ();

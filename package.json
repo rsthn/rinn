@@ -1,6 +1,6 @@
 {
     "name": "@rsthn/rin",
-    "version": "2.0.29",
+    "version": "2.0.30",
     "description": "Rin Library",
     "type": "module",
     "main": "main.js",
@@ -8,7 +8,7 @@
         "test": "echo Ok",
         "requirements": "yarn global add --ignore-optional parcel-bundler",
         "deploy": "npm run build && node ./local/deploy.js",
-        "build": "parcel build ./main.js -o rin.js --global rin --no-source-maps"
+        "build": "parcel build ./main.js -o rin.js --global rin --no-source-maps --no-cache"
     },
     "repository": {
         "type": "git",

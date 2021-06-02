@@ -677,6 +677,43 @@ let _Model = EventDispatcher.extend
 	},
 
 	/**
+	**	Adds a propertyChanged event handler for the given property. The property name can have an event namespace prepended and separated by colon.
+	**
+	**	>> void watch (string property, function handler);
+	*/
+	watch: function (property, handler)
+	{
+		property = property.split(':');
+
+		if (property.length == 1)
+		{
+			property[1] = property[0];
+			property[0] = 'watch';
+		}
+
+		this.addEventListener (property[0]+":propertyChanged."+property[1], function (evt, args) {
+			handler (args.value, args, evt);
+		});
+	},
+
+	/**
+	**	Removes propertyChanged handlers related to the specified property. The property name can have an event namespace prepended and separated by colon.
+	**
+	**	>> void unwatch (string property);
+	*/
+	unwatch: function (property)
+	{
+		property = property.split(':');
+		if (property.length == 1)
+		{
+			property[1] = property[0];
+			property[0] = 'watch';
+		}
+
+		this.removeEventListener (property[0]+":propertyChanged."+property[1]);
+	},
+
+	/**
 	**	Serializes the model into a string.
 	**
 	**	string toString ();

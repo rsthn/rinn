@@ -1279,7 +1279,7 @@ Template.functions =
 	},
 
 	/**
-	**	Constructs an array obtained by expanding the given template for each of the items in the list-expr, the mandatory varname
+	**	Constructs a string obtained by concatenating the expanded template for each of the items in the list-expr, the mandatory varname
 	**	parameter (namely 'i') indicates the name of the variable that will contain the data of each item as the list-expr is
 	**	traversed. Extra variables i# and i## (suffix '#' and '##') are introduced to denote the index/key and numeric index
 	**	of the current item respectively, note that the later will always have a numeric value.
@@ -1291,7 +1291,7 @@ Template.functions =
 		let var_name = Template.expand(parts[1], data, 'arg');
 		let list = Template.expand(parts[2], data, 'arg');
 
-		let s = [];
+		let s = '';
 		let j = 0;
 
 		if (!list) return s;
@@ -1302,7 +1302,7 @@ Template.functions =
 			data[var_name + '##'] = j++;
 			data[var_name + '#'] = i;
 
-			s.push(Template.expand(parts[3], data, 'text'));
+			s += Template.expand(parts[3], data, 'text');
 		}
 
 		delete data[var_name];

@@ -79,14 +79,14 @@ Class.prototype.isInstanceOf = function (className)
 
 
 /**
-**	Internal method to ensure the _super field of an instance is ready to be used.
+**	Internal method to ensure the _super field of an instance has all functions properly bound to the instance.
 **
 **	>> void _initSuperRefs ();
 */
 Class.prototype._initSuperRefs = function ()
 {
-	var _super = this.constructor._super;
-	var _newSuper = { };
+	let _super = this.constructor._super;
+	let _newSuper = { };
 
 	for (let i in _super)
 	{
@@ -95,8 +95,10 @@ Class.prototype._initSuperRefs = function ()
 		let _prot = _super[i].prototype;
 		for (let j in _prot)
 		{
-			if (Rin.typeOf(_prot[j]) == "function")
-				o[j] = _prot[j].bind(this);
+			if (Rin.typeOf(_prot[j]) != "function")
+				continue;
+
+			o[j] = _prot[j].bind(this);
 		}
 
 		_newSuper[i] = o;
@@ -131,7 +133,7 @@ Class.inherit = function (proto)
 		// Combine methods and properties.
 		Rin.override (self.prototype, proto._class.prototype);
 
-		// Combine super methods.
+		// Combine super references.
 		Rin.override (_super, proto._class._super);
 
 		// Add new super reference if className specified in inherited prototypes.
@@ -157,7 +159,10 @@ Class.inherit = function (proto)
 */
 Class.prototype._extend = function (base, protos)
 {
-	var _class = function (...args)
+	if (protos.length == 0)
+		return base;
+
+	const _class = function (...args)
 	{
 		this._initSuperRefs();
 		this.__ctor.apply(this, args);
@@ -167,11 +172,12 @@ Class.prototype._extend = function (base, protos)
 	_class._super = { };
 
 	Class.inherit.call (_class, base);
-
 	delete _class.prototype.className;
 
 	for (let i = 0; i < protos.length; i++)
+	{
 		_class.inherit (protos[i]);
+	}
 
 	delete _class._super.Class;
 

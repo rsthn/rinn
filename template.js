@@ -983,6 +983,7 @@ Template.functions =
 	/**
 	**	Expression functions.
 	*/
+	'global': function(args) { return globalThis; },
 	'null': function(args) { return null; },
 	'true': function(args) { return true; },
 	'false': function(args) { return false; },
@@ -1037,9 +1038,9 @@ Template.functions =
 	/**
 	**	Returns the JSON representation of the expression.
 	**
-	**	json <expr>
+	**	dump <expr>
 	*/
-	'json': function (args)
+	'dump': function (args)
 	{
 		return JSON.stringify(args[1]);
 	},

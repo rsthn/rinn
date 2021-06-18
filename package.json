@@ -1,14 +1,23 @@
 {
     "name": "@rsthn/rin",
-    "version": "2.0.30",
+    "version": "2.0.31",
     "description": "Rin Library",
     "type": "module",
     "main": "main.js",
     "scripts": {
         "test": "echo Ok",
-        "requirements": "yarn global add --ignore-optional parcel-bundler",
-        "deploy": "npm run build && node ./local/deploy.js",
-        "build": "parcel build ./main.js -o rin.js --global rin --no-source-maps --no-cache"
+        "requirements": "yarn global add --ignore-optional parcel",
+        "deploy": "yarn build && node ./local/deploy.js",
+        "build": "parcel build --no-cache --target target_dist _export.js --no-source-maps"
+    },
+    "target_dist": "dist/rin.js",
+    "targets": {
+        "target_dist": {
+            "isLibrary": false,
+            "engines": {
+                "browsers": "since 2020-01"
+            }
+        }
     },
     "repository": {
         "type": "git",
@@ -20,10 +29,8 @@
         "url": "https://github.com/rsthn/rin/issues"
     },
     "homepage": "https://github.com/rsthn/rin#readme",
-    "browserslist": [
-        "since 2019-01"
-    ],
     "files": [
+        "dist/",
         "*.js",
         "LICENSE",
         "README.md"

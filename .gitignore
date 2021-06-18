@@ -3,3 +3,4 @@ node_modules/
 .svn
 .cache
 local/
+.parcel-cache

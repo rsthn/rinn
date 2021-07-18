@@ -17,7 +17,7 @@
 let Rin = { };
 export default Rin;
 
-/**
+/*
 **	Invokes the specified function 'fn' 10ms later.
 **
 **	>> void invokeLater (function fn);
@@ -28,7 +28,7 @@ Rin.invokeLater = function (fn)
 };
 
 
-/**
+/*
 **	Waits for the specified amount of milliseconds. Returns a Promise.
 **
 **	>> Promise wait (int millis);
@@ -41,7 +41,7 @@ Rin.wait = function (millis)
 };
 
 
-/**
+/*
 **	Returns the type of an element 'o', properly detects arrays and null types. The return string is always in lowercase.
 **
 **	>> string typeOf (any o);
@@ -58,7 +58,7 @@ Rin.typeOf = function (o)
 };
 
 
-/**
+/*
 **	Returns boolean indicating if the type of the element is an array or an object.
 **
 **	>> bool isArrayOrObject (any o);
@@ -75,24 +75,27 @@ Rin.isArrayOrObject = function (o)
 };
 
 
-/**
+/*
 **	Creates a clone (deep copy) of the specified element. The element can be an array, an object or a primitive type.
 **
 **	>> T clone (T elem);
 */
 Rin.clone = function (elem)
 {
-	var o;
+	let o = Rin.typeOf(elem);
 
-	if (Rin.typeOf(elem) == "array")
+	if (o === 'array')
 	{
 		o = [ ];
 
 		for (let i = 0; i < elem.length; i++)
 			o.push (Rin.clone(elem[i]));
 	}
-	else if (Rin.typeOf(elem) == "object")
+	else if (o === 'object')
 	{
+		if (('clone' in elem) && typeof(elem.clone) === 'function')
+			return elem.clone();
+
 		o = { };
 
 		for (let i in elem)
@@ -107,7 +110,7 @@ Rin.clone = function (elem)
 };
 
 
-/**
+/*
 **	Merges all given elements into the first one, object fields are cloned.
 **
 **	>> T merge (T... elems)
@@ -159,7 +162,7 @@ Rin.merge = function (output, ...objs)
 };
 
 
-/**
+/*
 **	Assigns all fields from the specified objects into the first one.
 **
 **	>> object override (object output, object... objs)
@@ -216,6 +219,26 @@ Rin.arrayFind = function (arr, o, getObject)
 
 
 /*
+**	Verifies if the specified object is of class `m`, returns boolean.
+**
+**	>> bool isTypeOf (object obj, class _class);
+*/
+Rin.isInstanceOf = function (obj, _class)
+{
+	if (!obj || !_class || typeof(obj) !== 'object')
+		return false;
+
+	if (obj instanceof _class)
+		return true;
+
+	if ('isInstanceOf' in obj)
+		return obj.isInstanceOf(_class);
+
+	return false;
+};
+
+
+/*
 **	Traverses the given object attempting to find the index/key that does an identical match with the specified value,
 **	if not found returns -1, otherwise the index/key where the value was found.
 **
@@ -245,7 +268,7 @@ Rin.indexOf = function (container, value, forceArray=false)
 };
 
 
-/**
+/*
 **	Escapes a string using HTML entities.
 **
 **	>> string escape (string str);
@@ -256,7 +279,7 @@ Rin.escape = function (str)
 };
 
 
-/**
+/*
 **	Verifies if the specified object is of class `m`, if not it will create a new instance of `m` passing `o` as parameter.
 **
 **	>> object ensureTypeOf (class m, object o);
@@ -276,27 +299,7 @@ Rin.ensureTypeOf = function (m, o)
 };
 
 
-/**
-**	Verifies if the specified object is of class `m`, returns boolean.
-**
-**	>> bool isTypeOf (class m, object o);
-*/
-Rin.isTypeOf = function (m, o)
-{
-	if (!o || !m || o instanceof m)
-		return true;
-
-	if (o.isInstanceOf && m.prototype.className)
-	{
-		if (o.isInstanceOf (m.prototype.className))
-			return true;
-	}
-
-	return false;
-};
-
-
-/**
+/*
 **	Serializes an object and returns its JSON string representation.
 **
 **	>> string serialize (object o);
@@ -307,7 +310,7 @@ Rin.serialize = function (o)
 };
 
 
-/**
+/*
 **	Deserializes a string in JSON format and returns the result.
 **
 **	>> any deserialize (string s);
@@ -318,7 +321,7 @@ Rin.deserialize = function (s)
 };
 
 
-/**
+/*
 **	Chains a new function to an existing one on some object, such that invoking the function on the object will cause
 **	both functions to run (order would be oldFunction then newFunction).
 **
@@ -354,7 +357,7 @@ Rin.hookAppend = function (object, functionName, newFunction, conditional=true)
 };
 
 
-/**
+/*
 **	Chains a new function to an existing one on some object, such that invoking the function on the object will cause
 **	both functions to run (order would be oldFunction then newFunction).
 **

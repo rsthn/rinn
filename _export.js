@@ -14,5 +14,5 @@
 **	USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-import * as _rin from './main';
+import * as _rin from './main.js';
 export default rin = _rin;

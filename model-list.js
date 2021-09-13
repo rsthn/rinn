@@ -148,18 +148,20 @@ export default Model.extend
 
 		this.prepareEvent ("itemsCleared")
 		.enqueue (this.prepareEvent ("modelChanged", { fields: ["contents"] })).resume ();
+
+		return this;
 	},
 
 	/**
 	**	Sets the contents of the list with the specified array. All items will be ensured to be of the same model
 	**	type as the one specified in the list.
 	**
-	**	>> void setData (array data);
+	**	>> ModelList setData (array data);
 	*/
 	setData: function (data)
 	{
 		this.clear();
-		if (!data) return;
+		if (!data) return this;
 
 		for (var i = 0; i < data.length; i++)
 		{
@@ -173,6 +175,8 @@ export default Model.extend
 
 		this.prepareEvent ("itemsChanged")
 		.enqueue (this.prepareEvent ("modelChanged", { fields: ["contents"] })).resume ();
+
+		return this;
 	},
 
 	/**

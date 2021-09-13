@@ -76,26 +76,26 @@ let _Model = EventDispatcher.extend
 
 		if (defaults != null)
 		{
-			this.reset (defaults);
+			this.reset (defaults, false);
 		}
 		else
 		{
-			var o = null;
+			let o = null;
 
 			if (!this.defaults && this.constraints)
 			{
-				var o = { };
+				o = { };
 
-				for (var i in this.constraints)
+				for (let i in this.constraints)
 				{
-					var j = this.constraints[i];
+					let j = this.constraints[i];
 					if (j.def === null || j.def === undefined)
 					{
 						o[i] = null;
 						continue;
 					}
 
-					if (typeof(j.def) == "function")
+					if (typeof(j.def) === 'function')
 						o[i] = j.def();
 					else
 						o[i] = j.def;
@@ -108,7 +108,7 @@ let _Model = EventDispatcher.extend
 		this.init();
 
 		if (data != null)
-			this.set (arguments[0], true);
+			this.set (data, true);
 
 		if (this.constraints) this.update();
 
@@ -126,13 +126,13 @@ let _Model = EventDispatcher.extend
 	{
 		if (!this.defaults)
 		{
-			if (!defaults || (Rin.typeOf(defaults) != "object" && Rin.typeOf(defaults) != "function"))
+			if (!defaults || (Rin.typeOf(defaults) !== 'object' && Rin.typeOf(defaults) !== 'function'))
 				return this;
 
 			this.defaults = defaults;
 		}
 
-		if (Rin.typeOf(this.defaults) == "function")
+		if (Rin.typeOf(this.defaults) === 'function')
 			this.data = this.defaults();
 		else
 			this.data = Rin.clone(this.defaults);

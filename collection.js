@@ -64,12 +64,21 @@ export default Flattenable.extend
 			this.add(i);
 	},
 
+	/**
+	 * 	Executed when the value in `items` is changed.
+	 */
+	itemsReferenceChanged: function()
+	{
+	},
+
 	/*
 	**	Resets the collection to empty. Note that onItemRemoved will not be called.
 	*/
 	reset: function ()
 	{
 		this.items = [];
+		this.itemsReferenceChanged();
+
 		return this;
 	},
 
@@ -214,6 +223,7 @@ export default Flattenable.extend
 			tmp.push(item);
 
 			this.items = tmp.concat(this.items);
+			this.itemsReferenceChanged();
 		}
 
 		this.onItemAdded (item);

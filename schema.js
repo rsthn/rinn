@@ -131,17 +131,17 @@ let Schema =
 
                 if (!("strings" in context))
                 {
-                    context.strings_map = { };
+                    context.index = { };
                     context.strings = [ ];
                 }
 
-                if (!(value in context.strings_map))
+                if (!(value in context.index))
                 {
                     context.strings.push(value);
-                    context.strings_map[value] = context.strings.length;
+                    context.index[value] = context.strings.length;
                 }
 
-                return context.strings_map[value];
+                return context.index[value];
             },
 
 			unflatten: function (value, context)
@@ -220,7 +220,10 @@ let Schema =
 
 					for (let i = 0; i < this.properties.length; i++)
 					{
-						o[this.properties[i].name] = this.properties[i].type.flatten(value[this.properties[i].name], context);
+						if (this.properties[i].name in value)
+							o[this.properties[i].name] = this.properties[i].type.flatten(value[this.properties[i].name], context);
+						else
+							o[this.properties[i].name] = this.properties[i].type.flatten(this.properties[i].defvalue, context);
 					}
 				}
 				else
@@ -229,7 +232,10 @@ let Schema =
 
 					for (let i = 0; i < this.properties.length; i++)
 					{
-						o.push(this.properties[i].type.flatten(value[this.properties[i].name], context));
+						if (this.properties[i].name in value)
+							o.push(this.properties[i].type.flatten(value[this.properties[i].name], context));
+						else
+							o.push(this.properties[i].type.flatten(this.properties[i].defvalue, context));
 					}
 				}
 
@@ -380,6 +386,54 @@ let Schema =
 
                 return o;
             }
+        });
+	},
+
+    Selector: function ()
+    {
+        return Schema.Type({
+
+			conditions: [],
+			value: null,
+
+			when: function (value, type)
+			{
+				this.conditions.push([ (val) => val === value, type ]);
+				return this;
+			},
+
+			with: function (value)
+			{
+				this.value = value;
+				return this;
+			},
+
+            flatten: function (value, context)
+            {
+				if (value == null) return null;
+
+				for (let i of this.conditions)
+				{
+					if (i[0](this.value) === true)
+						return i[1].flatten(value, context);
+				}
+
+                return null;
+            },
+
+            unflatten: async function (value, context)
+            {
+				if (value == null) return null;
+
+				for (let i of this.conditions)
+				{
+					if (i[0](this.value) === true)
+						return await i[1].unflatten(value, context);
+				}
+
+                return null;
+            }
+
         });
 	}
 };

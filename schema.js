@@ -157,6 +157,7 @@ let Schema =
 
 			itemType: type,
 			_debug: false,
+			_filter: null,
 
 			debug: function(v) {
 				this._debug = v;
@@ -168,14 +169,24 @@ let Schema =
                 return this;
             },
 
+			filter: function (callback) {
+				this._filter = callback;
+				return this;
+			},
+
 			flatten: function (value, context)
 			{
 				if (value == null) return null;
 
                 let o = [ ];
-                
+
                 for (let i = 0; i < value.length; i++)
+				{
+					if (this._filter && !this._filter(value[i], i))
+						continue;
+
                     o.push(this.itemType.flatten(value[i], context));
+				}
 
                 return o;
             },

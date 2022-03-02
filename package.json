@@ -1,6 +1,6 @@
 {
     "name": "@rsthn/rin",
-    "version": "2.0.35",
+    "version": "2.0.36",
     "description": "Rin Library",
     "type": "module",
     "main": "main.js",

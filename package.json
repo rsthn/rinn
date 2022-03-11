@@ -1,6 +1,6 @@
 {
     "name": "rinn",
-    "version": "2.0.38",
+    "version": "2.0.39",
     "description": "Rinn Library",
     "type": "module",
     "source": "src/main.js",
@@ -10,7 +10,7 @@
         "test": "echo Success.",
         "requirements": "yarn global add --ignore-optional parcel",
         "build": "parcel build --no-cache --target module",
-		"commit": "yarn build && node ./local/commit.js",
+        "commit": "yarn build && node ./local/commit.js",
         "deploy": "yarn build && node ./local/deploy.js"
     },
     "browserslist": "since 2020-01",
@@ -26,6 +26,7 @@
     "homepage": "https://github.com/rsthn/rinn#readme",
     "files": [
         "dist/",
+        "src/",
         "LICENSE",
         "README.md"
     ]

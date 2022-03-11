@@ -1,25 +1,18 @@
 {
     "name": "rinn",
-    "version": "2.0.37",
+    "version": "2.0.38",
     "description": "Rinn Library",
     "type": "module",
-    "main": "main.js",
+    "source": "src/main.js",
+    "main": "src/main.js",
+    "module": "./dist/rinn.js",
     "scripts": {
-        "test": "echo Ok",
+        "test": "echo Success.",
         "requirements": "yarn global add --ignore-optional parcel",
-        "deploy": "yarn build && node ./local/deploy.js",
-        "build": "parcel build --no-cache --target browser _export.js --no-source-maps"
+        "build": "parcel build --no-cache --target module",
+        "deploy": "yarn build && node ./local/deploy.js"
     },
-    "browser": "dist/rinn.js",
-    "targets": {
-        "browser": {
-            "isLibrary": false,
-            "engines": {
-                "browsers": "since 2020-01"
-            },
-            "optimize": true
-        }
-    },
+    "browserslist": "since 2020-01",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/rsthn/rinn.git"
@@ -32,12 +25,7 @@
     "homepage": "https://github.com/rsthn/rinn#readme",
     "files": [
         "dist/",
-        "*.js",
         "LICENSE",
         "README.md"
-    ],
-    "dependencies": {
-        "base-64": "^1.0.0",
-        "node-fetch": "^2.6.1"
-    }
+    ]
 }

@@ -10,6 +10,7 @@
         "test": "echo Success.",
         "requirements": "yarn global add --ignore-optional parcel",
         "build": "parcel build --no-cache --target module",
+		"commit": "yarn build && node ./local/commit.js",
         "deploy": "yarn build && node ./local/deploy.js"
     },
     "browserslist": "since 2020-01",

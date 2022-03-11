@@ -1,12 +1,12 @@
 # Rinn Library
 
-This library provides functionality for classes, models, collections, events, and serialization (with schemas) that might not be ground-breaking but are certainly pretty useful.
+This library provides functionality for classes, models, collections, events, and serialization (with strict schemas) that might not be ground-breaking but are certainly pretty useful.
 
 <br/>
 
 ## Installation
 
-You can use npm/yarn to install the library, or just download the standalone files `rinn.js` (ESM) or `rinn.cjs.js` (CommonJS) from the `dist` folder and include it in your index.html file directly. When using CJS, a global variable named `rinn` will be available.
+You can use npm/yarn to install the library, or just download the standalone file (ESM) from the `dist` folder and include it in your index.html file.
 
 ```sh
 yarn add rinn

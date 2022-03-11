@@ -1,7 +1,7 @@
 /*
-**	rin/flattenable
+**	rinn/flattenable.js
 **
-**	Copyright (c) 2013-2020, RedStar Technologies, All rights reserved.
+**	Copyright (c) 2013-2022, RedStar Technologies, All rights reserved.
 **	https://rsthn.com/
 **
 **	THIS LIBRARY IS PROVIDED BY REDSTAR TECHNOLOGIES "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,

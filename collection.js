@@ -1,7 +1,7 @@
 /*
-**	rin/collection
+**	rinn/collection.js
 **
-**	Copyright (c) 2013-2020, RedStar Technologies, All rights reserved.
+**	Copyright (c) 2013-2022, RedStar Technologies, All rights reserved.
 **	https://rsthn.com/
 **
 **	THIS LIBRARY IS PROVIDED BY REDSTAR TECHNOLOGIES "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
@@ -16,7 +16,7 @@
 
 import Flattenable from './flattenable.js';
 import Schema from './schema.js';
-import Rin from './alpha.js';
+import Rinn from './alpha.js';
 
 /**
 **	Flattenable collection class, used to store items and manipulate them. The items should also be flattenable.
@@ -129,10 +129,10 @@ export default Flattenable.extend
 
 		for (var i = 0; i < this.items.length; i++)
 		{
-			if (exc && Rin.partialCompare(this.items[i], exc))
+			if (exc && Rinn.partialCompare(this.items[i], exc))
 				continue;
 
-			if (Rin.partialCompare(this.items[i], inc))
+			if (Rinn.partialCompare(this.items[i], inc))
 				return this.items[i];
 		}
 

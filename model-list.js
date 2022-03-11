@@ -1,7 +1,7 @@
 /*
-**	rin/model-list
+**	rinn/model-list.js
 **
-**	Copyright (c) 2013-2020, RedStar Technologies, All rights reserved.
+**	Copyright (c) 2013-2022, RedStar Technologies, All rights reserved.
 **	https://rsthn.com/
 **
 **	THIS LIBRARY IS PROVIDED BY REDSTAR TECHNOLOGIES "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
@@ -14,7 +14,7 @@
 **	USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-import Rin from './alpha.js';
+import Rinn from './alpha.js';
 import Model from './model.js';
 
 /**
@@ -165,7 +165,7 @@ export default Model.extend
 
 		for (var i = 0; i < data.length; i++)
 		{
-			var item = Rin.ensureTypeOf(this.itemt, data[i]);
+			var item = Rinn.ensureTypeOf(this.itemt, data[i]);
 
 			this.itemId.push(this.nextId++);
 			this.data.contents.push(item);
@@ -234,7 +234,7 @@ export default Model.extend
 		if (index < 0 || index >= this.data.contents.length)
 			return false;
 
-		item = Rin.ensureTypeOf(this.itemt, item);
+		item = Rinn.ensureTypeOf(this.itemt, item);
 
 		this._unbind(this.data.contents[index]);
 		this.data.contents[index] = item;
@@ -270,10 +270,10 @@ export default Model.extend
 	*/
 	push: function (item)
 	{
-		if (item && Rin.typeOf(item) != "object")
+		if (item && Rinn.typeOf(item) != "object")
 			return null;
 
-		item = Rin.ensureTypeOf(this.itemt, item);
+		item = Rinn.ensureTypeOf(this.itemt, item);
 
 		this.itemId.push(this.nextId++);
 		this.data.contents.push (item);
@@ -303,10 +303,10 @@ export default Model.extend
 	*/
 	unshift: function (item)
 	{
-		if (item && Rin.typeOf(item) != "object")
+		if (item && Rinn.typeOf(item) != "object")
 			return null;
 
-		item = Rin.ensureTypeOf(this.itemt, item);
+		item = Rinn.ensureTypeOf(this.itemt, item);
 
 		this.itemId.unshift(this.nextId++);
 		this.data.contents.unshift (item);
@@ -341,7 +341,7 @@ export default Model.extend
 
 		for (var i = 0; i < contents.length; i++)
 		{
-			if (Rin.partialCompare (contents[i].data, data))
+			if (Rinn.partialCompare (contents[i].data, data))
 				return retObject ? contents[i] : i;
 		}
 

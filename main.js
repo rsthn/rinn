@@ -1,7 +1,7 @@
 /*
-**	rin/main
+**	rinn/main.js
 **
-**	Copyright (c) 2013-2020, RedStar Technologies, All rights reserved.
+**	Copyright (c) 2013-2022, RedStar Technologies, All rights reserved.
 **	https://rsthn.com/
 **
 **	THIS LIBRARY IS PROVIDED BY REDSTAR TECHNOLOGIES "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
@@ -14,7 +14,7 @@
 **	USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-import _Rin from './alpha.js';
+import _Rinn from './alpha.js';
 import _Class from './class.js';
 import _Event from './event.js';
 import _EventDispatcher from './event-dispatcher.js';
@@ -25,7 +25,7 @@ import _Flattenable from './flattenable.js';
 import _Collection from './collection.js';
 import _Template from './template.js';
 
-export const Rin = _Rin;
+export const Rinn = _Rinn;
 export const Class = _Class;
 export const Event = _Event;
 export const EventDispatcher = _EventDispatcher;

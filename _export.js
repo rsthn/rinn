@@ -1,7 +1,7 @@
 /*
-**	rin/_export
+**	rinn/_export
 **
-**	Copyright (c) 2013-2020, RedStar Technologies, All rights reserved.
+**	Copyright (c) 2013-2022, RedStar Technologies, All rights reserved.
 **	https://rsthn.com/
 **
 **	THIS LIBRARY IS PROVIDED BY REDSTAR TECHNOLOGIES "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
@@ -14,5 +14,5 @@
 **	USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-import * as _rin from './main.js';
-export default rin = _rin;
+import * as _rinn from './main.js';
+export default rinn = _rinn;

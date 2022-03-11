@@ -1,7 +1,7 @@
 /*
-**	rin/model-constraints
+**	rinn/model-constraints.js
 **
-**	Copyright (c) 2013-2020, RedStar Technologies, All rights reserved.
+**	Copyright (c) 2013-2022, RedStar Technologies, All rights reserved.
 **	https://rsthn.com/
 **
 **	THIS LIBRARY IS PROVIDED BY REDSTAR TECHNOLOGIES "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
@@ -14,7 +14,7 @@
 **	USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-import Rin from './alpha.js';
+import Rinn from './alpha.js';
 import Regex from './model-regex.js';
 
 /**
@@ -81,7 +81,7 @@ export default
 				break;
 
 			case "array":
-				if (Rin.typeOf(value) == "array")
+				if (Rinn.typeOf(value) == "array")
 					break;
 
 				if (value === null || value === undefined)
@@ -135,7 +135,7 @@ export default
 		var mclass = this._getref(ctval, model);
 		if (!value) return new mclass();
 
-		return Rin.ensureTypeOf(mclass, value);
+		return Rinn.ensureTypeOf(mclass, value);
 	},
 
 
@@ -148,11 +148,11 @@ export default
 		var mclass = this._getref(ctval, model);
 		if (!value) value = [];
 
-		if (!mclass || Rin.typeOf(value) != "array")
+		if (!mclass || Rinn.typeOf(value) != "array")
 			throw new Error (ctval);
 
 		for (var i = 0; i < value.length; i++)
-			value[i] = Rin.ensureTypeOf(mclass, value[i]);
+			value[i] = Rinn.ensureTypeOf(mclass, value[i]);
 		
 		return value;
 	},
@@ -166,7 +166,7 @@ export default
 	{
 		var remove = false;
 
-		if (Rin.typeOf(ctval) == "object")
+		if (Rinn.typeOf(ctval) == "object")
 		{
 			if (ctval.remove) remove = ctval.remove;
 			ctval = ctval.value;
@@ -174,7 +174,7 @@ export default
 
 		if (ctval) return value;
 
-		if (Rin.typeOf(value) != "array")
+		if (Rinn.typeOf(value) != "array")
 			throw new Error (ctval);
 
 		for (var i = 0; i < value.length; i++)
@@ -200,7 +200,7 @@ export default
 	{
 		var remove = false;
 
-		if (Rin.typeOf(ctval) == "object")
+		if (Rinn.typeOf(ctval) == "object")
 		{
 			if (ctval.remove) remove = ctval.remove;
 			ctval = ctval.value;
@@ -208,7 +208,7 @@ export default
 
 		if (!ctval) return value;
 
-		if (Rin.typeOf(value) != "array")
+		if (Rinn.typeOf(value) != "array")
 			throw new Error (ctval);
 
 		for (var i = 0; i < value.length; i++)
@@ -237,7 +237,7 @@ export default
 		if (value === null || value === undefined)
 			throw new Error (ctval ? "" : "null");
 
-		switch (Rin.typeOf(value))
+		switch (Rinn.typeOf(value))
 		{
 			case "array":
 				if (value.length == 0) throw new Error (ctval ? "" : "null");
@@ -305,7 +305,7 @@ export default
 	*/
 	mincount: function (model, ctval, name, value)
 	{
-		if (Rin.typeOf(value) != "array" || value.length < ctval)
+		if (Rinn.typeOf(value) != "array" || value.length < ctval)
 			throw new Error (ctval);
 
 		return value;
@@ -317,7 +317,7 @@ export default
 	*/
 	maxcount: function (model, ctval, name, value)
 	{
-		if (Rin.typeOf(value) != "array" || value.length > ctval)
+		if (Rinn.typeOf(value) != "array" || value.length > ctval)
 			throw new Error (ctval);
 
 		return value;
@@ -343,7 +343,7 @@ export default
 	*/
 	inset: function (model, ctval, name, value)
 	{
-		if (Rin.typeOf(ctval) != "array")
+		if (Rinn.typeOf(ctval) != "array")
 		{
 			if (!new RegExp("^("+ctval.toString()+")$").test (value.toString()))
 				throw new Error (ctval);

@@ -1,12 +1,10 @@
-# Rin Namespace
+# Rinn Namespace
 
-Contains all the classes and definitions of the library, can accessed using the global 'Rin' or 'rin' object if you're using the browser version, or by importing it as follows from node:
+Contains all the classes and definitions of the library, can accessed using the global 'Rinn' or 'rinn' object if you're using the browser version, or by importing it as follows from node:
 
 ```js
-const Rin = require('@rsthn/rin');
+const Rinn = require('rinn');
 ```
-
-
 
 <br/>
 

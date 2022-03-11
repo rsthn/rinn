@@ -1,7 +1,7 @@
 /*
-**	rin/class
+**	rinn/class.js
 **
-**	Copyright (c) 2013-2020, RedStar Technologies, All rights reserved.
+**	Copyright (c) 2013-2022, RedStar Technologies, All rights reserved.
 **	https://rsthn.com/
 **
 **	THIS LIBRARY IS PROVIDED BY REDSTAR TECHNOLOGIES "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
@@ -14,7 +14,7 @@
 **	USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-import Rin from './alpha.js';
+import Rinn from './alpha.js';
 
 /*
 **	Base class used to easily create classes and sub-classes with complex multiple inheritance and
@@ -73,7 +73,7 @@ Class.prototype.__dtor = function ()
 */
 Class.prototype.isInstanceOf = function (className)
 {
-	className = Rin.typeOf(className) === 'string' ? className : (className.prototype ? className.prototype.className : className.constructor.prototype.className);
+	className = Rinn.typeOf(className) === 'string' ? className : (className.prototype ? className.prototype.className : className.constructor.prototype.className);
 	return className in this._super ? true : this.className === className;
 };
 
@@ -97,7 +97,7 @@ Class.prototype._initSuperRefs = function ()
 		let _prot = _super[i].prototype;
 		for (let j in _prot)
 		{
-			if (Rin.typeOf(_prot[j]) !== 'function')
+			if (Rinn.typeOf(_prot[j]) !== 'function')
 				continue;
 
 			o[j] = (function(fn)
@@ -132,17 +132,17 @@ Class.inherit = function (proto)
 	let _super = self._super;
 	let _class = self._class;
 
-	if (Rin.typeOf(proto) === 'function')
+	if (Rinn.typeOf(proto) === 'function')
 	{
 		// Move constants (uppercased properties) to the class-level instead of prototype-level.
 		for (let i in proto._class)
 			if (!/^[A-Z]/.test(i)) self[i] = proto._class[i];
 
 		// Combine methods and properties.
-		Rin.override (self.prototype, proto._class.prototype);
+		Rinn.override (self.prototype, proto._class.prototype);
 
 		// Combine super references.
-		Rin.override (_super, proto._class._super);
+		Rinn.override (_super, proto._class._super);
 
 		// Add new super reference if className specified in inherited prototypes.
 		if (proto._class.prototype.className)
@@ -150,7 +150,7 @@ Class.inherit = function (proto)
 	}
 	else
 	{
-		Rin.override (self.prototype, proto);
+		Rinn.override (self.prototype, proto);
 	}
 
 	self._super = _super;
@@ -192,7 +192,7 @@ Class.prototype._extend = function (base, protos)
 		_class.prototype.classInit();
 
 	_class.isInstance = function(value) {
-		return Rin.isInstanceOf(value, _class);
+		return Rinn.isInstanceOf(value, _class);
 	};
 
 	return _class;

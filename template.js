@@ -1,7 +1,7 @@
 /*
-**	rin/template
+**	rinn/template
 **
-**	Copyright (c) 2013-2020, RedStar Technologies, All rights reserved.
+**	Copyright (c) 2013-2022, RedStar Technologies, All rights reserved.
 **	https://rsthn.com/
 **
 **	THIS LIBRARY IS PROVIDED BY REDSTAR TECHNOLOGIES "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
@@ -14,7 +14,7 @@
 **	USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-import Rin from './alpha.js';
+import Rinn from './alpha.js';
 
 /**
 **	Templating module. The template formats available are shown below, note that the sym-open and sym-close symbols are by
@@ -28,7 +28,7 @@ import Rin from './alpha.js';
 **																	sym-open and sym-close symbols when the first character is not '<', sym_open or space.
 **	Filtered Output:				[functionName ... <expr> ...]	Runs a function call, 'expr' can be any of the allowed formats shown here (nested if desired),
 **																	functionName should map to one of the available expression functions registered in the
-**																	Rin.Template.functions map, each of which have their own parameters.
+**																	Rinn.Template.functions map, each of which have their own parameters.
 */
 
 let Template =
@@ -112,7 +112,7 @@ let Template =
 				data = Template.parseTemplate (data, sym_open, sym_close, false, 0);
 				type = 'base-string';
 
-				if (Rin.typeOf(data) == 'array')
+				if (Rinn.typeOf(data) == 'array')
 				{
 					type = data[0].type;
 					data = data[0].data;
@@ -860,7 +860,7 @@ let Template =
 		// Return as argument ('object' if only one, or string if more than one), that is, the first item in the result.
 		if (ret == 'arg')
 		{
-			if (Rin.typeOf(s) == 'array')
+			if (Rinn.typeOf(s) == 'array')
 			{
 				if (s.length != 1)
 					return s.join('');
@@ -871,7 +871,7 @@ let Template =
 			return s;
 		}
 
-		if (ret == 'text' && Rin.typeOf(s) == 'array')
+		if (ret == 'text' && Rinn.typeOf(s) == 'array')
 		{
 			let f = (e => e != null && typeof(e) == 'object' ? ('map' in e ? e.map(f).join('') : ('join' in e ? e.join('') : e.toString())) : e);
 			s = s.map(f).join('');
@@ -912,7 +912,7 @@ let Template =
 	*/
 	value: function (parts, data=null)
 	{
-		return Rin.typeOf(parts) != 'array' ? parts : Template.expand(parts, data ? data : { }, 'arg');
+		return Rinn.typeOf(parts) != 'array' ? parts : Template.expand(parts, data ? data : { }, 'arg');
 	},
 
 	/**
@@ -1022,7 +1022,7 @@ Template.functions =
 	'null?': function(args) { return !args[1]; },
 	'zero?': function(args) { return parseInt(args[1]) == 0; },
 
-	'typeof': function(args) { return Rin.typeOf(args[1]); },
+	'typeof': function(args) { return Rinn.typeOf(args[1]); },
 
 	'*': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x *= args[i]; return x; },
 	'/': function(args) { let x = args[1]; for (let i = 2; i < args.length; i++) x /= args[i]; return x; },
@@ -1187,7 +1187,7 @@ Template.functions =
 
 		for (let i = 0; i < args.length; i++)
 		{
-			if (Rin.typeOf(args[i]) == 'array')
+			if (Rinn.typeOf(args[i]) == 'array')
 			{
 				s += `<${name}>`;
 				
@@ -1234,7 +1234,7 @@ Template.functions =
 	*/
 	'join': function (args)
 	{
-		if (args[2] && Rin.typeOf(args[2]) == 'array')
+		if (args[2] && Rinn.typeOf(args[2]) == 'array')
 			return args[2].join(args[1]);
 
 		return '';
@@ -1811,7 +1811,7 @@ Template.functions =
 	{
 		let value = args[2];
 
-		if (Rin.typeOf(value) != 'object')
+		if (Rinn.typeOf(value) != 'object')
 			return false;
 
 		return args[1] in value;
@@ -1829,7 +1829,7 @@ Template.functions =
 		let list = Template.expand(parts[2], data, 'arg');
 		if (!list) return list;
 
-		let arrayMode = Rin.typeOf(list) == 'array' ? true : false;
+		let arrayMode = Rinn.typeOf(list) == 'array' ? true : false;
 		let output = arrayMode ? [] : {};
 		let j = 0;
 
@@ -1864,7 +1864,7 @@ Template.functions =
 		let list = Template.expand(parts[2], data, 'arg');
 		if (!list) return list;
 
-		let arrayMode = Rin.typeOf(list) == 'array' ? true : false;
+		let arrayMode = Rinn.typeOf(list) == 'array' ? true : false;
 		let output = arrayMode ? [] : {};
 		let j = 0;
 

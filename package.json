@@ -1,34 +1,35 @@
 {
-    "name": "@rsthn/rin",
-    "version": "2.0.36",
-    "description": "Rin Library",
+    "name": "rinn",
+    "version": "2.0.37",
+    "description": "Rinn Library",
     "type": "module",
     "main": "main.js",
     "scripts": {
         "test": "echo Ok",
         "requirements": "yarn global add --ignore-optional parcel",
         "deploy": "yarn build && node ./local/deploy.js",
-        "build": "parcel build --no-cache --target target_dist _export.js --no-source-maps"
+        "build": "parcel build --no-cache --target browser _export.js --no-source-maps"
     },
-    "target_dist": "dist/rin.js",
+    "browser": "dist/rinn.js",
     "targets": {
-        "target_dist": {
+        "browser": {
             "isLibrary": false,
             "engines": {
                 "browsers": "since 2020-01"
-            }
+            },
+            "optimize": true
         }
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/rsthn/rin.git"
+        "url": "git+https://github.com/rsthn/rinn.git"
     },
     "author": "RedStar Technologies",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/rsthn/rin/issues"
+        "url": "https://github.com/rsthn/rinn/issues"
     },
-    "homepage": "https://github.com/rsthn/rin#readme",
+    "homepage": "https://github.com/rsthn/rinn#readme",
     "files": [
         "dist/",
         "*.js",

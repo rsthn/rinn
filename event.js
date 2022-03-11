@@ -1,7 +1,7 @@
 /*
-**	rin/event
+**	rinn/event.js
 **
-**	Copyright (c) 2013-2020, RedStar Technologies, All rights reserved.
+**	Copyright (c) 2013-2022, RedStar Technologies, All rights reserved.
 **	https://rsthn.com/
 **
 **	THIS LIBRARY IS PROVIDED BY REDSTAR TECHNOLOGIES "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
@@ -14,7 +14,7 @@
 **	USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-import Rin from './alpha.js';
+import Rinn from './alpha.js';
 import Class from './class.js';
 
 /**
@@ -153,7 +153,7 @@ export default Class.extend
 			if (this.list[this.i].silent)
 				continue;
 
-			if (Rin.typeOf(this.list[this.i].handler) == "string")
+			if (Rinn.typeOf(this.list[this.i].handler) == "string")
 			{
 				if (this.list[this.i].context)
 				{

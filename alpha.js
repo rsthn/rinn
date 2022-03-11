@@ -1,7 +1,7 @@
 /*
-**	rin/alpha
+**	rinn/alpha.js
 **
-**	Copyright (c) 2013-2020, RedStar Technologies, All rights reserved.
+**	Copyright (c) 2013-2022, RedStar Technologies, All rights reserved.
 **	https://rsthn.com/
 **
 **	THIS LIBRARY IS PROVIDED BY REDSTAR TECHNOLOGIES "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
@@ -14,15 +14,15 @@
 **	USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-let Rin = { };
-export default Rin;
+let Rinn = { };
+export default Rinn;
 
 /*
 **	Invokes the specified function 'fn' 10ms later.
 **
 **	>> void invokeLater (function fn);
 */
-Rin.invokeLater = function (fn)
+Rinn.invokeLater = function (fn)
 {
 	if (fn) setTimeout (function() { fn(); }, 10);
 };
@@ -33,7 +33,7 @@ Rin.invokeLater = function (fn)
 **
 **	>> Promise wait (int millis);
 */
-Rin.wait = function (millis)
+Rinn.wait = function (millis)
 {
 	return new Promise(function (resolve, reject) {
 		setTimeout (resolve, millis);
@@ -46,7 +46,7 @@ Rin.wait = function (millis)
 **
 **	>> string typeOf (any o);
 */
-Rin.typeOf = function (o)
+Rinn.typeOf = function (o)
 {
 	if (o instanceof Array)
 		return "array";
@@ -63,9 +63,9 @@ Rin.typeOf = function (o)
 **
 **	>> bool isArrayOrObject (any o);
 */
-Rin.isArrayOrObject = function (o)
+Rinn.isArrayOrObject = function (o)
 {
-	switch (Rin.typeOf(o))
+	switch (Rinn.typeOf(o))
 	{
 		case "array": case "object":
 			return true;
@@ -80,16 +80,16 @@ Rin.isArrayOrObject = function (o)
 **
 **	>> T clone (T elem);
 */
-Rin.clone = function (elem)
+Rinn.clone = function (elem)
 {
-	let o = Rin.typeOf(elem);
+	let o = Rinn.typeOf(elem);
 
 	if (o === 'array')
 	{
 		o = [ ];
 
 		for (let i = 0; i < elem.length; i++)
-			o.push (Rin.clone(elem[i]));
+			o.push (Rinn.clone(elem[i]));
 	}
 	else if (o === 'object')
 	{
@@ -99,7 +99,7 @@ Rin.clone = function (elem)
 		o = { };
 
 		for (let i in elem)
-			o[i] = Rin.clone(elem[i]);
+			o[i] = Rinn.clone(elem[i]);
 	}
 	else
 	{
@@ -115,15 +115,15 @@ Rin.clone = function (elem)
 **
 **	>> T merge (T... elems)
 */
-Rin.merge = function (output, ...objs)
+Rinn.merge = function (output, ...objs)
 {
-	if (Rin.typeOf(output) == "array")
+	if (Rinn.typeOf(output) == "array")
 	{
 		for (let i = 0; i < objs.length; i++)
 		{
 			let arr = objs[i];
 
-			if (Rin.typeOf(arr) != "array")
+			if (Rinn.typeOf(arr) != "array")
 			{
 				output.push(arr);
 			}
@@ -131,26 +131,26 @@ Rin.merge = function (output, ...objs)
 			{
 				for (let j = 0; j < arr.length; j++)
 				{
-					output.push(Rin.clone(arr[j]));
+					output.push(Rinn.clone(arr[j]));
 				}
 			}
 		}
 	}
-	else if (Rin.typeOf(output) == "object")
+	else if (Rinn.typeOf(output) == "object")
 	{
 		for (let i = 0; i < objs.length; i++)
 		{
 			let obj = objs[i];
-			if (Rin.typeOf(obj) != "object") continue;
+			if (Rinn.typeOf(obj) != "object") continue;
 
 			for (let field in obj)
 			{
-				if (Rin.isArrayOrObject(obj[field]))
+				if (Rinn.isArrayOrObject(obj[field]))
 				{
 					if (field in output)
-						Rin.merge(output[field], obj[field]);
+						Rinn.merge(output[field], obj[field]);
 					else
-						output[field] = Rin.clone(obj[field]);
+						output[field] = Rinn.clone(obj[field]);
 				}
 				else
 					output[field] = obj[field];
@@ -167,7 +167,7 @@ Rin.merge = function (output, ...objs)
 **
 **	>> object override (object output, object... objs)
 */
-Rin.override = function (output, ...objs)
+Rinn.override = function (output, ...objs)
 {
 	for (let i = 0; i < objs.length; i++)
 	{
@@ -184,7 +184,7 @@ Rin.override = function (output, ...objs)
 /*
 **	Compares two objects and returns `true` if all properties in "partial" find a match in "full".
 */
-Rin.partialCompare = function (full, partial)
+Rinn.partialCompare = function (full, partial)
 {
 	if (full == null || partial == null) return false;
 
@@ -206,7 +206,7 @@ Rin.partialCompare = function (full, partial)
 **	object was not found. When `getObject` is set to `true` the object will be returned instead of an index, or
 **	`null` if not found.
 */
-Rin.arrayFind = function (arr, o, getObject)
+Rinn.arrayFind = function (arr, o, getObject)
 {
 	for (var i = 0; arr && i < arr.length; i++)
 	{
@@ -223,7 +223,7 @@ Rin.arrayFind = function (arr, o, getObject)
 **
 **	>> bool isTypeOf (object obj, class _class);
 */
-Rin.isInstanceOf = function (obj, _class)
+Rinn.isInstanceOf = function (obj, _class)
 {
 	if (!obj || !_class || typeof(obj) !== 'object')
 		return false;
@@ -245,7 +245,7 @@ Rin.isInstanceOf = function (obj, _class)
 **	>> int indexOf (array container, T value)
 **	>> string indexOf (object container, T value)
 */
-Rin.indexOf = function (container, value, forceArray=false)
+Rinn.indexOf = function (container, value, forceArray=false)
 {
 	if (forceArray)
 	{
@@ -273,7 +273,7 @@ Rin.indexOf = function (container, value, forceArray=false)
 **
 **	>> string escape (string str);
 */
-Rin.escape = function (str)
+Rinn.escape = function (str)
 {
 	return (str+"").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 };
@@ -284,7 +284,7 @@ Rin.escape = function (str)
 **
 **	>> object ensureTypeOf (class m, object o);
 */
-Rin.ensureTypeOf = function (m, o)
+Rinn.ensureTypeOf = function (m, o)
 {
 	if (!o || !m || o instanceof m)
 		return o;
@@ -304,7 +304,7 @@ Rin.ensureTypeOf = function (m, o)
 **
 **	>> string serialize (object o);
 */
-Rin.serialize = function (o)
+Rinn.serialize = function (o)
 {
 	return JSON.stringify(o);
 };
@@ -315,7 +315,7 @@ Rin.serialize = function (o)
 **
 **	>> any deserialize (string s);
 */
-Rin.deserialize = function (s)
+Rinn.deserialize = function (s)
 {
 	return JSON.parse(s);
 };
@@ -330,7 +330,7 @@ Rin.deserialize = function (s)
 **
 **	>> object{function unhook} hook (Object object, String functionName, function newFunction, bool conditional=false);
 */
-Rin.hookAppend = function (object, functionName, newFunction, conditional=true)
+Rinn.hookAppend = function (object, functionName, newFunction, conditional=true)
 {
 	const oldFunction = object[functionName];
 
@@ -366,7 +366,7 @@ Rin.hookAppend = function (object, functionName, newFunction, conditional=true)
 **
 **	>> object{function unhook} hook (Object object, String functionName, function newFunction, bool conditional=false);
 */
-Rin.hookPrepend = function (object, functionName, newFunction, conditional=true)
+Rinn.hookPrepend = function (object, functionName, newFunction, conditional=true)
 {
 	const oldFunction = object[functionName];
 

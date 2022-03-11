@@ -1,7 +1,7 @@
 /*
-**	rin/model
+**	rinn/model.js
 **
-**	Copyright (c) 2013-2020, RedStar Technologies, All rights reserved.
+**	Copyright (c) 2013-2022, RedStar Technologies, All rights reserved.
 **	https://rsthn.com/
 **
 **	THIS LIBRARY IS PROVIDED BY REDSTAR TECHNOLOGIES "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
@@ -14,7 +14,7 @@
 **	USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-import Rin from './alpha.js';
+import Rinn from './alpha.js';
 import EventDispatcher from './event-dispatcher.js';
 
 /**
@@ -126,16 +126,16 @@ let _Model = EventDispatcher.extend
 	{
 		if (!this.defaults)
 		{
-			if (!defaults || (Rin.typeOf(defaults) !== 'object' && Rin.typeOf(defaults) !== 'function'))
+			if (!defaults || (Rinn.typeOf(defaults) !== 'object' && Rinn.typeOf(defaults) !== 'function'))
 				return this;
 
 			this.defaults = defaults;
 		}
 
-		if (Rin.typeOf(this.defaults) === 'function')
+		if (Rinn.typeOf(this.defaults) === 'function')
 			this.data = this.defaults();
 		else
-			this.data = Rin.clone(this.defaults);
+			this.data = Rinn.clone(this.defaults);
 
 		return (nsilent === false || defaults === false) ? this : this.update(null, true);
 	},
@@ -287,7 +287,7 @@ let _Model = EventDispatcher.extend
 		var n = arguments.length;
 		var force = false, silent = false;
 
-		if ((n > 2 || (n == 2 && Rin.typeOf(arguments[0]) == "object")) && Rin.typeOf(arguments[n-1]) == "boolean")
+		if ((n > 2 || (n == 2 && Rinn.typeOf(arguments[0]) == "object")) && Rinn.typeOf(arguments[n-1]) == "boolean")
 		{
 			force = arguments[--n];
 			if (force === false) silent = true;
@@ -444,19 +444,19 @@ let _Model = EventDispatcher.extend
 	*/
 	constraint: function (field, constraint, value)
 	{
-		if (arguments.length == 3 || arguments.length == 2 || (arguments.length == 1 && Rin.typeOf(field) == "object"))
+		if (arguments.length == 3 || arguments.length == 2 || (arguments.length == 1 && Rinn.typeOf(field) == "object"))
 		{
 			if (this.constraints === this.constructor.prototype.constraints)
-				this.constraints = Rin.clone (this.constraints);
+				this.constraints = Rinn.clone (this.constraints);
 
 			switch (arguments.length)
 			{
 				case 1:
-					Rin.override (this.constraints, field);
+					Rinn.override (this.constraints, field);
 					break;
 
 				case 2:
-					Rin.override (this.constraints[field], constraint);
+					Rinn.override (this.constraints[field], constraint);
 					break;
 
 				case 3:
@@ -495,7 +495,7 @@ let _Model = EventDispatcher.extend
 			return { };
 
 		var constraints = this.constraints;
-		var keys = this.defaults ? (Rin.typeOf(this.defaults) == "function" ? this.defaults() : this.defaults) : this.constraints;
+		var keys = this.defaults ? (Rinn.typeOf(this.defaults) == "function" ? this.defaults() : this.defaults) : this.constraints;
 
 		var data = { };
 
@@ -544,7 +544,7 @@ let _Model = EventDispatcher.extend
 	*/
 	remove: function (name, nsilent)
 	{
-		if (Rin.typeOf(name) == "array")
+		if (Rinn.typeOf(name) == "array")
 		{
 			for (var i = 0; i < name.length; i++)
 				delete this.data[name[i]];
@@ -582,11 +582,11 @@ let _Model = EventDispatcher.extend
 
 		this._level++;
 
-		if (fields && Rin.typeOf(fields) == 'string')
+		if (fields && Rinn.typeOf(fields) == 'string')
 		{
 			this._propertyEvent (fields, this.data[fields], this.data[fields], direct);
 		}
-		else if (fields && Rin.typeOf(fields) == 'array')
+		else if (fields && Rinn.typeOf(fields) == 'array')
 		{
 			for (var i of fields)
 				this._propertyEvent (i, this.data[i], this.data[i], direct);
@@ -615,7 +615,7 @@ let _Model = EventDispatcher.extend
 	{
 		if (!this.constraints) return this;
 
-		if (fields && Rin.typeOf(fields) == "string")
+		if (fields && Rinn.typeOf(fields) == "string")
 		{
 			this._set (fields, this.data[fields])
 		}
@@ -623,7 +623,7 @@ let _Model = EventDispatcher.extend
 		{
 			for (var i in this.data)
 			{
-				if (fields && Rin.indexOf(fields, i) == -1)
+				if (fields && Rinn.indexOf(fields, i) == -1)
 					continue;
 
 				this._set (i, this.data[i])
@@ -720,7 +720,7 @@ let _Model = EventDispatcher.extend
 	*/
 	toString: function ()
 	{
-		return Rin.serialize(this.get (true));
+		return Rinn.serialize(this.get (true));
 	}
 });
 

@@ -1,7 +1,7 @@
 /*
-**	rin/schema
+**	rinn/schema
 **
-**	Copyright (c) 2013-2020, RedStar Technologies, All rights reserved.
+**	Copyright (c) 2013-2022, RedStar Technologies, All rights reserved.
 **	https://rsthn.com/
 **
 **	THIS LIBRARY IS PROVIDED BY REDSTAR TECHNOLOGIES "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
@@ -14,7 +14,7 @@
 **	USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-import Rin from './alpha.js';
+import Rinn from './alpha.js';
 
 /**
 **	The utility functions in this module allow to create a very strict serialization/deserialization schema
@@ -36,7 +36,7 @@ let Schema =
             }
         };
 
-        return proto ? Rin.override(tmp, proto) : tmp;
+        return proto ? Rinn.override(tmp, proto) : tmp;
     },
 
 	String: function()

@@ -16,73 +16,96 @@
 
 import Rinn from './alpha.js';
 
-/*
-**	Base class used to easily create classes and sub-classes with complex multiple inheritance and
-**	support for calls to parent class methods.
-*/
+/**
+ * 	Base class used to create other classes with complex prototype based multiple inheritance while at the
+ * 	same time avoiding the prototype chain for faster access. Supports calling parent class methods.
+ */
 
-let Class = function ()
+//!class Class
+const Class = function ()
 {
 };
 
-export default Class;
-
-
-/*
-**	Reference to the class itself.
-*/
+/**
+ * 	Reference to the class itself.
+ */
 Class._class = Class;
 
-
-/*
-**	Contains the methods of each of the super classes.
-*/
+/**
+ * 	Contains the methods of each of the super classes.
+ */
 Class._super = { };
 
-
-/*
-**	Name of the class, if none specified the class will be considered "final" and will not be inheritable.
-*/
+/**
+ * 	Name of the class, if none specified the class will be considered "final" and will not be inheritable.
+ * 	@public @type {string}
+ * 	!string className;
+ */
 Class.prototype.className = 'Class';
 
-
-/*
-**	Class constructor, should initialize the state of the instance. Invoked when the `new` keyword is used with the class.
-*/
+/**
+ * 	Class constructor, should initialize the instance. Invoked when the `new` keyword is used with the class.
+ * 	!__ctor() : Class;
+ */
 Class.prototype.__ctor = function ()
 {
 };
 
-
-/*
-**	Class destructor, should clear the instance state and release any used resources, invoked when the global `dispose`
-**	function is called with the instance as parameter.
-*/
+/**
+ * 	Class destructor, should clear the instance and release any used resources, invoked when the global `dispose` function
+ * 	is called with an instance as parameter.
+ * 	!__dtor() : void;
+ */
 Class.prototype.__dtor = function ()
 {
 };
 
-
-/*
-**	Returns true if the object is an instance of the specified class (verifies inheritance), the parameter can be a class
-**	name, a class constructor or a class instance, in any case the appropriate checks will be done.
-**
-**	>> bool isInstanceOf (string className);
-**	>> bool isInstanceOf (constructor classConstructor);
-**	>> bool isInstanceOf (object classInstance);
-*/
+/**
+ * 	Returns true if the object is an instance of the specified class, the parameter can be a class name (string), a constructor (function) or
+ * 	a class instance (object), in any cases the appropriate checks will be done.
+ *
+ * 	@param {string|function|object} className
+ * 	@returns {boolean}
+ *
+ * 	!isInstanceOf (className: string|function|object) : boolean;
+ */
 Class.prototype.isInstanceOf = function (className)
 {
-	className = Rinn.typeOf(className) === 'string' ? className : (className.prototype ? className.prototype.className : className.constructor.prototype.className);
-	return className in this._super ? true : this.className === className;
+	if (className === null)
+		return false;
+
+	if (typeof(className) === 'function')
+	{
+		className = className.prototype.className;
+	}
+	else if (typeof(className) !== 'string')
+	{
+		className = className.__proto__.className;
+	}
+
+	return this.className === className ? true : this._super.hasOwnProperty(className);
 };
 
+/**
+ * 	Returns true if the given object is an instance of the specified class, the parameter can be a class name (string), a constructor (function)
+ * 	or a class instance (object), in any cases the appropriate checks will be done.
+ *
+ * 	@param {Object} object
+ * 	@param {string|function|object} className
+ *
+ *	!instanceOf (object: object, className: string|function|object) : boolean;
+ */
+Class.instanceOf = function (object, className)
+{
+	if (object === null || className === null)
+		return false;
 
-/*
-**	Internal method to ensure the _super field of an instance has all functions properly bound to the instance.
-**
-**	>> void _initSuperRefs ();
-*/
+	return object.isInstanceOf(className);
+};
+
+/**
+ * 	Internal method to ensure the _super field of an instance has all functions properly bound to the instance.
+ */
 Class.prototype._initSuperRefs = function ()
 {
 	let _super = this.constructor._super;
@@ -199,11 +222,9 @@ Class.prototype._extend = function (base, protos)
 };
 
 
-/*
-**	Creates a new class with the specified prototypes each of which can be a class constructor or an object.
-**
-**	>> constructor extend (object... protos);
-*/
+/**
+ * 	Creates a new class with the specified prototypes each of which can be a class constructor (function) or an object.
+ */
 Class.extend = function (...protos)
 {
 	return this._class.prototype._extend (this, protos);
@@ -219,3 +240,5 @@ Class.create = function (proto)
 {
 	return new (this.extend(proto)) ();
 };
+
+export default Class;

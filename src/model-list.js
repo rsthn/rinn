@@ -335,7 +335,7 @@ export default Model.extend
 	**
 	**	int|object find (object data, bool retObject=false);
 	*/
-	find: function (data, retObject)
+	find: function (data, retObject=false)
 	{
 		var contents = this.data.contents;
 

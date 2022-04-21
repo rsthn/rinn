@@ -1,3 +1,13 @@
+<br/>
+
+<p align="center">
+	<img src="https://img.shields.io/npm/v/rinn?label=version&color=%2300a020&style=flat-square"/>
+	<img src="https://img.shields.io/npm/dt/rinn?color=%23a000a0&style=flat-square"/>
+	<img src="https://img.shields.io/bundlephobia/min/rinn/latest?color=%2300a0b0&style=flat-square"/>
+</p>
+
+<br/>
+
 # Rinn Library
 
 This library provides functionality for classes, models, collections, events, and serialization (with strict schemas) that might not be ground-breaking but are certainly pretty useful.
@@ -6,10 +16,10 @@ This library provides functionality for classes, models, collections, events, an
 
 ## Installation
 
-You can use npm/yarn to install the library, or just download the standalone file (ESM) from the `dist` folder and include it in your index.html file.
+Use your favorite package manager, or just download the standalone files from the `dist` folder and include it in your index.html file.
 
 ```sh
-yarn add rinn
+pnpm add rinn
 ```
 
 <br/>

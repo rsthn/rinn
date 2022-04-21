@@ -17,9 +17,9 @@
 import Rinn from './alpha.js';
 
 /**
-**	The utility functions in this module allow to create a very strict serialization/deserialization schema
-**	to ensure that all values are of the specific type when stored in string format.
-*/
+ * The utility functions in this module allow to create a very strict serialization/deserialization schema
+ * to ensure that all values are of the specific type when stored in string format.
+ */
 
 let Schema =
 {
@@ -215,7 +215,13 @@ let Schema =
 
             property: function (name, type, defvalue=null)
             {
-                this.properties.push({ name: name, type: type, defvalue: defvalue });
+                this.properties.push({ name: name, source: name, type: type, defvalue: defvalue });
+                return this;
+            },
+
+            propertyAlias: function (name, source, type, defvalue=null)
+            {
+                this.properties.push({ name: name, source: source, type: type, defvalue: defvalue });
                 return this;
             },
 
@@ -231,8 +237,8 @@ let Schema =
 
 					for (let i = 0; i < this.properties.length; i++)
 					{
-						if (this.properties[i].name in value)
-							o[this.properties[i].name] = this.properties[i].type.flatten(value[this.properties[i].name], context);
+						if (this.properties[i].source in value)
+							o[this.properties[i].name] = this.properties[i].type.flatten(value[this.properties[i].source], context);
 						else
 							o[this.properties[i].name] = this.properties[i].type.flatten(this.properties[i].defvalue, context);
 					}
@@ -243,8 +249,8 @@ let Schema =
 
 					for (let i = 0; i < this.properties.length; i++)
 					{
-						if (this.properties[i].name in value)
-							o.push(this.properties[i].type.flatten(value[this.properties[i].name], context));
+						if (this.properties[i].source in value)
+							o.push(this.properties[i].type.flatten(value[this.properties[i].source], context));
 						else
 							o.push(this.properties[i].type.flatten(this.properties[i].defvalue, context));
 					}
@@ -252,7 +258,7 @@ let Schema =
 
                 return o;
             },
-            
+
             unflatten: async function (value, context)
             {
 				if (value == null) return null;

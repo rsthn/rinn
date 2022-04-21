@@ -1,22 +1,31 @@
 {
     "name": "rinn",
-    "version": "2.0.41",
+    "version": "2.0.42",
     "description": "Rinn Library",
     "type": "module",
-    "source": "src/main.js",
-    "main": "src/main.js",
-    "module": "./dist/rinn.js",
+    "main": "./dist/rinn.m.js",
+    "module": "./dist/rinn.m.js",
+    "browser": "./dist/rinn.js",
+    "packageManager": "pnpm@6.32.4",
     "scripts": {
         "test": "echo Success.",
-        "requirements": "yarn global add --ignore-optional parcel",
-        "build": "parcel build --no-cache --target module",
-        "commit": "yarn build && node ./local/commit.js",
-        "deploy": "yarn build && node ./local/deploy.js"
+        "commit": "node ./local/commit.js",
+        "deploy": "pnpm build:all && node ./local/deploy.js",
+        "build:all": "pnpm build:module && pnpm build:browser",
+        "build:browser": "parcel build --no-cache --target browser",
+        "build:module": "parcel build --no-cache --target module",
+        "build": "pnpm build:browser"
     },
     "browserslist": "since 2020-01",
     "targets": {
         "module": {
+            "source": "./src/main.js",
             "optimize": true
+        },
+        "browser": {
+            "source": "./src/main.js",
+            "optimize": true,
+            "includeNodeModules": true
         }
     },
     "repository": {

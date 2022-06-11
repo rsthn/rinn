@@ -17,8 +17,8 @@
 import Rinn from './alpha.js';
 
 /**
- * 	Base class used to create other classes with complex prototype based multiple inheritance while at the
- * 	same time avoiding the prototype chain for faster access. Supports calling parent class methods.
+ * Base class used to create other classes with complex prototype based multiple inheritance while at the
+ * same time avoiding the prototype chain for faster access. Supports calling parent class methods.
  */
 
 //!class Class
@@ -27,47 +27,41 @@ const Class = function ()
 };
 
 /**
- * 	Reference to the class itself.
+ * Reference to the class itself.
  */
 Class._class = Class;
 
 /**
- * 	Contains the methods of each of the super classes.
+ * Contains the methods of each of the super classes.
  */
 Class._super = { };
 
 /**
- * 	Name of the class, if none specified the class will be considered "final" and will not be inheritable.
- * 	@public @type {string}
- * 	!string className;
+ * Name of the class, if none specified the class will be considered "final" and will not be inheritable.
+ * !readonly string className;
  */
 Class.prototype.className = 'Class';
 
 /**
- * 	Class constructor, should initialize the instance. Invoked when the `new` keyword is used with the class.
- * 	!__ctor() : Class;
+ * Class constructor, should initialize the instance. Invoked when the `new` keyword is used with the class.
+ * !constructor();
  */
 Class.prototype.__ctor = function ()
 {
 };
 
 /**
- * 	Class destructor, should clear the instance and release any used resources, invoked when the global `dispose` function
- * 	is called with an instance as parameter.
- * 	!__dtor() : void;
+ * Class destructor, should clear the instance and release any used resources, invoked when the global `dispose` function is called with an instance as parameter.
+ * !__dtor() : void;
  */
 Class.prototype.__dtor = function ()
 {
 };
 
 /**
- * 	Returns true if the object is an instance of the specified class, the parameter can be a class name (string), a constructor (function) or
- * 	a class instance (object), in any cases the appropriate checks will be done.
- *
- * 	@param {string|function|object} className
- * 	@returns {boolean}
- *
- * 	!isInstanceOf (className: string|function|object) : boolean;
+ * Returns true if the object is an instance of the specified class, the parameter can be a class name (string), a constructor (function) or
+ * a class instance (object), in any cases the appropriate checks will be done.
+ * !isInstanceOf (className: string|function|object) : boolean;
  */
 Class.prototype.isInstanceOf = function (className)
 {
@@ -87,13 +81,9 @@ Class.prototype.isInstanceOf = function (className)
 };
 
 /**
- * 	Returns true if the given object is an instance of the specified class, the parameter can be a class name (string), a constructor (function)
- * 	or a class instance (object), in any cases the appropriate checks will be done.
- *
- * 	@param {Object} object
- * 	@param {string|function|object} className
- *
- *	!instanceOf (object: object, className: string|function|object) : boolean;
+ * Returns true if the given object is an instance of the specified class, the parameter can be a class name (string), a constructor (function)
+ * or a class instance (object), in any cases the appropriate checks will be done.
+ * !instanceOf (object: object, className: string|function|object) : boolean;
  */
 Class.instanceOf = function (object, className)
 {
@@ -104,7 +94,7 @@ Class.instanceOf = function (object, className)
 };
 
 /**
- * 	Internal method to ensure the _super field of an instance has all functions properly bound to the instance.
+ * Internal method to ensure the _super field of an instance has all functions properly bound to the instance.
  */
 Class.prototype._initSuperRefs = function ()
 {
@@ -125,8 +115,8 @@ Class.prototype._initSuperRefs = function ()
 
 			o[j] = (function(fn)
 			{
-				return function (a00, a01, a02, a03, a04, a05, a06, a07, a08, a09, a0A) {
-					return fn.call(self, a00, a01, a02, a03, a04, a05, a06, a07, a08, a09, a0A);
+				return function (a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10) {
+					return fn.call(self, a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
 				};
 			})
 			(_prot[j]);
@@ -183,11 +173,9 @@ Class.inherit = function (proto)
 };
 
 
-/*
-**	Internal method used to extend a class with one or more prototypes.
-**
-**	>> class _extend (object base, object[] protos);
-*/
+/**
+ * Internal method used to extend a class with one or more prototypes.
+ */
 Class.prototype._extend = function (base, protos)
 {
 	if (protos.length === 0)
@@ -223,7 +211,7 @@ Class.prototype._extend = function (base, protos)
 
 
 /**
- * 	Creates a new class with the specified prototypes each of which can be a class constructor (function) or an object.
+ * Creates a new class with the specified prototypes each of which can be a class constructor (function) or an object.
  */
 Class.extend = function (...protos)
 {
@@ -231,14 +219,52 @@ Class.extend = function (...protos)
 };
 
 
-/*
-**	Creates a new instance of a class resulting from extending the self class with the specified prototype.
-**
-**	>> object create (object proto);
-*/
+/**
+ * Creates a new instance of a class resulting from extending the self class with the specified prototype.
+ */
 Class.create = function (proto)
 {
 	return new (this.extend(proto)) ();
+};
+
+/**
+ * Mutates the host object to be an instance of the specified class.
+ * !static mutate (classConstructor: object, host: object) : object;
+ */
+Class.mutate = function (classConstructor, host)
+{
+	let zombie = new classConstructor ();
+
+	// Copy all members from the class prototype.
+	for (let i in classConstructor.prototype)
+	{
+		if (host.hasOwnProperty(i))
+			continue;
+	
+		host[i] = classConstructor.prototype[i];
+	}
+	
+	// Copy all members from the zombie class instance.
+	for (let i in zombie)
+	{
+		if (host.hasOwnProperty(i))
+			continue;
+	
+		host[i] = zombie[i];
+	}
+
+	// Rebind the super references.
+	if (host._super)
+	{
+		for (let i in host._super)
+		{
+			for (let j in host._super[i]) {
+				host._super[i][j] = classConstructor.prototype.constructor._super[i].prototype[j].bind(host);
+			}
+		}
+	}
+
+	return host;
 };
 
 export default Class;

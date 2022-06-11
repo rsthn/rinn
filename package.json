@@ -1,12 +1,11 @@
 {
     "name": "rinn",
-    "version": "2.0.42",
+    "version": "2.0.43",
     "description": "Rinn Library",
     "type": "module",
     "main": "./dist/rinn.m.js",
     "module": "./dist/rinn.m.js",
     "browser": "./dist/rinn.js",
-    "packageManager": "pnpm@6.32.4",
     "scripts": {
         "test": "echo Success.",
         "commit": "node ./local/commit.js",
@@ -40,8 +39,10 @@
     "homepage": "https://github.com/rsthn/rinn#readme",
     "files": [
         "dist/",
-        "src/",
         "LICENSE",
         "README.md"
-    ]
+    ],
+    "devDependencies": {
+        "parcel": "^2.6.0"
+    }
 }

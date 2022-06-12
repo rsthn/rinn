@@ -229,9 +229,9 @@ Class.create = function (proto)
 
 /**
  * Mutates the host object to be an instance of the specified class.
- * !static mutate (classConstructor: object, host: object) : object;
+ * !static mutate (classConstructor: object, host: object, override?: object) : object;
  */
-Class.mutate = function (classConstructor, host)
+Class.mutate = function (classConstructor, host, override=null)
 {
 	let zombie = new classConstructor ();
 
@@ -262,6 +262,12 @@ Class.mutate = function (classConstructor, host)
 				host._super[i][j] = classConstructor.prototype.constructor._super[i].prototype[j].bind(host);
 			}
 		}
+	}
+
+	// Copy override members.
+	if (override !== null) {
+		for (let i in override)
+			host[i] = override[i];
 	}
 
 	return host;

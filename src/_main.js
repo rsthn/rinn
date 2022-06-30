@@ -20,3 +20,17 @@ export const Schema = _Schema;
 export const Flattenable = _Flattenable;
 export const Collection = _Collection;
 export const Template = _Template;
+
+global.rinn =
+{
+	Rinn: Rinn,
+	Class: Class,
+	Event: Event,
+	EventDispatcher: EventDispatcher,
+	Model: Model,
+	ModelList: ModelList,
+	Schema: Schema,
+	Flattenable: Flattenable,
+	Collection: Collection,
+	Template: Template,
+};

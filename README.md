@@ -10,13 +10,13 @@
 
 # Rinn Library
 
-This library provides functionality for classes, models, collections, events, and serialization (with strict schemas) that might not be ground-breaking but are certainly pretty useful.
+This library provides functionality for classes, models, collections, events, and serialization (with strict schemas) that might not be ground-breaking but are certainly lightweight and pretty useful.
 
 <br/>
 
 ## Installation
 
-Use your favorite package manager, or just download the standalone files from the `dist` folder and include it in your index.html file.
+Use your favorite package manager, or just download the standalone files from the `dist` folder and include it in your `index.html` file.
 
 ```sh
 pnpm add rinn

@@ -287,7 +287,7 @@ let _Model = EventDispatcher.extend
 
 		if (n == 2)
 		{
-			if (this.data[arguments[0]] != arguments[1] || force)
+			if (this.data[arguments[0]] !== arguments[1] || force)
 			{
 				if (!this._silent && !silent)
 					this._propertyEvent (arguments[0], this.data[arguments[0]], this._validate (arguments[0], arguments[1]));
@@ -299,7 +299,7 @@ let _Model = EventDispatcher.extend
 		{
 			for (var i in arguments[0])
 			{
-				if (this.data[i] != arguments[0][i] || force)
+				if (this.data[i] !== arguments[0][i] || force)
 				{
 					if (!this._silent && !silent)
 						this._propertyEvent (i, this.data[i], this._validate (i, arguments[0][i]));

@@ -699,6 +699,14 @@ let _Model = EventDispatcher.extend
 	},
 
 	/**
+	 * Triggers a field change event. Even if the value of the field is the same as the model's, the event will still be triggered.
+	 */
+	trigger: function (name, value=null)
+	{
+		return this.set(name, value, true);
+	},
+
+	/**
 	**	Serializes the model into a string.
 	**
 	**	string toString ();

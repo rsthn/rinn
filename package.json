@@ -1,15 +1,16 @@
 {
     "name": "rinn",
-    "version": "2.0.47",
+    "version": "2.0.48",
     "description": "Rinn Library",
     "type": "module",
     "main": "./dist/rinn.m.js",
     "module": "./dist/rinn.m.js",
     "global": "./dist/rinn.js",
     "scripts": {
-        "test": "echo Success.",
-        "commit": "pnpm build && node ./local/commit.js",
-        "deploy": "pnpm build && node ./local/deploy.js",
+        "test": "echo Ok",
+        "commit": "node ./scripts/commit.js",
+        "deploy": "pnpm build && node ./scripts/deploy.js",
+        "changes": "rose ./scripts/changes",
         "build:global": "parcel build --no-cache --target global",
         "build:module": "parcel build --no-cache --target module",
         "build": "pnpm build:module && pnpm build:global"
@@ -41,6 +42,6 @@
         "README.md"
     ],
     "devDependencies": {
-        "parcel": "^2.6.0"
+        "parcel": "^2.9.3"
     }
 }

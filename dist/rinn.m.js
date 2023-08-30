@@ -1,4 +1,857 @@
-function $parcel$export(e,t,r,n){Object.defineProperty(e,t,{get:r,set:n,enumerable:!0,configurable:!0})}var $parcel$global="undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:"undefined"!=typeof window?window:"undefined"!=typeof global?global:{},$parcel$modules={},$parcel$inits={},parcelRequire=$parcel$global.parcelRequire25d2;null==parcelRequire&&(parcelRequire=function(e){if(e in $parcel$modules)return $parcel$modules[e].exports;if(e in $parcel$inits){var t=$parcel$inits[e];delete $parcel$inits[e];var r={id:e,exports:{}};return $parcel$modules[e]=r,t.call(r.exports,r,r.exports),r.exports}var n=new Error("Cannot find module '"+e+"'");throw n.code="MODULE_NOT_FOUND",n},parcelRequire.register=function(e,t){$parcel$inits[e]=t},$parcel$global.parcelRequire25d2=parcelRequire),parcelRequire.register("4VREF",(function(module,exports){$parcel$export(module.exports,"default",(()=>$39761b0dd175036e$export$2e2bcd8739ae039));var $fMUO1=parcelRequire("fMUO1"),$cAEYe=parcelRequire("cAEYe"),$39761b0dd175036e$export$2e2bcd8739ae039={_getref:function(value,obj){return"string"==typeof value?("#"==value.substr(0,1)?value=obj.get(value.substr(1)):"@"==value.substr(0,1)&&(value=obj[value.substr(1)]),"string"==typeof value?eval(value):value):value},type:function(e,t,r,n){switch(t){case"int":if(n=parseInt(n),isNaN(n))throw new Error(t);break;case"float":if(n=parseFloat(n),isNaN(n))throw new Error(t);break;case"string":n=null==n?"":n.toString();break;case"bit":if(!0===n||!1===n){n=n?1:0;break}if(n=parseInt(n),isNaN(n))throw new Error(t);n=n?1:0;break;case"array":if("array"==$fMUO1.default.typeOf(n))break;if(null==n){n=[];break}throw new Error(t);case"bool":if("true"===n||!0===n){n=!0;break}if("false"===n||!1===n){n=!1;break}throw new Error(t)}return n},model:function(e,t,r,n){var a=this._getref(t,e);if(!a)throw new Error(t);return n?a.ensure(n):new a},cls:function(e,t,r,n){var a=this._getref(t,e);return n?$fMUO1.default.ensureTypeOf(a,n):new a},arrayof:function(e,t,r,n){var a=this._getref(t,e);if(n||(n=[]),!a||"array"!=$fMUO1.default.typeOf(n))throw new Error(t);for(var i=0;i<n.length;i++)n[i]=$fMUO1.default.ensureTypeOf(a,n[i]);return n},arraynull:function(e,t,r,n){var a=!1;if("object"==$fMUO1.default.typeOf(t)&&(t.remove&&(a=t.remove),t=t.value),t)return n;if("array"!=$fMUO1.default.typeOf(n))throw new Error(t);for(var i=0;i<n.length;i++)if(null==n[i]){if(!a)throw new Error(t);n.splice(i--,1)}return n},arraycompliant:function(e,t,r,n){var a=!1;if("object"==$fMUO1.default.typeOf(t)&&(t.remove&&(a=t.remove),t=t.value),!t)return n;if("array"!=$fMUO1.default.typeOf(n))throw new Error(t);for(var i=0;i<n.length;i++)if(null!=n[i]&&!n[i].isCompliant()){if(!a)throw new Error(t);n.splice(i--,1)}return n},required:function(e,t,r,n){if(null==n)throw new Error(t?"":"null");if("array"===$fMUO1.default.typeOf(n)){if(0==n.length)throw new Error(t?"":"null")}else if(0==n.toString().length)throw new Error(t?"":"null");return n},minlen:function(e,t,r,n){if(n.toString().length<t)throw new Error(t);return n},maxlen:function(e,t,r,n){if(n.toString().length>t)throw new Error(t);return n},minval:function(e,t,r,n){if(parseFloat(n)<t)throw new Error(t);return n},maxval:function(e,t,r,n){if(parseFloat(n)>t)throw new Error(t);return n},mincount:function(e,t,r,n){if("array"!=$fMUO1.default.typeOf(n)||n.length<t)throw new Error(t);return n},maxcount:function(e,t,r,n){if("array"!=$fMUO1.default.typeOf(n)||n.length>t)throw new Error(t);return n},pattern:function(e,t,r,n){if(!$cAEYe.default[t].test(n.toString()))throw new Error(t);return n},inset:function(e,t,r,n){if("array"!=$fMUO1.default.typeOf(t)){if(!new RegExp("^("+t.toString()+")$").test(n.toString()))throw new Error(t);return n}if(-1==t.indexOf(n.toString()))throw new Error(t.join("|"));return n},upper:function(e,t,r,n){return t?n.toString().toUpperCase():n},lower:function(e,t,r,n){return t?n.toString().toLowerCase():n}}})),parcelRequire.register("fMUO1",(function(e,t){$parcel$export(e.exports,"default",(()=>n));const r={};var n=r;r.invokeLater=function(e){e&&setTimeout((function(){e()}),10)},r.wait=function(e){return new Promise((function(t,r){setTimeout(t,e)}))},r.typeOf=function(e){return e instanceof Array?"array":null===e?"null":(typeof e).toString().toLowerCase()},r.isArrayOrObject=function(e){switch(r.typeOf(e)){case"array":case"object":return!0}return!1},r.clone=function(e){let t=r.typeOf(e);if("array"===t){t=[];for(let n=0;n<e.length;n++)t.push(r.clone(e[n]))}else if("object"===t){if("clone"in e&&"function"==typeof e.clone)return e.clone();t={};for(let n in e)t[n]=r.clone(e[n])}else t=e;return t},r.merge=function(e,...t){if("array"==r.typeOf(e))for(let n=0;n<t.length;n++){let a=t[n];if("array"!=r.typeOf(a))e.push(a);else for(let t=0;t<a.length;t++)e.push(r.clone(a[t]))}else if("object"==r.typeOf(e))for(let n=0;n<t.length;n++){let a=t[n];if("object"==r.typeOf(a))for(let t in a)r.isArrayOrObject(a[t])?t in e?r.merge(e[t],a[t]):e[t]=r.clone(a[t]):e[t]=a[t]}return e},r.override=function(e,...t){for(let r=0;r<t.length;r++)for(let n in t[r])e[n]=t[r][n];return e},r.partialCompare=function(e,t){if(null==e||null==t)return!1;if(e===t)return!0;for(var r in t)if(e[r]!=t[r])return!1;return!0},r.arrayFind=function(e,t,r){for(var n=0;e&&n<e.length;n++)if(this.partialCompare(e[n],t))return r?e[n]:n;return!!r&&null},r.isInstanceOf=function(e,t){return!(!e||!t||"object"!=typeof e)&&(e instanceof t||"isInstanceOf"in e&&e.isInstanceOf(t))},r.indexOf=function(e,t,r=!1){if(r){for(let r=0;r<e.length;r++)if(e[r]===t)return r;return-1}for(let r in e)if(e[r]===t)return r;return-1},r.escape=function(e){return(e+"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")},r.ensureTypeOf=function(e,t){return!t||!e||t instanceof e||t.isInstanceOf&&e.prototype.className&&t.isInstanceOf(e.prototype.className)?t:new e(t)},r.serialize=function(e){return JSON.stringify(e)},r.deserialize=function(e){return JSON.parse(e)},r.hookAppend=function(e,t,r,n=!0){const a=e[t];return e[t]=n?function(...e){if(!1!==a.apply(this,e))return r.apply(this,e)}:function(...e){return a.apply(this,e),r.apply(this,e)},{unhook:function(){e[t]=a}}},r.hookPrepend=function(e,t,r,n=!0){const a=e[t];return e[t]=n?function(...e){if(!1!==r.apply(this,e))return a.apply(this,e)}:function(...e){return r.apply(this,e),a.apply(this,e)},{unhook:function(){e[t]=a}}}})),parcelRequire.register("cAEYe",(function(e,t){$parcel$export(e.exports,"default",(()=>r));var r={email:/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)+$/i,url:/^[\w-]+:\/\/[\w-]+(\.\w+)+.*$/,urlNoProt:/^[\w-]+(\.\w+)+.*$/,name:/^[-A-Za-z0-9_.]+$/,uname:/^['\pL\pN ]+$/,text:/^[^&<>{}]*$/,utext:/^([\r\n\pL\pN\pS &!@#$%*\[\]()_+=;',.\/?:"~-]+)$/}}));var $fMUO1=parcelRequire("fMUO1"),$fMUO1=parcelRequire("fMUO1");
-//!class Class
-const $2394d727dfd6a212$var$Class=function(){};$2394d727dfd6a212$var$Class._class=$2394d727dfd6a212$var$Class,$2394d727dfd6a212$var$Class._super={},$2394d727dfd6a212$var$Class.prototype.className="Class",$2394d727dfd6a212$var$Class.prototype.__ctor=function(){},$2394d727dfd6a212$var$Class.prototype.__dtor=function(){},$2394d727dfd6a212$var$Class.prototype.isInstanceOf=function(e){return null!==e&&("function"==typeof e?e=e.prototype.className:"string"!=typeof e&&(e=e.__proto__.className),this.className===e||this._super.hasOwnProperty(e))},$2394d727dfd6a212$var$Class.instanceOf=function(e,t){return null!==e&&null!==t&&e.isInstanceOf(t)},$2394d727dfd6a212$var$Class.prototype._initSuperRefs=function(){let e=this.constructor._super,t={};const r=this;for(let n in e){let a={},i=e[n].prototype;for(let e in i)"function"===$fMUO1.default.typeOf(i[e])&&(a[e]=function(e){return function(t,n,a,i,s,l,f,o,u,c,d){return e.call(r,t,n,a,i,s,l,f,o,u,c,d)}}(i[e]));t[n]=a}this._super=t},$2394d727dfd6a212$var$Class.inherit=function(e){let t=this._class,r=t._super,n=t._class;if("function"===$fMUO1.default.typeOf(e)){for(let r in e._class)/^[A-Z]/.test(r)||(t[r]=e._class[r]);$fMUO1.default.override(t.prototype,e._class.prototype),$fMUO1.default.override(r,e._class._super),e._class.prototype.className&&(r[e._class.prototype.className]=e._class)}else $fMUO1.default.override(t.prototype,e);return t._super=r,t._class=n,t},$2394d727dfd6a212$var$Class.prototype._extend=function(e,t){if(0===t.length)return e;const r=function(...e){this._initSuperRefs(),this.__ctor.apply(this,e)};r._class=r,r._super={},$2394d727dfd6a212$var$Class.inherit.call(r,e),delete r.prototype.className;for(let e=0;e<t.length;e++)r.inherit(t[e]);return delete r._super.Class,"classInit"in r.prototype&&r.prototype.classInit(),r.isInstance=function(e){return $fMUO1.default.isInstanceOf(e,r)},r},$2394d727dfd6a212$var$Class.extend=function(...e){return this._class.prototype._extend(this,e)},$2394d727dfd6a212$var$Class.create=function(e){return new(this.extend(e))},$2394d727dfd6a212$var$Class.mutate=function(e,t,r=null){let n=new e;for(let r in e.prototype)t.hasOwnProperty(r)||(t[r]=e.prototype[r]);for(let e in n)t.hasOwnProperty(e)||(t[e]=n[e]);if(t._super)for(let r in t._super)for(let n in t._super[r])t._super[r][n]=e.prototype.constructor._super[r].prototype[n].bind(t);if(null!==r)for(let e in r)t[e]=r[e];return t};var $2394d727dfd6a212$export$2e2bcd8739ae039=$2394d727dfd6a212$var$Class,$fMUO1=parcelRequire("fMUO1"),$13eda5a5dec8010f$export$2e2bcd8739ae039=$2394d727dfd6a212$export$2e2bcd8739ae039.extend({className:"Event",source:null,name:null,args:null,_async:!1,list:null,next:null,ret:null,original:null,i:-1,__ctor:function(e,t,r,n,a,i){this.source=e,this.name=r,this.args=n,this.cbHandler=a,this.cbContext=i,this.list=t,this.reset()},reset:function(){return this.next=null,this.ret=[],this._async=!1,this.i=-1,this},setSource:function(e){return this.source=e,this},wait:function(){return this._async=!0,this},resume:function(){for(this._async=!1;!(this._async||++this.i>=this.list.length);)if(!this.list[this.i].silent)if("string"==$fMUO1.default.typeOf(this.list[this.i].handler)){if(this.list[this.i].context){if(!this.list[this.i].context[this.list[this.i].handler])continue;if(!1===this.list[this.i].context[this.list[this.i].handler](this,this.args,this.list[this.i].data))break}else if(!1===$parcel$global[this.list[this.i].handler].call(null,this,this.args,this.list[this.i].data))break}else if(!1===this.list[this.i].handler.call(this.list[this.i].context,this,this.args,this.list[this.i].data))break;return this._async||(this.i>=this.list.length&&this.next&&this.next.resume(),this.cbHandler&&this.cbHandler.call(this.cbContext)),this},from:function(e){return this.original=e,this},enqueue:function(e){if(!e)return this;var t;for(t=this;null!=t.next;t=t.next);return t.next=e,e.from(this),this}}),$c43adaf9cb6d6dd3$export$2e2bcd8739ae039=$2394d727dfd6a212$export$2e2bcd8739ae039.extend({className:"EventDispatcher",listeners:null,namespace:null,__ctor:function(){this.listeners={}},setNamespace:function(e){return this.namespace=e,this},addEventListener:function(e,t,r,n){var a=(e=e.split(":"))[e.length-1],i=e.length>1?e[0]:null;return this.listeners[a]||(this.listeners[a]=[]),this.listeners[a].push({ns:i,handler:t,context:r,data:n,silent:0}),this},removeEventListener:function(e,t,r){var n=(e=e.split(":"))[e.length-1],a=e.length>1?e[0]:null;if("*"==n)for(var i in this.listeners)for(var s=this.listeners[i],l=0;l<s.length;l++){var f=!0;t&&(f=f&&s[l].handler===t),r&&(f=f&&s[l].context===r),a&&(f=f&&s[l].ns==a),f&&s.splice(l--,1)}else{if(!this.listeners[n])return this;for(s=this.listeners[n],l=0;l<s.length;l++){f=!0;t&&(f=f&&s[l].handler===t),r&&(f=f&&s[l].context===r),a&&(f=f&&s[l].ns==a),f&&s.splice(l--,1)}}return this},prepareEvent:function(e,t,r,n){var a=[],i=(e=e.split(":"))[e.length-1],s=e.length>1?e[0]:null;this.listeners[i]&&(a=a.concat(this.listeners[i])),this.listeners["*"]&&(a=a.concat(this.listeners["*"]));for(var l=0;l<a.length;l++)a[l].silent&&a.splice(l--,1);if(s)for(l=0;l<a.length;l++)a[l].ns!=s&&a.splice(l--,1);return new $13eda5a5dec8010f$export$2e2bcd8739ae039(this,a,i,t,r,n)},silence:function(e,t){var r=(e=e.split(":"))[e.length-1],n=e.length>1?e[0]:null;if(t=!1===t?-1:1,"*"==r)for(var a in this.listeners)for(var i=this.listeners[a],s=0;s<i.length;s++)n&&i[s].ns!=n||(i[s].silent+=t);else{if(!this.listeners[r])return this;for(i=this.listeners[r],s=0;s<i.length;s++)n&&i[s].ns!=n||(i[s].silent+=t)}return this},dispatchEvent:function(e,t,r,n){return this.prepareEvent(this.namespace?this.namespace+":"+e:e,t,r,n).resume()}}),$fMUO1=parcelRequire("fMUO1"),$4VREF=parcelRequire("4VREF");let $4dfa0622e14576ea$var$_Model=$c43adaf9cb6d6dd3$export$2e2bcd8739ae039.extend({className:"Model",defaults:null,constraints:null,data:null,changedList:null,_silent:0,_level:0,__ctor:function(e,t){if(this._super.EventDispatcher.__ctor(),this.data={},null!=t)this.reset(t,!1);else{let e=null;if(!this.defaults&&this.constraints){e={};for(let t in this.constraints){let r=this.constraints[t];null!==r.def&&void 0!==r.def?"function"==typeof r.def?e[t]=r.def():e[t]=r.def:e[t]=null}}this.reset(e)}this.init(),null!=e&&this.set(e,!0),this.constraints&&this.update(),this.ready()},reset:function(e,t){if(!this.defaults){if(!e||"object"!==$fMUO1.default.typeOf(e)&&"function"!==$fMUO1.default.typeOf(e))return this;this.defaults=e}return"function"===$fMUO1.default.typeOf(this.defaults)?this.data=this.defaults():this.data=$fMUO1.default.clone(this.defaults),!1===t||!1===e?this:this.update(null,!0)},init:function(){},ready:function(){},silent:function(e){return this._silent+=e?1:-1,this},_validate:function(e,t){if(!this.constraints||!this.constraints[e])return t;var r=this.constraints[e],n=t;for(var a in r)if($4dfa0622e14576ea$var$_Model.Constraints[a])try{n=$4dfa0622e14576ea$var$_Model.Constraints[a](this,r[a],e,n)}catch(t){if("null"==t.message)break;throw new Error(`Constraint [${a}:${r[a]}] failed on property '${e}'.`)}return n},_set:function(e,t){if(!this.constraints||!this.constraints[e])return this.data[e]=t,t;var r=this.constraints[e],n=(this.data[e],t);for(var a in r)if($4dfa0622e14576ea$var$_Model.Constraints[a])try{n=$4dfa0622e14576ea$var$_Model.Constraints[a](this,r[a],e,n)}catch(r){if("null"==r.message)break;this._silent||this.dispatchEvent("constraintError",{constraint:a,message:r.message,name:e,value:t});break}return this.data[e]=n},_propertyEvent:function(e,t,r,n){var a={name:e,old:t,value:r,level:this._level},i=this.dispatchEvent("propertyChanging",a);n?this.data[e]=a.value:a.value=this._set(e,a.value),null!=i&&i.ret.length&&!1===i.ret[0]||(this.dispatchEvent("propertyChanged."+e,a),this.dispatchEvent("propertyChanged",a),this.changedList.push(e))},set:function(){var e=arguments.length,t=!1,r=!1;if((e>2||2==e&&"object"==$fMUO1.default.typeOf(arguments[0]))&&"boolean"==$fMUO1.default.typeOf(arguments[e-1])&&!1===(t=arguments[--e])&&(r=!0),0==this._level&&(this.changedList=[]),this._level++,2==e)(this.data[arguments[0]]!==arguments[1]||t)&&(this._silent||r?this._set(arguments[0],arguments[1]):this._propertyEvent(arguments[0],this.data[arguments[0]],this._validate(arguments[0],arguments[1])));else for(var n in arguments[0])(this.data[n]!==arguments[0][n]||t)&&(this._silent||r?this._set(n,arguments[0][n]):this._propertyEvent(n,this.data[n],this._validate(n,arguments[0][n])));return--this._level||!this.changedList.length||r||this._silent||this.dispatchEvent("modelChanged",{fields:this.changedList}),this},has:function(e){return e in this.data},get:function(e,t){return 0==arguments.length||!1===e?this.data:1==arguments.length&&!0===e?this.flatten():2==arguments.length&&void 0===this.data[e]?t:this.data[e]},getInt:function(e,t){return 2==arguments.length&&void 0===this.data[e]?t:parseInt(this.data[e])},getFloat:function(e,t){return 2==arguments.length&&void 0===this.data[e]?t:parseFloat(this.data[e])},getBool:function(e,t){return"true"===(e=2==arguments.length&&void 0===this.data[e]?t:this.data[e])||!0===e||"false"!==e&&!1!==e&&!!parseInt(e)},getReference:function(e){var t=this;return{get:function(){return t.get(e)},set:function(r){t.set(e,r)}}},constraint:function(e,t,r){if(3==arguments.length||2==arguments.length||1==arguments.length&&"object"==$fMUO1.default.typeOf(e)){switch(this.constraints===this.constructor.prototype.constraints&&(this.constraints=$fMUO1.default.clone(this.constraints)),arguments.length){case 1:$fMUO1.default.override(this.constraints,e);break;case 2:$fMUO1.default.override(this.constraints[e],t);break;case 3:this.constraints[e][t]=r}return this}return e?this.constraints[e]:this},flatten:function(e,t){if(e)return null==(a=this.flatten(!1,!0))?null:(a.class=this.classPath,a);if(!this.constraints&&!this.defaults)return this.data;if(!this.isCompliant())return{};var r=this.constraints,n=this.defaults?"function"==$fMUO1.default.typeOf(this.defaults)?this.defaults():this.defaults:this.constraints,a={};for(var i in this.data)if(i in n){if(r&&r[i]){var s=r[i];if(s.model){a[i]=this.data[i]?this.data[i].flatten(t):null;continue}if(s.arrayof){a[i]=[];for(var l=0;l<this.data[i].length;l++)a[i][l]=this.data[i][l]?this.data[i][l].flatten(t):null;continue}if(s.cls){a[i]=this.data[i]?this.data[i].flatten():null;continue}}a[i]=this.data[i]}return a},remove:function(e,t){if("array"==$fMUO1.default.typeOf(e)){for(var r=0;r<e.length;r++)delete this.data[e[r]];!1===t||this._silent||this.dispatchEvent("propertyRemoved",{fields:e})}else delete this.data[e],!1===t||this._silent||this.dispatchEvent("propertyRemoved",{fields:[e]})},update:function(e,t){if(this._silent)return this;if(0==this._level&&(this.changedList=[]),this._level++,e&&"string"==$fMUO1.default.typeOf(e))this._propertyEvent(e,this.data[e],this.data[e],t);else if(e&&"array"==$fMUO1.default.typeOf(e))for(var r of e)this._propertyEvent(r,this.data[r],this.data[r],t);else for(var r in this.data)this._propertyEvent(r,this.data[r],this.data[r],t);return--this._level||this._silent||0==this.changedList.length&&!0!==e||this.dispatchEvent("modelChanged",{fields:this.changedList}),this},validate:function(e){if(!this.constraints)return this;if(e&&"string"==$fMUO1.default.typeOf(e))this._set(e,this.data[e]);else for(var t in this.data)e&&-1==$fMUO1.default.indexOf(e,t)||this._set(t,this.data[t]);return this},isCompliant:function(){if(!this.constraints)return!0;try{for(var e in this.data)this._validate(e,this.data[e]);return!0}catch(e){}return!1},observe:function(e,t,r){this.addEventListener("propertyChanged."+e,t,r)},unobserve:function(e,t,r){this.removeEventListener("propertyChanged."+e,t,r)},watch:function(e,t){1==(e=e.split(":")).length&&(e[1]=e[0],e[0]="watch"),this.addEventListener(e[0]+":propertyChanged."+e[1],(function(e,r){t(r.value,r,e)}))},unwatch:function(e){1==(e=e.split(":")).length&&(e[1]=e[0],e[0]="watch"),this.removeEventListener(e[0]+":propertyChanged."+e[1])},trigger:function(e,t=null){return this.set(e,t,!0)},toString:function(){return $fMUO1.default.serialize(this.get(!0))}});$4dfa0622e14576ea$var$_Model.Constraints=$4VREF.default;var $4dfa0622e14576ea$export$2e2bcd8739ae039=$4dfa0622e14576ea$var$_Model,$fMUO1=parcelRequire("fMUO1"),$0890bed8a163f087$export$2e2bcd8739ae039=$4dfa0622e14576ea$export$2e2bcd8739ae039.extend({className:"ModelList",itemt:$4dfa0622e14576ea$export$2e2bcd8739ae039,contents:null,itemId:null,nextId:null,defaults:{contents:null},constraints:{contents:{type:"array",arrayof:"@itemt"}},__ctor:function(...e){this.itemId=[],this.nextId=0,this._super.Model.__ctor(...e)},ready:function(){this._eventGroup="ModelList_"+Date.now()+":modelChanged",this.contents=this.data.contents},_bind:function(e,t){return t&&t.addEventListener&&t.addEventListener(this._eventGroup,this._onItemEvent,this,e),t},_unbind:function(e){return e&&e.removeEventListener&&e.removeEventListener(this._eventGroup),e},_onItemEvent:function(e,t,r){this.prepareEvent("itemChanged",{id:r,item:e.source}).from(e).enqueue(this.prepareEvent("modelChanged",{fields:["contents"]})).resume()},length:function(){return this.data.contents.length},clear:function(){for(var e=0;e<this.data.contents;e++)this._unbind(this.data.contents[e]);return this.itemId=[],this.nextId=0,this.contents=this.data.contents=[],this.prepareEvent("itemsCleared").enqueue(this.prepareEvent("modelChanged",{fields:["contents"]})).resume(),this},setData:function(e){if(this.clear(),!e)return this;for(var t=0;t<e.length;t++){var r=$fMUO1.default.ensureTypeOf(this.itemt,e[t]);this.itemId.push(this.nextId++),this.data.contents.push(r),this._bind(this.nextId-1,r)}return this.prepareEvent("itemsChanged").enqueue(this.prepareEvent("modelChanged",{fields:["contents"]})).resume(),this},getData:function(){return this.data.contents},getAt:function(e){return e<0||e>=this.data.contents.length?null:this.data.contents[e]},removeAt:function(e){if(e<0||e>=this.data.contents.length)return null;let t=this.data.contents.splice(e,1)[0],r=this.itemId.splice(e,1)[0];return this._unbind(t),this.prepareEvent("itemRemoved",{id:r,item:t}).enqueue(this.prepareEvent("modelChanged",{fields:["contents"]})).resume(),t},setAt:function(e,t){return!(e<0||e>=this.data.contents.length)&&(t=$fMUO1.default.ensureTypeOf(this.itemt,t),this._unbind(this.data.contents[e]),this.data.contents[e]=t,this._bind(this.itemId[e],t),this.prepareEvent("itemChanged",{id:this.itemId[e],item:t}).enqueue(this.prepareEvent("modelChanged",{fields:["contents"]})).resume(),!0)},updateAt:function(e){return!(e<0||e>=this.data.contents.length)&&(this.prepareEvent("itemChanged",{id:this.itemId[e],item:this.data.contents[e]}).enqueue(this.prepareEvent("modelChanged",{fields:["contents"]})).resume(),!0)},push:function(e){return e&&"object"!=$fMUO1.default.typeOf(e)?null:(e=$fMUO1.default.ensureTypeOf(this.itemt,e),this.itemId.push(this.nextId++),this.data.contents.push(e),this._bind(this.nextId-1,e),this.prepareEvent("itemAdded",{id:this.itemId[this.itemId.length-1],item:e,position:"tail"}).enqueue(this.prepareEvent("modelChanged",{fields:["contents"]})).resume(),e)},pop:function(){return this._unbind(this.data.contents.pop())},unshift:function(e){return e&&"object"!=$fMUO1.default.typeOf(e)?null:(e=$fMUO1.default.ensureTypeOf(this.itemt,e),this.itemId.unshift(this.nextId++),this.data.contents.unshift(e),this._bind(this.nextId-1,e),this.prepareEvent("itemAdded",{id:this.itemId[0],item:e,position:"head"}).enqueue(this.prepareEvent("modelChanged",{fields:["contents"]})).resume(),e)},shift:function(){return this._unbind(this.data.contents.shift())},find:function(e,t=!1){for(var r=this.data.contents,n=0;n<r.length;n++)if($fMUO1.default.partialCompare(r[n].data,e))return t?r[n]:n;return t?null:-1}}),$fMUO1=parcelRequire("fMUO1");let $2710795e2347ba2a$var$Schema={Type:function(e){let t={flatten:function(e,t){return e},unflatten:function(e,t){return e}};return e?$fMUO1.default.override(t,e):t},String:function(){return $2710795e2347ba2a$var$Schema.Type({flatten:function(e,t){return null!=e?e.toString():null},unflatten:function(e,t){return null!=e?e.toString():null}})},Integer:function(){return $2710795e2347ba2a$var$Schema.Type({flatten:function(e,t){return~~e},unflatten:function(e,t){return~~e}})},Number:function(e){return $2710795e2347ba2a$var$Schema.Type({_precision:e,_round:!1,precision:function(e){return this._precision=~~e,this},flatten:function(e,t){return e=parseFloat(e),this._precision>0&&(e=~~(e*Math.pow(10,this._precision))/Math.pow(10,this._precision)),e},unflatten:function(e,t){return parseFloat(e)}})},Bool:function(e){return $2710795e2347ba2a$var$Schema.Type({_compact:e,compact:function(e){return this._compact=e,this},flatten:function(e,t){return e=~~e,this._compact?e>0?1:0:e>0},unflatten:function(e,t){return!!~~e}})},SharedString:function(){return $2710795e2347ba2a$var$Schema.Type({flatten:function(e,t){return null==e?0:(e=e.toString(),"strings"in t||(t.index={},t.strings=[]),e in t.index||(t.strings.push(e),t.index[e]=t.strings.length),t.index[e])},unflatten:function(e,t){return null==e||0==e?null:t.strings[~~e-1]}})},Array:function(e){return $2710795e2347ba2a$var$Schema.Type({itemType:e,_debug:!1,_filter:null,debug:function(e){return this._debug=e,this},of:function(e){return this.itemType=e,this},filter:function(e){return this._filter=e,this},flatten:function(e,t){if(null==e)return null;let r=[];for(let n=0;n<e.length;n++)this._filter&&!this._filter(e[n],n)||r.push(this.itemType.flatten(e[n],t));return r},unflatten:async function(e,t){if(null==e)return null;let r=[];for(let n=0;n<e.length;n++)r.push(await this.itemType.unflatten(e[n],t));return r}})},Object:function(){return $2710795e2347ba2a$var$Schema.Type({properties:[],property:function(e,t,r=null){return this.properties.push({name:e,source:e,type:t,defvalue:r}),this},propertyAlias:function(e,t,r,n=null){return this.properties.push({name:e,source:t,type:r,defvalue:n}),this},flatten:function(e,t){if(null==e)return null;let r;if(!0===t.symbolic){r={};for(let n=0;n<this.properties.length;n++)this.properties[n].source in e?r[this.properties[n].name]=this.properties[n].type.flatten(e[this.properties[n].source],t):r[this.properties[n].name]=this.properties[n].type.flatten(this.properties[n].defvalue,t)}else{r=[];for(let n=0;n<this.properties.length;n++)this.properties[n].source in e?r.push(this.properties[n].type.flatten(e[this.properties[n].source],t)):r.push(this.properties[n].type.flatten(this.properties[n].defvalue,t))}return r},unflatten:async function(e,t){if(null==e)return null;let r={};if(!0===t.symbolic)for(let n=0;n<this.properties.length;n++)r[this.properties[n].name]=await this.properties[n].type.unflatten(this.properties[n].name in e?e[this.properties[n].name]:this.properties[n].defvalue,t);else for(let n=0;n<this.properties.length;n++)r[this.properties[n].name]=await this.properties[n].type.unflatten(n in e?e[n]:this.properties[n].defvalue,t);return r}})},Class:function(e){return $2710795e2347ba2a$var$Schema.Type({_constructor:e,constructor:function(e){return this._constructor=e,this},flatten:function(e,t){return null==e?null:e.flatten(t)},unflatten:async function(e,t){return null==e?null:await(new this._constructor).unflatten(e,t)}})},Property:function(e,t){return $2710795e2347ba2a$var$Schema.Type({property:e,type:t,name:function(e){return this.property=e,this},is:function(e){return this.type=e,this},flatten:function(e,t){if(null==e)return null;let r;return!0===t.symbolic?(r={},r[this.property]=this.type.flatten(e[this.property],t)):r=this.type.flatten(e[this.property],t),r},unflatten:async function(e,t){if(null==e)return null;let r={};return!0===t.symbolic?r[this.property]=await this.type.unflatten(e[this.property],t):r[this.property]=await this.type.unflatten(e,t),r}})},Map:function(){return $2710795e2347ba2a$var$Schema.Type({flatten:function(e,t){if(null==e)return null;if(!0===t.symbolic)return e;let r=[];for(let t in e)r.push(t),r.push(e[t]);return r},unflatten:function(e,t){if(null==e)return null;if(!0===t.symbolic)return e;let r={};for(let t=0;t<e.length;t+=2)r[e[t]]=e[t+1];return r}})},Selector:function(){return $2710795e2347ba2a$var$Schema.Type({conditions:[],value:null,when:function(e,t){return this.conditions.push([t=>t===e,t]),this},with:function(e){return this.value=e,this},flatten:function(e,t){if(null==e)return null;for(let r of this.conditions)if(!0===r[0](this.value))return r[1].flatten(e,t);return null},unflatten:async function(e,t){if(null==e)return null;for(let r of this.conditions)if(!0===r[0](this.value))return await r[1].unflatten(e,t);return null}})}};var $2710795e2347ba2a$export$2e2bcd8739ae039=$2710795e2347ba2a$var$Schema,$32651d5f38a8a64c$export$2e2bcd8739ae039=$2394d727dfd6a212$export$2e2bcd8739ae039.extend({className:"Flattenable",typeSchema:null,flatten:function(e){return this.typeSchema.flatten(this,e)},unflatten:async function(e,t){return Object.assign(this,await this.typeSchema.unflatten(e,t)),await this.onUnflattened(),this},onUnflattened:async function(){}}),$fMUO1=parcelRequire("fMUO1"),$2bcce06113365814$export$2e2bcd8739ae039=$32651d5f38a8a64c$export$2e2bcd8739ae039.extend({className:"Collection",itemTypeSchema:null,items:null,__ctor:function(e){e||(e=this.itemTypeSchema),e&&(this.typeSchema=$2710795e2347ba2a$export$2e2bcd8739ae039.Property("items").is($2710795e2347ba2a$export$2e2bcd8739ae039.Array().of(e))),this.reset()},onUnflattened:function(){let e=this.items;this.reset();for(let t of e)this.add(t)},itemsReferenceChanged:function(){},reset:function(){return this.items=[],this.itemsReferenceChanged(),this},clear:function(){var e=this.items;this.reset();for(var t=0;t<e.length;t++)this.onItemRemoved(e[t],0);return this},sort:function(e,t){return"function"!=typeof e?this.items.sort((function(r,n){return(r[e]<=n[e]?-1:1)*(!0===t?-1:1)})):this.items.sort(e),this},findItem:function(e,t){if(!this.items)return null;for(var r=0;r<this.items.length;r++)if((!t||!$fMUO1.default.partialCompare(this.items[r],t))&&$fMUO1.default.partialCompare(this.items[r],e))return this.items[r];return null},getItems:function(){return this.items},length:function(){return this.items.length},isEmpty:function(){return!this.items.length},indexOf:function(e){return this.items.indexOf(e)},getAt:function(e,t=!1){return e<0&&1==t&&(e+=this.items.length),e>=0&&e<this.items.length?this.items[e]:null},first:function(){return this.getAt(0)},last:function(){return this.getAt(-1,!0)},addAt:function(e,t){if(!t||!this.onBeforeItemAdded(t))return this;if(e<0&&(e=0),e>this.items.length&&(e=this.items.length),0==e)this.items.unshift(t);else if(e==this.items.length)this.items.push(t);else{var r=this.items.splice(0,e);r.push(t),this.items=r.concat(this.items),this.itemsReferenceChanged()}return this.onItemAdded(t),this},unshift:function(e){return this.addAt(0,e)},push:function(e){return this.addAt(this.items.length,e)},add:function(e){return this.push(e)},removeAt:function(e,t=!1){if(e<0&&1==t&&(e+=this.items.length),e<0||e>=this.items.length)return null;var r=this.items[e];return this.items.splice(e,1),this.onItemRemoved(r,e),r},pop:function(e){return this.removeAt(-1,!0)},shift:function(e){return this.removeAt(0)},remove:function(e){return this.removeAt(this.indexOf(e))},forEach:function(e){if(this.isEmpty())return this;for(var t=0;t<this.items.length&&!1!==e(this.items[t],t,this);t++);return this},forEachCall:function(e,...t){if(this.isEmpty())return this;for(var r=0;r<this.items.length&&!1!==this.items[r][e](...t);r++);return this},forEachRev:function(e){if(this.isEmpty())return this;for(var t=this.items.length-1;t>=0&&!1!==e(this.items[t],t,this);t--);return this},forEachRevCall:function(e,...t){if(this.isEmpty())return this;for(var r=this.items.length-1;r>=0&&!1!==this.items[r][e](...t);r--);return this},onBeforeItemAdded:function(e){return!0},onItemAdded:function(e){},onItemRemoved:function(e){}}),$fMUO1=parcelRequire("fMUO1");let $d261ccdafdfe12a9$var$Template={strict:!1,parseTemplate:function(e,t,r,n=!1,a=1){let i="string",s=null,l=0,f=0,o="",u=[],c=u,d=!1;function h(e,n){if("template"==e?n=$d261ccdafdfe12a9$var$Template.parseTemplate(n,t,r,!0,0):"parse"==e?(n=$d261ccdafdfe12a9$var$Template.parseTemplate(n,t,r,!1,0),e="base-string","array"==$fMUO1.default.typeOf(n)&&(e=n[0].type,n=n[0].data)):"parse-trim-merge"==e?n=$d261ccdafdfe12a9$var$Template.parseTemplate(n.trim().split("\n").map((e=>e.trim())).join("\n"),t,r,!1,0):"parse-merge"==e?n=$d261ccdafdfe12a9$var$Template.parseTemplate(n,t,r,!1,0):"parse-merge-alt"==e&&(n=$d261ccdafdfe12a9$var$Template.parseTemplate(n,"{","}",!1,0)),"parse-merge"==e||"parse-merge-alt"==e||"parse-trim-merge"==e)for(let e=0;e<n.length;e++)u.push(n[e]);else u.push({type:e,data:n});d&&(c.push(u=[]),d=!1)}!0===n&&(e=e.trim(),i="identifier",l=10,c.push(u=[])),e+="\0";for(let n=0;n<e.length;n++)if("\\"!=e[n]){switch(l){case 0:"\0"==e[n]?s="string":e[n]==t&&"<"==e[n+1]?(l=1,f=1,s="string",i="parse-merge"):e[n]==t&&"@"==e[n+1]?(l=1,f=1,s="string",i="parse-trim-merge",n++):e[n]==t&&":"==e[n+1]?(l=12,f=1,s="string",i="string",n++):e[n]==t?(l=1,f=1,s="string",i="template"):o+=e[n];break;case 1:if("\0"==e[n])throw new Error("Parse error: Unexpected end of template");if(e[n]==r){if(f--,f<0)throw new Error("Parse error: Unmatched "+r);if(0==f){l=0,s=i;break}}else e[n]==t&&f++;o+=e[n];break;case 10:if("\0"==e[n]){s=i;break}if("."==e[n]){h(i,o),h("access","."),i="identifier",o="";break}if(null!=e[n].match(/[\t\n\r\f\v ]/)){for(s=i,i="identifier",d=!0;null!=e[n].match(/[\t\n\r\f\v ]/);)n++;n--;break}if(e[n]==t&&"<"==e[n+1]){o&&(s=i),l=11,f=1,i="parse-merge";break}if(e[n]==t&&"@"==e[n+1]){o&&(s=i),l=11,f=1,i="parse-trim-merge",n++;break}if('"'==e[n]){o&&(s=i),l=14,f=1,i="parse-merge";break}if("'"==e[n]){o&&(s=i),l=15,f=1,i="parse-merge";break}if("`"==e[n]){o&&(s=i),l=16,f=1,i="parse-merge-alt";break}if(e[n]==t&&":"==e[n+1]){o&&(s=i),l=13,f=1,i="string",n++;break}if(e[n]==t){o&&h(i,o),l=11,f=1,o="",i="parse",o+=e[n];break}"identifier"!=i&&(h(i,o),o="",i="identifier"),o+=e[n];break;case 11:if("\0"==e[n])throw new Error("Parse error: Unexpected end of template");if(e[n]==r){if(f--,f<0)throw new Error("Parse error: Unmatched "+r);if(0==f&&(l=10,"parse-merge"==i||"parse-merge-alt"==i||"parse-trim-merge"==i))break}else e[n]==t&&f++;o+=e[n];break;case 12:if("\0"==e[n])throw new Error("Parse error: Unexpected end of template");if(e[n]==r){if(f--,f<0)throw new Error("Parse error: Unmatched "+r);if(0==f){0!=o.length&&"<"!=o[0]&&"["!=o[0]&&" "!=o[0]&&(o=t+o+r),l=0,s=i;break}}else e[n]==t&&f++;o+=e[n];break;case 13:if("\0"==e[n])throw new Error("Parse error: Unexpected end of template");if(e[n]==r){if(f--,f<0)throw new Error("Parse error: Unmatched "+r);if(0==f){"<"!=o[0]&&"["!=o[0]&&" "!=o[0]&&(o=t+o+r),l=10;break}}else e[n]==t&&f++;o+=e[n];break;case 14:if("\0"==e[n])throw new Error("Parse error: Unexpected end of template");if('"'==e[n]){if(f--,f<0)throw new Error('Parse error: Unmatched "');if(0==f&&(l=10,"parse-merge"==i||"parse-merge-alt"==i||"parse-trim-merge"==i))break}o+=e[n];break;case 15:if("\0"==e[n])throw new Error("Parse error: Unexpected end of template");if("'"==e[n]){if(f--,f<0)throw new Error("Parse error: Unmatched '");if(0==f&&(l=10,"parse-merge"==i||"parse-merge-alt"==i||"parse-trim-merge"==i))break}o+=e[n];break;case 16:if("\0"==e[n])throw new Error("Parse error: Unexpected end of template");if("`"==e[n]){if(f--,f<0)throw new Error("Parse error: Unmatched `");if(0==f&&(l=10,"parse-merge"==i||"parse-merge-alt"==i||"parse-trim-merge"==i))break}o+=e[n]}s&&(h(s,o),s=o="")}else o+="\\",o+=e[++n];if(!n){let e=0;for(;e<c.length&&"string"==c[e].type&&""==c[e].data;)c.splice(e,1);for(e=c.length-1;e>0&&"string"==c[e].type&&""==c[e].data;)c.splice(e--,1);0==c.length&&c.push({type:"string",data:""})}return a&&function e(t){if("object"==typeof t){if(t instanceof Array)for(let r=0;r<t.length;r++)e(t[r]);else t.data=e(t.data);return t}for(let e=0;e<t.length;e++)if("\\"==t[e]){let r=t[e+1];switch(r){case"n":r="\n";break;case"r":r="\r";break;case"f":r="\f";break;case"v":r="\v";break;case"t":r="\t";break;case"s":r="s";break;case'"':r='"';break;case"'":r="'"}t=t.substr(0,e)+r+t.substr(e+2)}return t}(c),c},parse:function(e){return this.parseTemplate(e.trim(),"[","]",!1)},clean:function(e){for(let t=0;t<e.length;t++)"template"!=e[t].type&&(e.splice(t,1),t--);return e},expand:function(e,t,r="text",n="base-string"){let a=[];if("var"==n){let r=!0,n=!1,i=t,s=null,l=!0,f="";for(let a=0;a<e.length&&null!=t;a++)switch(e[a].type){case"identifier":case"string":f+=e[a].data,s=null;break;case"template":s=this.expand(e[a].data,i,"arg","template"),f+="object"!=typeof s?s:"";break;case"base-string":f+=this.expand(e[a].data,i,"arg","base-string"),s=null;break;case"access":if(s&&"object"==typeof s)t=s;else{for(""==f&&(f="this");;)if("!"==f[0])f=f.substr(1),r=!1;else{if("$"!=f[0])break;f=f.substr(1),n=!0}if("this"!=f&&null!=t){let e=t;null===(t=f in t?t[f]:null)&&l&&f in $d261ccdafdfe12a9$var$Template.functions&&(t=$d261ccdafdfe12a9$var$Template.functions[f](null,null,e)),l=!1}}f=""}for(;""!=f;)if("!"==f[0])f=f.substr(1),r=!1;else{if("$"!=f[0])break;f=f.substr(1),n=!0}if("this"!=f){let r=!1;if(null!=t?f in t?t=t[f]:(r=!0,t=null):r=!0,r&&1==e.length&&1==$d261ccdafdfe12a9$var$Template.strict)throw new Error("Expression function `"+f+"` not found.")}"string"==typeof t&&(r&&(t=t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")),n&&(t='"'+t+'"')),a.push(t)}if("varref"==r){let r=t,n=null,a=!0,i="";for(let s=0;s<e.length&&null!=t;s++)switch(e[s].type){case"identifier":case"string":i+=e[s].data,n=null;break;case"template":n=this.expand(e[s].data,r,"arg","template"),i+="object"!=typeof n?n:"";break;case"base-string":i+=this.expand(e[s].data,r,"arg","base-string"),n=null;break;case"access":if(n&&"object"==typeof n)t=n;else{for(""==i&&(i="this");;)if("!"==i[0])i=i.substr(1);else{if("$"!=i[0])break;i=i.substr(1)}if("this"!=i&&null!=t){let e=t;null===(t=i in t?t[i]:null)&&a&&i in $d261ccdafdfe12a9$var$Template.functions&&(t=$d261ccdafdfe12a9$var$Template.functions[i](null,null,e)),a=!1}}i=""}for(;""!=i;)if("!"==i[0])i=i.substr(1);else{if("$"!=i[0])break;i=i.substr(1)}return"this"!=i?[t,i]:null}if("fn"==n){var i=[];if(i.push($d261ccdafdfe12a9$var$Template.expand(e[0],t,"text","base-string")),"_"+i[0]in $d261ccdafdfe12a9$var$Template.functions&&(i[0]="_"+i[0]),!(i[0]in $d261ccdafdfe12a9$var$Template.functions)){if(1==$d261ccdafdfe12a9$var$Template.strict)throw new Error("Expression function `"+i[0]+"` not found.");return`(Unknown: ${i[0]})`}if("_"==i[0][0])return $d261ccdafdfe12a9$var$Template.functions[i[0]](e,t);for(let r=1;r<e.length;r++)i.push($d261ccdafdfe12a9$var$Template.expand(e[r],t,"arg","base-string"));a.push($d261ccdafdfe12a9$var$Template.functions[i[0]](i,e,t))}if("template"==n){if(1==e.length){if(1==e[0].length&&"string"==e[0][0].type)return e[0][0].data;if(1==e[0].length&&"identifier"==e[0][0].type){let n=e[0][0].data;if(n in $d261ccdafdfe12a9$var$Template.functions||"_"+n in $d261ccdafdfe12a9$var$Template.functions)return $d261ccdafdfe12a9$var$Template.expand(e,t,r,"fn")}return $d261ccdafdfe12a9$var$Template.expand(e[0],t,r,"var")}return $d261ccdafdfe12a9$var$Template.expand(e,t,r,"fn")}if("base-string"==n){let n=-1;for(let i of e){let s=null;switch(n++,i.type){case"template":s=$d261ccdafdfe12a9$var$Template.expand(i.data,t,r,"template");break;case"string":case"identifier":s=i.data;break;case"base-string":s=$d261ccdafdfe12a9$var$Template.expand(i.data,t,r,"base-string")}"void"!=r&&("last"==r&&n!=e.length-1||a.push(s))}}if("obj"==r)return a;if("last"==r)return"Rose\\Arry"==typeOf(a)&&(a=a[0]),a;if("void"==r)return null;if("arg"==r)return"array"==$fMUO1.default.typeOf(a)?1!=a.length?a.join(""):a[0]:a;if("text"==r&&"array"==$fMUO1.default.typeOf(a)){let e=t=>null!=t&&"object"==typeof t?"map"in t?t.map(e).join(""):"join"in t?t.join(""):t.toString():t;a=a.map(e).join("")}return a},compile:function(e){return e=$d261ccdafdfe12a9$var$Template.parse(e),function(t=null,r="text"){return $d261ccdafdfe12a9$var$Template.expand(e,t||{},r)}},eval:function(e,t=null,r="text"){return e=$d261ccdafdfe12a9$var$Template.parse(e),$d261ccdafdfe12a9$var$Template.expand(e,t||{},r)},value:function(e,t=null){return"array"!=$fMUO1.default.typeOf(e)?e:$d261ccdafdfe12a9$var$Template.expand(e,t||{},"arg")},register:function(e,t){$d261ccdafdfe12a9$var$Template.functions[e]=t},call:function(e,t,r=null){return e in $d261ccdafdfe12a9$var$Template.functions?$d261ccdafdfe12a9$var$Template.functions[e](t,null,r):null},getNamedValues:function(e,t,r=1,n=!0){let a={},i=0;for(;r<e.length;r+=2){let s=$d261ccdafdfe12a9$var$Template.expand(e[r],t,"arg");i||(i=s.startsWith(":")?1:s.endsWith(":")?2:3),1==i?s=s.substr(1):2==i&&(s=s.substr(0,s.length-1)),a[s]=n?$d261ccdafdfe12a9$var$Template.expand(e[r+1],t,"arg"):e[r+1]}return a}};$d261ccdafdfe12a9$var$Template.functions={global:function(e){return globalThis},null:function(e){return null},true:function(e){return!0},false:function(e){return!1},len:function(e){return e[1].toString().length},int:function(e){return~~e[1]},str:function(e){return e[1].toString()},float:function(e){return parseFloat(e[1])},chr:function(e){return String.fromCharCode(e[1])},ord:function(e){return e[1].toString().charCodeAt(0)},not:function(e){return!e[1]},neg:function(e){return-e[1]},abs:function(e){return Math.abs(e[1])},and:function(e){for(let t=1;t<e.length;t++)if(!e[t])return!1;return!0},or:function(e){for(let t=1;t<e.length;t++)if(~~e[t])return!0;return!1},eq:function(e){return e[1]==e[2]},ne:function(e){return e[1]!=e[2]},lt:function(e){return e[1]<e[2]},le:function(e){return e[1]<=e[2]},gt:function(e){return e[1]>e[2]},ge:function(e){return e[1]>=e[2]},isnotnull:function(e){return!!e[1]},isnull:function(e){return!e[1]},iszero:function(e){return 0==parseInt(e[1])},"eq?":function(e){return e[1]==e[2]},"ne?":function(e){return e[1]!=e[2]},"lt?":function(e){return e[1]<e[2]},"le?":function(e){return e[1]<=e[2]},"gt?":function(e){return e[1]>e[2]},"ge?":function(e){return e[1]>=e[2]},"notnull?":function(e){return!!e[1]},"null?":function(e){return!e[1]},"zero?":function(e){return 0==parseInt(e[1])},typeof:function(e){return $fMUO1.default.typeOf(e[1])},"*":function(e){let t=e[1];for(let r=2;r<e.length;r++)t*=e[r];return t},"/":function(e){let t=e[1];for(let r=2;r<e.length;r++)t/=e[r];return t},"+":function(e){let t=e[1];for(let r=2;r<e.length;r++)t-=-e[r];return t},"-":function(e){let t=e[1];for(let r=2;r<e.length;r++)t-=e[r];return t},mul:function(e){let t=e[1];for(let r=2;r<e.length;r++)t*=e[r];return t},div:function(e){let t=e[1];for(let r=2;r<e.length;r++)t/=e[r];return t},sum:function(e){let t=e[1];for(let r=2;r<e.length;r++)t-=-e[r];return t},sub:function(e){let t=e[1];for(let r=2;r<e.length;r++)t-=e[r];return t},mod:function(e){let t=e[1];for(let r=2;r<e.length;r++)t%=e[r];return t},pow:function(e){let t=e[1];for(let r=2;r<e.length;r++)t=Math.pow(t,e[r]);return t},dump:function(e){return JSON.stringify(e[1])},_set:function(e,t){for(let r=1;r+1<e.length;r+=2){let n=$d261ccdafdfe12a9$var$Template.value(e[r+1],t);if(e[r].length>1){let a=$d261ccdafdfe12a9$var$Template.expand(e[r],t,"varref");null!=a&&(a[0][a[1]]=n)}else t[$d261ccdafdfe12a9$var$Template.value(e[r],t)]=n}return""},_unset:function(e,t){for(let r=1;r<e.length;r++)if(e[r].length>1){let n=$d261ccdafdfe12a9$var$Template.expand(e[r],t,"varref");null!=n&&delete n[0][n[1]]}else delete t[$d261ccdafdfe12a9$var$Template.value(e[r],t)];return null},trim:function(e){return e[1]?"object"==typeof e[1]?e[1].map((e=>e.trim())):e[1].trim():""},upper:function(e){return e[1]?"object"==typeof e[1]?e[1].map((e=>e.toUpperCase())):e[1].toUpperCase():""},lower:function(e){return e[1]?"object"==typeof e[1]?e[1].map((e=>e.toLowerCase())):e[1].toLowerCase():""},substr:function(e){let t=e[e.length-1].toString(),r=0,n=null;return 4==e.length?(r=~~e[1],n=~~e[2]):(r=~~e[1],n=null),r<0&&(r+=t.length),n<0&&(n+=t.length),null===n&&(n=t.length-r),t.substr(r,n)},replace:function(e){return e[3].split(e[1]).join(e[2])},nl2br:function(e){return e[1]?"object"==typeof e[1]?e[1].map((e=>e.replace(/\n/g,"<br/>"))):e[1].replace(/\n/g,"<br/>"):""},"%":function(e){e.shift();var t=e.shift();let r="";for(let n=0;n<e.length;n++)if("array"==$fMUO1.default.typeOf(e[n])){r+=`<${t}>`;for(let t=0;t<e[n].length;t++)r+=e[n][t];r+=`</${t}>`}else r+=`<${t}>${e[n]}</${t}>`;return r},"%%":function(e){e.shift();var t=e.shift();let r="",n="";for(let t=0;t<e.length;t+=2)t+1<e.length?r+=` ${e[t]}="${e[t+1]}"`:n=e[t];return n?`<${t}${r}>${n}</${t}>`:`<${t}${r}/>`},join:function(e){return e[2]&&"array"==$fMUO1.default.typeOf(e[2])?e[2].join(e[1]):""},split:function(e){return e[2]&&"string"==typeof e[2]?e[2].split(e[1]):[]},keys:function(e){return e[1]&&"object"==typeof e[1]?Object.keys(e[1]):[]},values:function(e){return e[1]&&"object"==typeof e[1]?Object.values(e[1]):[]},_each:function(e,t){let r=$d261ccdafdfe12a9$var$Template.expand(e[1],t,"arg"),n=$d261ccdafdfe12a9$var$Template.expand(e[2],t,"arg"),a="",i=0;if(!n)return a;for(let s in n)t[r]=n[s],t[r+"##"]=i++,t[r+"#"]=s,a+=$d261ccdafdfe12a9$var$Template.expand(e[3],t,"text");return delete t[r],delete t[r+"##"],delete t[r+"#"],a},_foreach:function(e,t){let r=$d261ccdafdfe12a9$var$Template.expand(e[1],t,"arg"),n=$d261ccdafdfe12a9$var$Template.expand(e[2],t,"arg"),a=0;if(!n)return null;for(let i in n)t[r]=n[i],t[r+"##"]=a++,t[r+"#"]=i,$d261ccdafdfe12a9$var$Template.expand(e[3],t,"text");return delete t[r],delete t[r+"##"],delete t[r+"#"],null},"_?":function(e,t){return $d261ccdafdfe12a9$var$Template.expand(e[1],t,"arg")?$d261ccdafdfe12a9$var$Template.expand(e[2],t,"arg"):e.length>3?$d261ccdafdfe12a9$var$Template.expand(e[3],t,"arg"):""},"_??":function(e,t){let r=$d261ccdafdfe12a9$var$Template.expand(e[1],t,"arg");return r||$d261ccdafdfe12a9$var$Template.expand(e[2],t,"arg")},_if:function(e,t){for(let r=0;r<e.length;r+=3){if("else"==$d261ccdafdfe12a9$var$Template.expand(e[r],t,"arg"))return $d261ccdafdfe12a9$var$Template.expand(e[r+1],t,"text");if($d261ccdafdfe12a9$var$Template.expand(e[r+1],t,"arg"))return $d261ccdafdfe12a9$var$Template.expand(e[r+2],t,"text")}return""},_switch:function(e,t){let r=$d261ccdafdfe12a9$var$Template.expand(e[1],t,"arg");for(let n=2;n<e.length;n+=2){let a=$d261ccdafdfe12a9$var$Template.expand(e[n],t,"arg");if(a==r||"default"==a)return $d261ccdafdfe12a9$var$Template.expand(e[n+1],t,"text")}return""},_break:function(e,t){throw new Error("EXC_BREAK")},_continue:function(e,t){throw new Error("EXC_CONTINUE")},_repeat:function(e,t){if(e.length<3||1!=(1&e.length))return"(`repeat`: Wrong number of parameters)";let r=$d261ccdafdfe12a9$var$Template.value(e[1],t),n=null,a=0,i=null,s=null;for(let r=2;r<e.length-1;r+=2){switch($d261ccdafdfe12a9$var$Template.value(e[r],t).toLowerCase()){case"from":a=parseFloat($d261ccdafdfe12a9$var$Template.value(e[r+1],t));break;case"to":i=parseFloat($d261ccdafdfe12a9$var$Template.value(e[r+1],t));break;case"count":n=parseFloat($d261ccdafdfe12a9$var$Template.value(e[r+1],t));break;case"step":s=parseFloat($d261ccdafdfe12a9$var$Template.value(e[r+1],t))}}let l=e[e.length-1],f=[];if(null!==i)if(null===s&&(s=a>i?-1:1),s<0)for(let e=a;e>=i;e+=s)try{t[r]=e,f.push($d261ccdafdfe12a9$var$Template.value(l,t))}catch(e){let t=e.message;if("EXC_BREAK"==t)break;if("EXC_CONTINUE"==t)continue;throw e}else for(let e=a;e<=i;e+=s)try{t[r]=e,f.push($d261ccdafdfe12a9$var$Template.value(l,t))}catch(e){let t=e.message;if("EXC_BREAK"==t)break;if("EXC_CONTINUE"==t)continue;throw e}else if(null!==n){null===s&&(s=1);for(let e=a;n>0;n--,e+=s)try{t[r]=e,f.push($d261ccdafdfe12a9$var$Template.value(l,t))}catch(e){let t=e.message;if("EXC_BREAK"==t)break;if("EXC_CONTINUE"==t)continue;throw e}}else{null===s&&(s=1);for(let e=a;;e+=s)try{t[r]=e,f.push($d261ccdafdfe12a9$var$Template.value(l,t))}catch(e){let t=e.message;if("EXC_BREAK"==t)break;if("EXC_CONTINUE"==t)continue;throw e}}return delete t[r],f},_for:function(e,t){if(e.length<3||1!=(1&e.length))return"(`for`: Wrong number of parameters)";let r=$d261ccdafdfe12a9$var$Template.value(e[1],t),n=null,a=0;to=null;let i=null;for(let r=2;r<e.length-1;r+=2)switch(value=$d261ccdafdfe12a9$var$Template.value(e[r],t),value.toLowerCase()){case"from":a=parseFloat($d261ccdafdfe12a9$var$Template.value(e[r+1],t));break;case"to":to=parseFloat($d261ccdafdfe12a9$var$Template.value(e[r+1],t));break;case"count":n=parseFloat($d261ccdafdfe12a9$var$Template.value(e[r+1],t));break;case"step":i=parseFloat($d261ccdafdfe12a9$var$Template.value(e[r+1],t))}let s=e[e.length-1];if(null!==to)if(null===i&&(i=a>to?-1:1),i<0)for(let e=a;e>=to;e+=i)try{t[r]=e,$d261ccdafdfe12a9$var$Template.value(s,t)}catch(e){let t=e.message;if("EXC_BREAK"==t)break;if("EXC_CONTINUE"==t)continue;throw e}else for(let e=a;e<=to;e+=i)try{t[r]=e,$d261ccdafdfe12a9$var$Template.value(s,t)}catch(e){let t=e.message;if("EXC_BREAK"==t)break;if("EXC_CONTINUE"==t)continue;throw e}else if(null!==n){null===i&&(i=1);for(let e=a;n>0;n--,e+=i)try{t[r]=e,$d261ccdafdfe12a9$var$Template.value(s,t)}catch(e){let t=e.message;if("EXC_BREAK"==t)break;if("EXC_CONTINUE"==t)continue;throw e}}else{null===i&&(i=1);for(let e=a;;e+=i)try{t[r]=e,$d261ccdafdfe12a9$var$Template.value(s,t)}catch(e){let t=e.message;if("EXC_BREAK"==t)break;if("EXC_CONTINUE"==t)continue;throw e}}return delete t[r],null},_loop:function(e,t){if(e.length<2)return"(`loop`: Wrong number of parameters)";let r=e[1];for(;;)try{$d261ccdafdfe12a9$var$Template.value(r,t)}catch(e){let t=e.message;if("EXC_BREAK"==t)break;if("EXC_CONTINUE"==t)continue;throw e}return null},_echo:function(e,t){let r="";for(let n=1;n<e.length;n++)r+=$d261ccdafdfe12a9$var$Template.expand(e[n],t,"arg");return console.log(r),""},"_#":function(e,t){let r=[];for(let n=1;n<e.length;n++)r.push($d261ccdafdfe12a9$var$Template.expand(e[n],t,"arg"));return r},"_##":function(e,t){let r=[];for(let t=1;t<e.length;t++)r.push(e[t]);return r},"_&":function(e,t){return $d261ccdafdfe12a9$var$Template.getNamedValues(e,t,1,!0)},"_&&":function(e,t){return $d261ccdafdfe12a9$var$Template.getNamedValues(e,t,1,!1)},contains:function(e,t,r){let n=e[1];if("object"!=typeof n)return r.err="Argument is not a Map",!1;let a="";for(let t=2;t<e.length;t++)e[t]in n||(a+=", "+e[t]);return""==a||(r.err=a.substr(1),!1)},has:function(e,t,r){let n=e[2];return"object"==$fMUO1.default.typeOf(n)&&e[1]in n},_map:function(e,t){let r=$d261ccdafdfe12a9$var$Template.expand(e[1],t,"arg"),n=$d261ccdafdfe12a9$var$Template.expand(e[2],t,"arg");if(!n)return n;let a="array"==$fMUO1.default.typeOf(n),i=a?[]:{},s=0;for(let l in n)t[r]=n[l],t[r+"##"]=s++,t[r+"#"]=l,a?i.push($d261ccdafdfe12a9$var$Template.expand(e[3],t,"arg")):i[l]=$d261ccdafdfe12a9$var$Template.expand(e[3],t,"arg");return delete t[r],delete t[r+"##"],delete t[r+"#"],i},_filter:function(e,t){let r=$d261ccdafdfe12a9$var$Template.expand(e[1],t,"arg"),n=$d261ccdafdfe12a9$var$Template.expand(e[2],t,"arg");if(!n)return n;let a="array"==$fMUO1.default.typeOf(n),i=a?[]:{},s=0;for(let l in n)t[r]=n[l],t[r+"##"]=s++,t[r+"#"]=l,~~$d261ccdafdfe12a9$var$Template.expand(e[3],t,"arg")&&(a?i.push(n[l]):i[l]=n[l]);return delete t[r],delete t[r+"##"],delete t[r+"#"],i},expand:function(e,t,r){return $d261ccdafdfe12a9$var$Template.expand($d261ccdafdfe12a9$var$Template.parseTemplate(e[1],"{","}"),3==e.length?e[2]:r)},_call:function(e,t){let r=$d261ccdafdfe12a9$var$Template.expand(e[1],t,"varref");if(!r||"function"!=typeof r[0][r[1]])throw new Error("Expression is not a function: "+$d261ccdafdfe12a9$var$Template.expand(e[1],t,"obj").map((e=>null==e?".":e)).join(""));let n=[];for(let r=2;r<e.length;r++)n.push($d261ccdafdfe12a9$var$Template.value(e[r],t));return r[0][r[1]](...n)}};var $d261ccdafdfe12a9$export$2e2bcd8739ae039=$d261ccdafdfe12a9$var$Template;const $9ffb7151b8b2d038$export$eefcfe56efaaa57d=$fMUO1.default,$9ffb7151b8b2d038$export$4c85e640eb41c31b=$2394d727dfd6a212$export$2e2bcd8739ae039,$9ffb7151b8b2d038$export$d61e24a684f9e51=$13eda5a5dec8010f$export$2e2bcd8739ae039,$9ffb7151b8b2d038$export$ec8b666c5fe2c75a=$c43adaf9cb6d6dd3$export$2e2bcd8739ae039,$9ffb7151b8b2d038$export$a1edc412be3e1841=$4dfa0622e14576ea$export$2e2bcd8739ae039,$9ffb7151b8b2d038$export$59eced47f477f85a=$0890bed8a163f087$export$2e2bcd8739ae039,$9ffb7151b8b2d038$export$19342e026b58ebb7=$2710795e2347ba2a$export$2e2bcd8739ae039,$9ffb7151b8b2d038$export$3a9581c9ade29768=$32651d5f38a8a64c$export$2e2bcd8739ae039,$9ffb7151b8b2d038$export$fb8073518f34e6ec=$2bcce06113365814$export$2e2bcd8739ae039,$9ffb7151b8b2d038$export$14416b8d99d47caa=$d261ccdafdfe12a9$export$2e2bcd8739ae039;export{$9ffb7151b8b2d038$export$eefcfe56efaaa57d as Rinn,$9ffb7151b8b2d038$export$4c85e640eb41c31b as Class,$9ffb7151b8b2d038$export$d61e24a684f9e51 as Event,$9ffb7151b8b2d038$export$ec8b666c5fe2c75a as EventDispatcher,$9ffb7151b8b2d038$export$a1edc412be3e1841 as Model,$9ffb7151b8b2d038$export$59eced47f477f85a as ModelList,$9ffb7151b8b2d038$export$19342e026b58ebb7 as Schema,$9ffb7151b8b2d038$export$3a9581c9ade29768 as Flattenable,$9ffb7151b8b2d038$export$fb8073518f34e6ec as Collection,$9ffb7151b8b2d038$export$14416b8d99d47caa as Template};
+function $parcel$export(t,e,n,r){Object.defineProperty(t,e,{get:n,set:r,enumerable:!0,configurable:!0})}var $parcel$global="undefined"!=typeof globalThis?globalThis:"undefined"!=typeof self?self:"undefined"!=typeof window?window:"undefined"!=typeof global?global:{},$parcel$modules={},$parcel$inits={},parcelRequire=$parcel$global.parcelRequire25d2;null==parcelRequire&&((parcelRequire=function(t){if(t in $parcel$modules)return $parcel$modules[t].exports;if(t in $parcel$inits){var e=$parcel$inits[t];delete $parcel$inits[t];var n={id:t,exports:{}};return $parcel$modules[t]=n,e.call(n.exports,n,n.exports),n.exports}var r=Error("Cannot find module '"+t+"'");throw r.code="MODULE_NOT_FOUND",r}).register=function(t,e){$parcel$inits[t]=e},$parcel$global.parcelRequire25d2=parcelRequire),parcelRequire.register("4VREF",function(module,exports){$parcel$export(module.exports,"default",()=>$39761b0dd175036e$export$2e2bcd8739ae039);var $fMUO1=parcelRequire("fMUO1"),$cAEYe=parcelRequire("cAEYe"),/**
+**	Map of model constraint handlers. Each function should accept parameters (in order): the model object (model), the constraint value (ctval),
+**	the property name (name), the property value (value) and return the corrected value once verified or throw an exception if errors occur.
+*/$39761b0dd175036e$export$2e2bcd8739ae039={/**
+	**	Utility function (not a handler) to get the real value given a reference string. If the value is not a string, the value itself will
+	**	be returned, if it is a string starting with '#' the model property will be returned, if starts with '@' the object property will be
+	**	returned, otherwise the contents of the string will eval'd and returned.
+	*/_getref:function(value,obj){return"string"!=typeof value?value:("#"==value.substr(0,1)?value=obj.get(value.substr(1)):"@"==value.substr(0,1)&&(value=obj[value.substr(1)]),"string"==typeof value)?eval(value):value},/**
+	**	Verifies that the new value is of the valid type before storing it on the property. When possible if the
+	**	input is of compatible type it will be converted to the target type.
+	*/type:function(t,e,n,r){switch(e){case"int":if(isNaN(r=parseInt(r)))throw Error(e);break;case"float":if(isNaN(r=parseFloat(r)))throw Error(e);break;case"string":r=null==r?"":r.toString();break;case"bit":if(!0===r||!1===r){r=r?1:0;break}if(isNaN(r=parseInt(r)))throw Error(e);r=r?1:0;break;case"array":if("array"==(0,$fMUO1.default).typeOf(r))break;if(null==r){r=[];break}throw Error(e);case"bool":if("true"===r||!0===r){r=!0;break}if("false"===r||!1===r){r=!1;break}throw Error(e)}return r},/**
+	**	Verifies that the field is of the specified model type.
+	*/model:function(t,e,n,r){var i=this._getref(e,t);if(!i)throw Error(e);return r?i.ensure(r):new i},/**
+	**	Verifies that the field is of the specified class.
+	*/cls:function(t,e,n,r){var i=this._getref(e,t);return r?(0,$fMUO1.default).ensureTypeOf(i,r):new i},/**
+	**	Verifies that the array contents are of the specified class. Returns error if the class does not exist
+	**	or if the field is not an array. Therefore a type:array constraint should be used before this one.
+	*/arrayof:function(t,e,n,r){var i=this._getref(e,t);if(r||(r=[]),!i||"array"!=(0,$fMUO1.default).typeOf(r))throw Error(e);for(var s=0;s<r.length;s++)r[s]=(0,$fMUO1.default).ensureTypeOf(i,r[s]);return r},/**
+	**	Verifies that the array contents are not null. Returns error if the field is not an array, therefore a
+	**	type:array constraint should be used before this one.
+	*/arraynull:function(t,e,n,r){var i=!1;if("object"==(0,$fMUO1.default).typeOf(e)&&(e.remove&&(i=e.remove),e=e.value),e)return r;if("array"!=(0,$fMUO1.default).typeOf(r))throw Error(e);for(var s=0;s<r.length;s++)if(null==r[s]){if(i)r.splice(s--,1);else throw Error(e)}return r},/**
+	**	Verifies that the array contents are all compliant. Returns error if the field is not an array, therefore
+	**	a type:array constraint should be used before this one.
+	*/arraycompliant:function(t,e,n,r){var i=!1;if("object"==(0,$fMUO1.default).typeOf(e)&&(e.remove&&(i=e.remove),e=e.value),!e)return r;if("array"!=(0,$fMUO1.default).typeOf(r))throw Error(e);for(var s=0;s<r.length;s++)if(null!=r[s]&&!r[s].isCompliant()){if(i)r.splice(s--,1);else throw Error(e)}return r},/**
+	**	Verifies the presense of the field.
+	*/required:function(t,e,n,r){if(null==r)throw Error(e?"":"null");if("array"===(0,$fMUO1.default).typeOf(r)){if(0==r.length)throw Error(e?"":"null")}else if(0==r.toString().length)throw Error(e?"":"null");return r},/**
+	**	Verifies the minimum length of the field.
+	*/minlen:function(t,e,n,r){if(r.toString().length<e)throw Error(e);return r},/**
+	**	Verifies the maximum length of the field.
+	*/maxlen:function(t,e,n,r){if(r.toString().length>e)throw Error(e);return r},/**
+	**	Verifies the minimum value of the field.
+	*/minval:function(t,e,n,r){if(parseFloat(r)<e)throw Error(e);return r},/**
+	**	Verifies the maximum value of the field.
+	*/maxval:function(t,e,n,r){if(parseFloat(r)>e)throw Error(e);return r},/**
+	**	Verifies the minimum number of items in the array.
+	*/mincount:function(t,e,n,r){if("array"!=(0,$fMUO1.default).typeOf(r)||r.length<e)throw Error(e);return r},/**
+	**	Verifies the maximum number of items in the array.
+	*/maxcount:function(t,e,n,r){if("array"!=(0,$fMUO1.default).typeOf(r)||r.length>e)throw Error(e);return r},/**
+	**	Verifies the format of the field using a regular expression. The constraint value should be the name of
+	**	one of the Model.Regex regular expressions.
+	*/pattern:function(t,e,n,r){if(!(0,$cAEYe.default)[e].test(r.toString()))throw Error(e);return r},/**
+	**	Verifies that the field is inside the specified set of options. The set can be an array or a string with
+	**	the options separated by vertical bar (|). The comparison is case-sensitive.
+	*/inset:function(t,e,n,r){if("array"!=(0,$fMUO1.default).typeOf(e)){if(!RegExp("^("+e.toString()+")$").test(r.toString()))throw Error(e);return r}if(-1==e.indexOf(r.toString()))throw Error(e.join("|"));return r},/**
+	**	Sets the field to upper case.
+	*/upper:function(t,e,n,r){return e?r.toString().toUpperCase():r},/**
+	**	Sets the field to lower case.
+	*/lower:function(t,e,n,r){return e?r.toString().toLowerCase():r}}}),parcelRequire.register("fMUO1",function(t,e){$parcel$export(t.exports,"default",()=>r);let n={};var r=n;/*
+**	Invokes the specified function 'fn' 10ms later.
+**
+**	>> void invokeLater (function fn);
+*/n.invokeLater=function(t){t&&setTimeout(function(){t()},10)},/*
+**	Waits for the specified amount of milliseconds. Returns a Promise.
+**
+**	>> Promise wait (int millis);
+*/n.wait=function(t){return new Promise(function(e,n){setTimeout(e,t)})},/*
+**	Returns the type of an element 'o', properly detects arrays and null types. The return string is always in lowercase.
+**
+**	>> string typeOf (any o);
+*/n.typeOf=function(t){return t instanceof Array?"array":null===t?"null":(typeof t).toString().toLowerCase()},/*
+**	Returns boolean indicating if the type of the element is an array or an object.
+**
+**	>> bool isArrayOrObject (any o);
+*/n.isArrayOrObject=function(t){switch(n.typeOf(t)){case"array":case"object":return!0}return!1},/*
+**	Creates a clone (deep copy) of the specified element. The element can be an array, an object or a primitive type.
+**
+**	>> T clone (T elem);
+*/n.clone=function(t){let e=n.typeOf(t);if("array"===e){e=[];for(let r=0;r<t.length;r++)e.push(n.clone(t[r]))}else if("object"===e){if("clone"in t&&"function"==typeof t.clone)return t.clone();for(let r in e={},t)e[r]=n.clone(t[r])}else e=t;return e},/*
+**	Merges all given elements into the first one, object fields are cloned.
+**
+**	>> T merge (T... elems)
+*/n.merge=function(t,...e){if("array"==n.typeOf(t))for(let r=0;r<e.length;r++){let i=e[r];if("array"!=n.typeOf(i))t.push(i);else for(let e=0;e<i.length;e++)t.push(n.clone(i[e]))}else if("object"==n.typeOf(t))for(let r=0;r<e.length;r++){let i=e[r];if("object"==n.typeOf(i))for(let e in i)n.isArrayOrObject(i[e])?e in t?n.merge(t[e],i[e]):t[e]=n.clone(i[e]):t[e]=i[e]}return t},/*
+**	Assigns all fields from the specified objects into the first one.
+**
+**	>> object override (object output, object... objs)
+*/n.override=function(t,...e){for(let n=0;n<e.length;n++)for(let r in e[n])t[r]=e[n][r];return t},/*
+**	Compares two objects and returns `true` if all properties in "partial" find a match in "full".
+*/n.partialCompare=function(t,e){if(null==t||null==e)return!1;if(t===e)return!0;for(var n in e)if(t[n]!=e[n])return!1;return!0},/*
+**	Performs a partial search for an object (o) in the specified array and returns its index or `false` if the
+**	object was not found. When `getObject` is set to `true` the object will be returned instead of an index, or
+**	`null` if not found.
+*/n.arrayFind=function(t,e,n){for(var r=0;t&&r<t.length;r++)if(this.partialCompare(t[r],e))return n?t[r]:r;return!!n&&null},/*
+**	Verifies if the specified object is of class `m`, returns boolean.
+**
+**	>> bool isTypeOf (object obj, class _class);
+*/n.isInstanceOf=function(t,e){return!!t&&!!e&&"object"==typeof t&&(t instanceof e||"isInstanceOf"in t&&t.isInstanceOf(e))},/*
+**	Traverses the given object attempting to find the index/key that does an identical match with the specified value,
+**	if not found returns -1, otherwise the index/key where the value was found.
+**
+**	>> int indexOf (array container, T value)
+**	>> string indexOf (object container, T value)
+*/n.indexOf=function(t,e,n=!1){if(n){for(let n=0;n<t.length;n++)if(t[n]===e)return n;return -1}for(let n in t)if(t[n]===e)return n;return -1},/*
+**	Escapes a string using HTML entities.
+**
+**	>> string escape (string str);
+*/n.escape=function(t){return(t+"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")},/*
+**	Verifies if the specified object is of class `m`, if not it will create a new instance of `m` passing `o` as parameter.
+**
+**	>> object ensureTypeOf (class m, object o);
+*/n.ensureTypeOf=function(t,e){return!e||!t||e instanceof t||e.isInstanceOf&&t.prototype.className&&e.isInstanceOf(t.prototype.className)?e:new t(e)},/*
+**	Serializes an object and returns its JSON string representation.
+**
+**	>> string serialize (object o);
+*/n.serialize=function(t){return JSON.stringify(t)},/*
+**	Deserializes a string in JSON format and returns the result.
+**
+**	>> any deserialize (string s);
+*/n.deserialize=function(t){return JSON.parse(t)},/*
+**	Chains a new function to an existing one on some object, such that invoking the function on the object will cause
+**	both functions to run (order would be oldFunction then newFunction).
+**
+**	If the `conditional` flag is set to `true`, the second function will be run only if the first one returns non-false.
+**	Returns an object with a single method 'unhook' which will revert the changes to leave only the original function.
+**
+**	>> object{function unhook} hook (Object object, String functionName, function newFunction, bool conditional=false);
+*/n.hookAppend=function(t,e,n,r=!0){let i=t[e];return r?t[e]=function(...t){if(!1!==i.apply(this,t))return n.apply(this,t)}:t[e]=function(...t){return i.apply(this,t),n.apply(this,t)},{unhook:function(){t[e]=i}}},/*
+**	Chains a new function to an existing one on some object, such that invoking the function on the object will cause
+**	both functions to run (order would be oldFunction then newFunction).
+**
+**	If the `conditional` flag is set to `true`, the second function will be run only if the first one returns non-false.
+**	Returns an object with a single method 'unhook' which will revert the changes to leave only the original function.
+**
+**	>> object{function unhook} hook (Object object, String functionName, function newFunction, bool conditional=false);
+*/n.hookPrepend=function(t,e,n,r=!0){let i=t[e];return r?t[e]=function(...t){if(!1!==n.apply(this,t))return i.apply(this,t)}:t[e]=function(...t){return n.apply(this,t),i.apply(this,t)},{unhook:function(){t[e]=i}}}}),parcelRequire.register("cAEYe",function(t,e){$parcel$export(t.exports,"default",()=>n);/**
+**	Common regular expressions for pattern validation.
+*/var n={email:/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)+$/i,url:/^[\w-]+:\/\/[\w-]+(\.\w+)+.*$/,urlNoProt:/^[\w-]+(\.\w+)+.*$/,name:/^[-A-Za-z0-9_.]+$/,uname:/^['\pL\pN ]+$/,text:/^[^&<>{}]*$/,utext:/^([\r\n\pL\pN\pS &!@#$%*\[\]()_+=;',.\/?:"~-]+)$/}});var $fMUO1=parcelRequire("fMUO1"),$fMUO1=parcelRequire("fMUO1");/**
+ * Base class used to create other classes with complex prototype based multiple inheritance while at the
+ * same time avoiding the prototype chain for faster access. Supports calling parent class methods.
+ *///!class Class
+let $2394d727dfd6a212$var$Class=function(){};/**
+ * Reference to the class itself.
+ */$2394d727dfd6a212$var$Class._class=$2394d727dfd6a212$var$Class,/**
+ * Contains the methods of each of the super classes.
+ */$2394d727dfd6a212$var$Class._super={},/**
+ * Name of the class, if none specified the class will be considered "final" and will not be inheritable.
+ * !readonly string className;
+ */$2394d727dfd6a212$var$Class.prototype.className="Class",/**
+ * Class constructor, should initialize the instance. Invoked when the `new` keyword is used with the class.
+ * !constructor();
+ */$2394d727dfd6a212$var$Class.prototype.__ctor=function(){},/**
+ * Class destructor, should clear the instance and release any used resources, invoked when the global `dispose` function is called with an instance as parameter.
+ * !__dtor() : void;
+ */$2394d727dfd6a212$var$Class.prototype.__dtor=function(){},/**
+ * Returns true if the object is an instance of the specified class, the parameter can be a class name (string), a constructor (function) or
+ * a class instance (object), in any cases the appropriate checks will be done.
+ * !isInstanceOf (className: string|function|object) : boolean;
+ */$2394d727dfd6a212$var$Class.prototype.isInstanceOf=function(t){return null!==t&&("function"==typeof t?t=t.prototype.className:"string"!=typeof t&&(t=t.__proto__.className),this.className===t||this._super.hasOwnProperty(t))},/**
+ * Returns true if the given object is an instance of the specified class, the parameter can be a class name (string), a constructor (function)
+ * or a class instance (object), in any cases the appropriate checks will be done.
+ * !instanceOf (object: object, className: string|function|object) : boolean;
+ */$2394d727dfd6a212$var$Class.instanceOf=function(t,e){return null!==t&&null!==e&&t.isInstanceOf(e)},/**
+ * Internal method to ensure the _super field of an instance has all functions properly bound to the instance.
+ */$2394d727dfd6a212$var$Class.prototype._initSuperRefs=function(){let t=this.constructor._super,e={},n=this;for(let r in t){let i={},s=t[r].prototype;for(let t in s)"function"===(0,$fMUO1.default).typeOf(s[t])&&(i[t]=function(t){return function(e,r,i,s,a,l,o,u,f,h,c){return t.call(n,e,r,i,s,a,l,o,u,f,h,c)}}(s[t]));e[r]=i}this._super=e},/*
+**	Extends the class with the specified prototype. The prototype can be a function (class constructor) or an object. Note that the
+**	class will be modified (and returned) instead of creating a new class. Must be called at the class-level (**not** instance level).
+**	When a class is provided all fields starting with uppercase at the class-level will not be inherited, this is used to create constants
+**	on classes without having them to be copied to derived classes.
+**
+**	>> class inherit (constructor classConstructor);
+**	>> class inherit (object obj);
+*/$2394d727dfd6a212$var$Class.inherit=function(t){let e=this._class,n=e._super,r=e._class;if("function"===(0,$fMUO1.default).typeOf(t)){// Move constants (uppercased properties) to the class-level instead of prototype-level.
+for(let n in t._class)/^[A-Z]/.test(n)||(e[n]=t._class[n]);// Combine methods and properties.
+(0,$fMUO1.default).override(e.prototype,t._class.prototype),// Combine super references.
+(0,$fMUO1.default).override(n,t._class._super),t._class.prototype.className&&(n[t._class.prototype.className]=t._class)}else(0,$fMUO1.default).override(e.prototype,t);return e._super=n,e._class=r,e},/**
+ * Internal method used to extend a class with one or more prototypes.
+ */$2394d727dfd6a212$var$Class.prototype._extend=function(t,e){if(0===e.length)return t;//VIOLET OPTIMIZE
+let n=function(...t){this._initSuperRefs(),this.__ctor.apply(this,t)};n._class=n,n._super={},$2394d727dfd6a212$var$Class.inherit.call(n,t),delete n.prototype.className;for(let t=0;t<e.length;t++)n.inherit(e[t]);return delete n._super.Class,"classInit"in n.prototype&&n.prototype.classInit(),n.isInstance=function(t){return(0,$fMUO1.default).isInstanceOf(t,n)},n},/**
+ * Creates a new class with the specified prototypes each of which can be a class constructor (function) or an object.
+ */$2394d727dfd6a212$var$Class.extend=function(...t){return this._class.prototype._extend(this,t)},/**
+ * Creates a new instance of a class resulting from extending the self class with the specified prototype.
+ */$2394d727dfd6a212$var$Class.create=function(t){return new(this.extend(t))},/**
+ * Mutates the host object to be an instance of the specified class.
+ * !static mutate (classConstructor: object, host: object, override?: object) : object;
+ */$2394d727dfd6a212$var$Class.mutate=function(t,e,n=null){let r=new t;// Copy all members from the class prototype.
+for(let n in t.prototype)e.hasOwnProperty(n)||(e[n]=t.prototype[n]);// Copy all members from the zombie class instance.
+for(let t in r)e.hasOwnProperty(t)||(e[t]=r[t]);// Rebind the super references.
+if(e._super)for(let n in e._super)for(let r in e._super[n])e._super[n][r]=t.prototype.constructor._super[n].prototype[r].bind(e);// Copy override members.
+if(null!==n)for(let t in n)e[t]=n[t];return e};var $2394d727dfd6a212$export$2e2bcd8739ae039=$2394d727dfd6a212$var$Class,$fMUO1=parcelRequire("fMUO1"),/**
+**	Holds the information about a triggered event. It also provides a mechanism to allow asynchronous
+**	event propagation to ensure the event chain order.
+*/$13eda5a5dec8010f$export$2e2bcd8739ae039=$2394d727dfd6a212$export$2e2bcd8739ae039.extend({/**
+	**	Name of the class.
+	*/className:"Event",/**
+	**	Source of the event.
+	*/source:null,/**
+	**	Name of the event.
+	*/name:null,/**
+	**	Arguments of the event.
+	*/args:null,/**
+	**	Indicates if the last event handler wants to use async mode.
+	*/_async:!1,/**
+	**	Queue of all handlers to invoke.
+	*/list:null,/**
+	**	Next event to be executed in the event chain.
+	*/next:null,/**
+	**	Return values from event handlers.
+	*/ret:null,/**
+	**	Original root event.
+	*/original:null,/**
+	**	Index of the current event handler.
+	*/i:-1,/**
+	**	Contructs an event object with the specified parameters. Source is the event-dispatcher object, list is
+	**	an array with all the listeners to invoke. The eventName and eventArgs are the event information to be
+	**	passed to each handler and if a callback is specified (cbHandler+cbContext) it will be executed once all
+	**	the event handlers have been processed.
+	**
+	**	Event __ctor (source: EventDispatcher, list: Array, eventName: string, eventArgs: map, cbHandler: function, cbContext: object);
+	*/__ctor:function(t,e,n,r,i,s){this.source=t,this.name=n,this.args=r,this.cbHandler=i,this.cbContext=s,this.list=e,this.reset()},/**
+	**	Resets the event to its initial state. An event object can be reused by resetting it and then
+	**	invoking the resume event.
+	**
+	**	Event reset ();
+	*/reset:function(){return this.next=null,this.ret=[],this._async=!1,this.i=-1,this},/**
+	**	Changes the source of the event.
+	**
+	**	Event setSource (object value);
+	*/setSource:function(t){return this.source=t,this},/**
+	**	Sets the internal asynchronous flag. Should be called before a handler returns. If a handler
+	**	calls this method it should also call resume() when async operations are finished.
+	**
+	**	Event wait ();
+	*/wait:function(){return this._async=!0,this},/**
+	**	Resumes event propagation. Should be called manually by event handlers that also call wait().
+	**
+	**	Event resume ();
+	*/resume:function(){for(this._async=!1;!this._async&&!(++this.i>=this.list.length);)if(!this.list[this.i].silent){if("string"==(0,$fMUO1.default).typeOf(this.list[this.i].handler)){if(this.list[this.i].context){if(!this.list[this.i].context[this.list[this.i].handler])continue;if(!1===this.list[this.i].context[this.list[this.i].handler](this,this.args,this.list[this.i].data))break}else if(!1===$parcel$global[this.list[this.i].handler].call(null,this,this.args,this.list[this.i].data))break}else if(!1===this.list[this.i].handler.call(this.list[this.i].context,this,this.args,this.list[this.i].data))break}return this._async||(this.i>=this.list.length&&this.next&&this.next.resume(),this.cbHandler&&this.cbHandler.call(this.cbContext)),this},/**
+	**	Sets the "original" property of the event to indicate where the original event comes from.
+	**
+	**	Event from (event: Event);
+	*/from:function(t){return this.original=t,this},/**
+	**	Enqueues the specified event to be executed upon the current event process is finished. The "original"
+	**	property of the chained event will be set to the current event.
+	**
+	**	Event enqueueEvent (event: Event);
+	*/enqueue:function(t){var e;if(!t)return this;for(e=this;null!=e.next;e=e.next);return e.next=t,t.from(this),this}}),/**
+**	Event dispatcher allows several event listeners to be attached, these will be invoked whenever the
+**	event that is being listened to is triggered.
+*/$c43adaf9cb6d6dd3$export$2e2bcd8739ae039=$2394d727dfd6a212$export$2e2bcd8739ae039.extend({/**
+	**	Name of the class.
+	*/className:"EventDispatcher",/**
+	**	Listeners attached to this event dispatcher. Grouped by event name.
+	*/listeners:null,/**
+	**	Namespace for event dispatching. Defaults to null. Can be modified using setNamespace().
+	*/namespace:null,/**
+	**	Initializes the event dispatcher.
+	**
+	**	EventDispatcher __ctor ();
+	*/__ctor:function(){this.listeners={}},/**
+	**	Sets the event dispatching namespace. Used to force all events dispatched to have the specified namespace.
+	**
+	**	EventDispatcher setNamespace (value: string);
+	*/setNamespace:function(t){return this.namespace=t,this},/**
+	**	Adds an event listener for a specified event to the event dispatcher. The event name can have an optional
+	**	namespace indicator which is added to the beginning of the event name and separated using a colon (:). This
+	**	indicator can be used to later trigger or remove all handlers of an specific namespace.
+	**
+	**	EventDispatcher addEventListener (eventName: string, handler: function, context: object, data: object);
+	*/addEventListener:function(t,e,n,r){var i=(t=t.split(":"))[t.length-1],s=t.length>1?t[0]:null;return this.listeners[i]||(this.listeners[i]=[]),this.listeners[i].push({ns:s,handler:e,context:n,data:r,silent:0}),this},/**
+	**	Removes an event listener from the event dispatcher. If only the name is provided all handlers with the
+	**	specified name will be removed. If a context is provided without a handler then any handler matching the
+	**	context will be removed. Special event name "*" can be used to match all event names.
+	**
+	**	EventDispatcher removeEventListener (eventName: string, handler: function, context: object);
+	*/removeEventListener:function(t,e,n){var r=(t=t.split(":"))[t.length-1],i=t.length>1?t[0]:null;if("*"==r)for(var s in this.listeners)for(var a=this.listeners[s],l=0;l<a.length;l++){var o=!0;e&&(o=o&&a[l].handler===e),n&&(o=o&&a[l].context===n),i&&(o=o&&a[l].ns==i),o&&a.splice(l--,1)}else{if(!this.listeners[r])return this;for(var a=this.listeners[r],l=0;l<a.length;l++){var o=!0;e&&(o=o&&a[l].handler===e),n&&(o=o&&a[l].context===n),i&&(o=o&&a[l].ns==i),o&&a.splice(l--,1)}}return this},/**
+	**	Prepares an event with the specified parameters for its later usage. The event is started when
+	**	the resume() method is called. If a callback is specified it will be executed once all event
+	**	handlers have been processed.
+	**
+	**	Event prepareEvent (eventName: string, eventArgs: map, cbHandler: function, cbContext: object);
+	**	Event prepareEvent (eventName: string, eventArgs: map);
+	*/prepareEvent:function(t,e,n,r){var i=[],s=(t=t.split(":"))[t.length-1],a=t.length>1?t[0]:null;this.listeners[s]&&(i=i.concat(this.listeners[s])),this.listeners["*"]&&(i=i.concat(this.listeners["*"]));for(var l=0;l<i.length;l++)i[l].silent&&i.splice(l--,1);if(a)for(var l=0;l<i.length;l++)i[l].ns!=a&&i.splice(l--,1);return new $13eda5a5dec8010f$export$2e2bcd8739ae039(this,i,s,e,n,r)},/**
+	**	Silences or unsilences all handlers attached to an event such that if the event fires the handler(s) will
+	**	not be invoked. It is recommended to use a namespace to ensure other handlers will continue to be run.
+	**
+	**	EventDispatcher silence (eventName: string);
+	*/silence:function(t,e){var n=(t=t.split(":"))[t.length-1],r=t.length>1?t[0]:null;if(e=!1===e?-1:1,"*"==n)for(var i in this.listeners)for(var s=this.listeners[i],a=0;a<s.length;a++)r&&s[a].ns!=r||(s[a].silent+=e);else{if(!this.listeners[n])return this;for(var s=this.listeners[n],a=0;a<s.length;a++)r&&s[a].ns!=r||(s[a].silent+=e)}return this},/**
+	**	Dispatches an event to the respective listeners. If a callback is specified it will be executed once
+	**	all event handlers have been processed.
+	**
+	**	Event dispatchEvent (eventName: string, eventArgs: map, cbHandler: function, cbContext: object);
+	**	Event dispatchEvent (eventName: string, eventArgs: map);
+	*/dispatchEvent:function(t,e,n,r){return this.prepareEvent(this.namespace?this.namespace+":"+t:t,e,n,r).resume()}}),$fMUO1=parcelRequire("fMUO1"),$4VREF=parcelRequire("4VREF");/**
+**	A model is a high-integrity data object used to store properties and more importantly to provide event support to notify of any
+**	kind of change that occurs to the model's properties. Integrity of the model is maintained by optionally using property constraints.
+*/let $4dfa0622e14576ea$var$_Model=$c43adaf9cb6d6dd3$export$2e2bcd8739ae039.extend({/**
+	**	Name of the class.
+	*/className:"Model",/**
+	**	Default properties for the model. Can be a map with the property name and its default value or a function
+	**	returning a map with dynamic default values. This is used to reset the model to its initial state.
+	*/defaults:null,/**
+	**	Model property contraints. A map with the property name and an object specifying the constraints of the
+	**	property. This is used to determine the type, format and behavior of each property in the model.
+	*/constraints:null,/**
+	**	Properties of the model.
+	*/data:null,/**
+	**	Array with the name of the properties that have changed. Populated prior modelChanged event.
+	*/changedList:null,/**
+	**	Silent mode indicator. While in silent mode events will not be dispatched.
+	*/_silent:0,/**
+	**	Current nesting level of the set() method. This is used to determine when all the property
+	**	changes are done.
+	*/_level:0,/**
+	**	Initializes the model and sets the properties to the specified data object.
+	**
+	**	>> Model __ctor (object data);
+	**	>> Model __ctor (object data, object defaults);
+	*/__ctor:function(t,e){if(this._super.EventDispatcher.__ctor(),this.data={},null!=e)this.reset(e,!1);else{let t=null;if(!this.defaults&&this.constraints)for(let e in t={},this.constraints){let n=this.constraints[e];if(null===n.def||void 0===n.def){t[e]=null;continue}"function"==typeof n.def?t[e]=n.def():t[e]=n.def}this.reset(t)}this.init(),null!=t&&this.set(t,!0),this.constraints&&this.update(),this.ready()},/**
+	**	Resets the model to its default state and triggers update events. If a map is provided the defaults of
+	**	the model will be set to the specified map.
+	**
+	**	>> Model reset (object defaults, [bool nsilent=true]);
+	**	>> Model reset ([bool nsilent=true]);
+	*/reset:function(t,e){if(!this.defaults){if(!t||"object"!==(0,$fMUO1.default).typeOf(t)&&"function"!==(0,$fMUO1.default).typeOf(t))return this;this.defaults=t}return"function"===(0,$fMUO1.default).typeOf(this.defaults)?this.data=this.defaults():this.data=(0,$fMUO1.default).clone(this.defaults),!1===e||!1===t?this:this.update(null,!0)},/**
+	**	Initializes the model. Called before the model properties are set.
+	**
+	**	>> void init ();
+	*/init:function(){},/**
+	**	Initialization epilogue. Called after initialization and after model properties are set.
+	**
+	**	>> void ready ();
+	*/ready:function(){},/**
+	**	Enables or disables silent mode. When the model is in silent mode events will not be dispatched.
+	**
+	**	>> Model silent (value: bool);
+	*/silent:function(t){return this._silent+=t?1:-1,this},/**
+	**	Validates a property name and value against the constraints defined in the model (if any). Returns the
+	**	final value if successful or throws an empty exception if errors occur.
+	**
+	**	>> T _validate (string name, T value);
+	*/_validate:function(t,e){if(!this.constraints||!this.constraints[t])return e;var n=this.constraints[t],r=e;for(var i in n)if($4dfa0622e14576ea$var$_Model.Constraints[i])try{r=$4dfa0622e14576ea$var$_Model.Constraints[i](this,n[i],t,r)}catch(e){if("null"==e.message)break;throw Error(`Constraint [${i}:${n[i]}] failed on property '${t}'.`)}return r},/**
+	**	Sets the value of a property and returns the value set. This method is internally used to set properties
+	**	one at a time. If constraints are present in the model for the specified property all constraints will be
+	**	verified. When constraint errors occur the constraintError event will be raised and the property value
+	**	will not be changed.
+	**
+	**	>> T _set (string name, T value);
+	*/_set:function(t,e){if(!this.constraints||!this.constraints[t])return this.data[t]=e,e;var n=this.constraints[t];this.data[t];var r=e;for(var i in n)if($4dfa0622e14576ea$var$_Model.Constraints[i])try{r=$4dfa0622e14576ea$var$_Model.Constraints[i](this,n[i],t,r)}catch(n){if("null"==n.message)break;this._silent||this.dispatchEvent("constraintError",{constraint:i,message:n.message,name:t,value:e});break}return this.data[t]=r},/**
+	**	Triggers property events to indicate a property is changing. First triggers "propertyChanging" and then
+	**	"propertyChanged". If the first event returns false the second event will not be triggered.
+	**
+	**	>> void _propertyEvent (string name, T prev, T value, bool direct=false);
+	*/_propertyEvent:function(t,e,n,r){var i={name:t,old:e,value:n,level:this._level},s=this.dispatchEvent("propertyChanging",i);r?this.data[t]=i.value:i.value=this._set(t,i.value),null!=s&&s.ret.length&&!1===s.ret[0]||(this.dispatchEvent("propertyChanged."+t,i),this.dispatchEvent("propertyChanged",i),this.changedList.push(t))},/**
+	**	Sets one or more properties of the model. Possible arguments can be two strings or a map.
+	**
+	**	>> Model set (string name, T value, bool force=true);
+	**	>> Model set (string name, T value, bool silent=false);
+	**	>> Model set (string name, T value);
+	**	>> Model set (object data);
+	*/set:function(){var t=arguments.length,e=!1,n=!1;if((t>2||2==t&&"object"==(0,$fMUO1.default).typeOf(arguments[0]))&&"boolean"==(0,$fMUO1.default).typeOf(arguments[t-1])&&(e=arguments[--t],!1===e&&(n=!0)),0==this._level&&(this.changedList=[]),this._level++,2==t)(this.data[arguments[0]]!==arguments[1]||e)&&(this._silent||n?this._set(arguments[0],arguments[1]):this._propertyEvent(arguments[0],this.data[arguments[0]],this._validate(arguments[0],arguments[1])));else for(var r in arguments[0])(this.data[r]!==arguments[0][r]||e)&&(this._silent||n?this._set(r,arguments[0][r]):this._propertyEvent(r,this.data[r],this._validate(r,arguments[0][r])));return--this._level||!this.changedList.length||n||this._silent||this.dispatchEvent("modelChanged",{fields:this.changedList}),this},/**
+	**	Returns true if the given key exists in the model.
+	**
+	**	>> boolean has (string name);
+	*/has:function(t){return t in this.data},/**
+	**	Returns the value of a property. If no name is specified the whole map of properties will be returned.
+	**	If a boolean value of "true" is provided the properties map will be returned but first will be compacted
+	**	using the default data to ensure only valid properties are present.
+	**
+	**	>> T get (string name);
+	**	>> object get ();
+	**	>> object get (true);
+	**	>> object get (false);
+	**	
+	*/get:function(t,e){return 0==arguments.length||!1===t?this.data:1==arguments.length&&!0===t?this.flatten():2==arguments.length&&void 0===this.data[t]?e:this.data[t]},/**
+	**	Returns the value of a property as an integer number.
+	**
+	**	>> int getInt (string name, [int def]);
+	*/getInt:function(t,e){return 2==arguments.length&&void 0===this.data[t]?e:parseInt(this.data[t])},/**
+	**	Returns the value of a property as a floating point number.
+	**
+	**	>> float getFloat (string name, [float def]);
+	*/getFloat:function(t,e){return 2==arguments.length&&void 0===this.data[t]?e:parseFloat(this.data[t])},/**
+	**	Returns the value of a property as a boolean value (true or false).
+	**
+	**	>> bool getBool (string name, [bool def]);
+	**	
+	*/getBool:function(t,e){return t=2==arguments.length&&void 0===this.data[t]?e:this.data[t],"true"===t||!0===t||"false"!==t&&!1!==t&&!!parseInt(t)},/**
+	**	Returns a reference object for a model property. The resulting object contains two methods
+	**	named "get" and "set" to modify the value of the property.
+	**
+	**	>> object getReference (string name);
+	*/getReference:function(t){var e=this;return{get:function(){return e.get(t)},set:function(n){e.set(t,n)}}},/**
+	**	Sets or returns a constraint given the property name. 
+	**
+	**	>> Model constraint (string field, string constraint, T value);
+	**	>> Model constraint (string field, object constraint);
+	**	>> Model constraint (object constraints);
+	**	>> object constraint (string field);
+	*/constraint:function(t,e,n){if(3==arguments.length||2==arguments.length||1==arguments.length&&"object"==(0,$fMUO1.default).typeOf(t)){switch(this.constraints===this.constructor.prototype.constraints&&(this.constraints=(0,$fMUO1.default).clone(this.constraints)),arguments.length){case 1:(0,$fMUO1.default).override(this.constraints,t);break;case 2:(0,$fMUO1.default).override(this.constraints[t],e);break;case 3:this.constraints[t][e]=n}return this}return t?this.constraints[t]:this},/**
+	**	Returns a compact version of the model properties. That is, a map only with validated properties that are
+	**	also present in the default data map. Returns null if the object is not compliant. If the "safe" parameter
+	**	is set one last property named "class" will be attached, this specifies the original classPath of the object.
+	**
+	**	>> object flatten ([bool safe=false]);
+	*/flatten:function(t,e){if(t){var n=this.flatten(!1,!0);return null==n?null:(n.class=this.classPath,n)}if(!this.constraints&&!this.defaults)return this.data;if(!this.isCompliant())return{};var r=this.constraints,i=this.defaults?"function"==(0,$fMUO1.default).typeOf(this.defaults)?this.defaults():this.defaults:this.constraints,n={};for(var s in this.data)if(s in i){if(r&&r[s]){var a=r[s];if(a.model){n[s]=this.data[s]?this.data[s].flatten(e):null;continue}if(a.arrayof){n[s]=[];for(var l=0;l<this.data[s].length;l++)n[s][l]=this.data[s][l]?this.data[s][l].flatten(e):null;continue}if(a.cls){n[s]=this.data[s]?this.data[s].flatten():null;continue}}n[s]=this.data[s]}return n},/**
+	**	Removes a property or a list of properties.
+	**
+	**	>> void remove (string name, [bool nsilent=true]);
+	**	>> void remove (array name, [bool nsilent=true]);
+	*/remove:function(t,e){if("array"==(0,$fMUO1.default).typeOf(t)){for(var n=0;n<t.length;n++)delete this.data[t[n]];!1===e||this._silent||this.dispatchEvent("propertyRemoved",{fields:t})}else delete this.data[t],!1===e||this._silent||this.dispatchEvent("propertyRemoved",{fields:[t]})},/**
+	**	Triggers data change events for one or more properties. Ensure that silent mode is not enabled or else
+	**	this method will have no effect. If no parameters are provided a full update will be triggered on all of
+	**	the model properties.
+	**
+	**	>> Model update (array fields);
+	**	>> Model update (string name);
+	**	>> Model update (bool forceModelChanged);
+	**	>> Model update ();
+	*/update:function(t,e){if(this._silent)return this;if(0==this._level&&(this.changedList=[]),this._level++,t&&"string"==(0,$fMUO1.default).typeOf(t))this._propertyEvent(t,this.data[t],this.data[t],e);else if(t&&"array"==(0,$fMUO1.default).typeOf(t))for(var n of t)this._propertyEvent(n,this.data[n],this.data[n],e);else for(var n in this.data)this._propertyEvent(n,this.data[n],this.data[n],e);return--this._level||this._silent||0==this.changedList.length&&!0!==t||this.dispatchEvent("modelChanged",{fields:this.changedList}),this},/**
+	**	Validates one or mode model properties using the defined constraints. If no parameters are provided all of
+	**	the properties in the model will be validated.
+	**
+	**	>> Model validate (array fields);
+	**	>> Model validate (string name);
+	**	>> Model validate ();
+	*/validate:function(t){if(!this.constraints)return this;if(t&&"string"==(0,$fMUO1.default).typeOf(t))this._set(t,this.data[t]);else for(var e in this.data)t&&-1==(0,$fMUO1.default).indexOf(t,e)||this._set(e,this.data[e]);return this},/**
+	**	Validates all the properties in the model and returns a boolean indicating if all of them comply with the
+	**	constraints defined in the model.
+	**
+	**	>> bool isCompliant ();
+	*/isCompliant:function(){if(!this.constraints)return!0;try{for(var t in this.data)this._validate(t,this.data[t]);return!0}catch(t){}return!1},/**
+	**	Registers an event handler for changes in a specific property of the model.
+	**
+	**	>> void observe (string property, function handler, object context);
+	*/observe:function(t,e,n){this.addEventListener("propertyChanged."+t,e,n)},/**
+	**	Unregisters an event handler from changes in a specific property of the model.
+	**
+	**	>> void unobserve (string property, function handler, object context);
+	*/unobserve:function(t,e,n){this.removeEventListener("propertyChanged."+t,e,n)},/**
+	**	Adds a propertyChanged event handler for the given property. The property name can have an event namespace prepended and separated by colon.
+	**
+	**	>> void watch (string property, function handler);
+	*/watch:function(t,e){1==(t=t.split(":")).length&&(t[1]=t[0],t[0]="watch"),this.addEventListener(t[0]+":propertyChanged."+t[1],function(t,n){e(n.value,n,t)})},/**
+	**	Removes propertyChanged handlers related to the specified property. The property name can have an event namespace prepended and separated by colon.
+	**
+	**	>> void unwatch (string property);
+	*/unwatch:function(t){1==(t=t.split(":")).length&&(t[1]=t[0],t[0]="watch"),this.removeEventListener(t[0]+":propertyChanged."+t[1])},/**
+	 * Triggers a field change event. Even if the value of the field is the same as the model's, the event will still be triggered.
+	 */trigger:function(t,e=null){return this.set(t,e,!0)},/**
+	**	Serializes the model into a string.
+	**
+	**	string toString ();
+	*/toString:function(){return(0,$fMUO1.default).serialize(this.get(!0))}});$4dfa0622e14576ea$var$_Model.Constraints=$4VREF.default;var $4dfa0622e14576ea$export$2e2bcd8739ae039=$4dfa0622e14576ea$var$_Model,$fMUO1=parcelRequire("fMUO1"),/**
+**	Generic list for models.
+*/$0890bed8a163f087$export$2e2bcd8739ae039=$4dfa0622e14576ea$export$2e2bcd8739ae039.extend({/**
+	**	Name of the class.
+	*/className:"ModelList",/**
+	**	Class of the items in the list, can be overriden by child classes to impose a more strict constraint.
+	*/itemt:$4dfa0622e14576ea$export$2e2bcd8739ae039,/**
+	**	Mirror of data.contents
+	*/contents:null,/**
+	**	IDs of every item in the contents.
+	*/itemId:null,/**
+	**	Autoincremental ID for the next item to be added.
+	*/nextId:null,/**
+	**	Default properties of the model.
+	*/defaults:{contents:null},/**
+	**	Constraints of the model to ensure integrity.
+	*/constraints:{contents:{type:"array",arrayof:"@itemt"}},/**
+	**	Constructor.
+	*/__ctor:function(...t){this.itemId=[],this.nextId=0,this._super.Model.__ctor(...t)},/**
+	**	Initialization epilogue. Called after initialization and after model properties are set.
+	*/ready:function(){this._eventGroup="ModelList_"+Date.now()+":modelChanged",this.contents=this.data.contents},/**
+	**	Connects the event handlers to the item.
+	**
+	**	>> Model _bind (int iid, Model item);
+	*/_bind:function(t,e){return e&&e.addEventListener&&e.addEventListener(this._eventGroup,this._onItemEvent,this,t),e},/**
+	**	Disconnects the event handlers from the item.
+	**
+	**	>> Model _unbind (Model item);
+	*/_unbind:function(t){return t&&t.removeEventListener&&t.removeEventListener(this._eventGroup),t},/**
+	**	Handler for item events.
+	**
+	**	>> Model _onItemEvent (Event evt, object args, int iid);
+	*/_onItemEvent:function(t,e,n){this.prepareEvent("itemChanged",{id:n,item:t.source}).from(t).enqueue(this.prepareEvent("modelChanged",{fields:["contents"]})).resume()},/**
+	**	Returns the number of items in the list.
+	**
+	**	>> int length ();
+	*/length:function(){return this.data.contents.length},/**
+	**	Clears the contents of the list.
+	**
+	**	>> void clear ();
+	*/clear:function(){for(var t=0;t<this.data.contents;t++)this._unbind(this.data.contents[t]);return this.itemId=[],this.nextId=0,this.contents=this.data.contents=[],this.prepareEvent("itemsCleared").enqueue(this.prepareEvent("modelChanged",{fields:["contents"]})).resume(),this},/**
+	**	Sets the contents of the list with the specified array. All items will be ensured to be of the same model
+	**	type as the one specified in the list.
+	**
+	**	>> ModelList setData (array data);
+	*/setData:function(t){if(this.clear(),!t)return this;for(var e=0;e<t.length;e++){var n=(0,$fMUO1.default).ensureTypeOf(this.itemt,t[e]);this.itemId.push(this.nextId++),this.data.contents.push(n),this._bind(this.nextId-1,n)}return this.prepareEvent("itemsChanged").enqueue(this.prepareEvent("modelChanged",{fields:["contents"]})).resume(),this},/**
+	**	Returns the raw array contents of the list.
+	**
+	**	>> array getData ();
+	*/getData:function(){return this.data.contents},/**
+	**	Returns the item at the specified index or null if the index is out of bounds.
+	**
+	**	>> Model getAt (int index);
+	*/getAt:function(t){return t<0||t>=this.data.contents.length?null:this.data.contents[t]},/**
+	**	Removes and returns the item at the specified index. Returns null if the index is out of bounds.
+	**
+	**	>> Model removeAt (int index);
+	*/removeAt:function(t){if(t<0||t>=this.data.contents.length)return null;let e=this.data.contents.splice(t,1)[0],n=this.itemId.splice(t,1)[0];return this._unbind(e),this.prepareEvent("itemRemoved",{id:n,item:e}).enqueue(this.prepareEvent("modelChanged",{fields:["contents"]})).resume(),e},/**
+	**	Sets the item at the specified index. Returns false if the index is out of bounds, true otherwise. The
+	**	item will be ensured to be of the model defined in the list.
+	**
+	**	>> bool setAt (int index, Model item);
+	*/setAt:function(t,e){return!(t<0)&&!(t>=this.data.contents.length)&&(e=(0,$fMUO1.default).ensureTypeOf(this.itemt,e),this._unbind(this.data.contents[t]),this.data.contents[t]=e,this._bind(this.itemId[t],e),this.prepareEvent("itemChanged",{id:this.itemId[t],item:e}).enqueue(this.prepareEvent("modelChanged",{fields:["contents"]})).resume(),!0)},/**
+	**	Notifies a change in the item at the specified index. Returns false if the index is out of bounds.
+	**
+	**	>> bool updateAt (int index);
+	*/updateAt:function(t){return!(t<0)&&!(t>=this.data.contents.length)&&(this.prepareEvent("itemChanged",{id:this.itemId[t],item:this.data.contents[t]}).enqueue(this.prepareEvent("modelChanged",{fields:["contents"]})).resume(),!0)},/**
+	**	Adds an item to the bottom of the list. Returns null if the item is not an object or a model. The item
+	**	will be ensured to be of the model specified in the list.
+	**
+	**	>> Model push (Model item);
+	*/push:function(t){return t&&"object"!=(0,$fMUO1.default).typeOf(t)?null:(t=(0,$fMUO1.default).ensureTypeOf(this.itemt,t),this.itemId.push(this.nextId++),this.data.contents.push(t),this._bind(this.nextId-1,t),this.prepareEvent("itemAdded",{id:this.itemId[this.itemId.length-1],item:t,position:"tail"}).enqueue(this.prepareEvent("modelChanged",{fields:["contents"]})).resume(),t)},/**
+	**	Removes and returns an item from the bottom of the list.
+	**
+	**	>> Model pop ();
+	*/pop:function(){return this._unbind(this.data.contents.pop())},/**
+	**	Adds an item to the top of the list. Returns null if the item is not an object or a model. The item
+	**	will be ensured to be of the model specified in the list.
+	**
+	**	>> Model unshift (Model item);
+	*/unshift:function(t){return t&&"object"!=(0,$fMUO1.default).typeOf(t)?null:(t=(0,$fMUO1.default).ensureTypeOf(this.itemt,t),this.itemId.unshift(this.nextId++),this.data.contents.unshift(t),this._bind(this.nextId-1,t),this.prepareEvent("itemAdded",{id:this.itemId[0],item:t,position:"head"}).enqueue(this.prepareEvent("modelChanged",{fields:["contents"]})).resume(),t)},/**
+	**	Removes and returns an item from the top of the list.
+	**
+	**	>> Model shift ();
+	*/shift:function(){return this._unbind(this.data.contents.shift())},/**
+	**	Searches for an item matching the specified partial definition and returns its index. Returns -1 if the
+	**	item was not found. If retObject is set to true the object will be returned instead of its index and null
+	**	will be returned when the item is not found.
+	**
+	**	int|object find (object data, bool retObject=false);
+	*/find:function(t,e=!1){for(var n=this.data.contents,r=0;r<n.length;r++)if((0,$fMUO1.default).partialCompare(n[r].data,t))return e?n[r]:r;return e?null:-1}}),$fMUO1=parcelRequire("fMUO1");/**
+ * The utility functions in this module allow to create a very strict serialization/deserialization schema
+ * to ensure that all values are of the specific type when stored in string format.
+ */let $2710795e2347ba2a$var$Schema={Type:function(t){let e={flatten:function(t,e){return t},unflatten:function(t,e){return t}};return t?(0,$fMUO1.default).override(e,t):e},String:function(){return $2710795e2347ba2a$var$Schema.Type({flatten:function(t,e){return null!=t?t.toString():null},unflatten:function(t,e){return null!=t?t.toString():null}})},Integer:function(){return $2710795e2347ba2a$var$Schema.Type({flatten:function(t,e){return~~t},unflatten:function(t,e){return~~t}})},Number:function(t){return $2710795e2347ba2a$var$Schema.Type({_precision:t,_round:!1,precision:function(t){return this._precision=~~t,this},flatten:function(t,e){return t=parseFloat(t),this._precision>0&&(t=~~(t*Math.pow(10,this._precision))/Math.pow(10,this._precision)),t},unflatten:function(t,e){return parseFloat(t)}})},Bool:function(t){return $2710795e2347ba2a$var$Schema.Type({_compact:t,compact:function(t){return this._compact=t,this},flatten:function(t,e){return t=~~t,this._compact?t>0?1:0:t>0},unflatten:function(t,e){return!!~~t}})},SharedString:function(){return $2710795e2347ba2a$var$Schema.Type({flatten:function(t,e){return null==t?0:(t=t.toString(),"strings"in e||(e.index={},e.strings=[]),t in e.index||(e.strings.push(t),e.index[t]=e.strings.length),e.index[t])},unflatten:function(t,e){return null==t||0==t?null:e.strings[~~t-1]}})},Array:function(t){return $2710795e2347ba2a$var$Schema.Type({itemType:t,_debug:!1,_filter:null,debug:function(t){return this._debug=t,this},of:function(t){return this.itemType=t,this},filter:function(t){return this._filter=t,this},flatten:function(t,e){if(null==t)return null;let n=[];for(let r=0;r<t.length;r++)(!this._filter||this._filter(t[r],r))&&n.push(this.itemType.flatten(t[r],e));return n},unflatten:async function(t,e){if(null==t)return null;let n=[];for(let r=0;r<t.length;r++)n.push(await this.itemType.unflatten(t[r],e));return n}})},Object:function(){return $2710795e2347ba2a$var$Schema.Type({properties:[],property:function(t,e,n=null){return this.properties.push({name:t,source:t,type:e,defvalue:n}),this},propertyAlias:function(t,e,n,r=null){return this.properties.push({name:t,source:e,type:n,defvalue:r}),this},flatten:function(t,e){let n;if(null==t)return null;if(!0===e.symbolic){n={};for(let r=0;r<this.properties.length;r++)this.properties[r].source in t?n[this.properties[r].name]=this.properties[r].type.flatten(t[this.properties[r].source],e):n[this.properties[r].name]=this.properties[r].type.flatten(this.properties[r].defvalue,e)}else{n=[];for(let r=0;r<this.properties.length;r++)this.properties[r].source in t?n.push(this.properties[r].type.flatten(t[this.properties[r].source],e)):n.push(this.properties[r].type.flatten(this.properties[r].defvalue,e))}return n},unflatten:async function(t,e){if(null==t)return null;let n={};if(!0===e.symbolic)for(let r=0;r<this.properties.length;r++)n[this.properties[r].name]=await this.properties[r].type.unflatten(this.properties[r].name in t?t[this.properties[r].name]:this.properties[r].defvalue,e);else for(let r=0;r<this.properties.length;r++)n[this.properties[r].name]=await this.properties[r].type.unflatten(r in t?t[r]:this.properties[r].defvalue,e);return n}})},Class:function(t){return $2710795e2347ba2a$var$Schema.Type({_constructor:t,constructor:function(t){return this._constructor=t,this},flatten:function(t,e){return null==t?null:t.flatten(e)},unflatten:async function(t,e){return null==t?null:await new this._constructor().unflatten(t,e)}})},/*
+	**	Used when you want to specify just a single property.
+	*/Property:function(t,e){return $2710795e2347ba2a$var$Schema.Type({property:t,type:e,name:function(t){return this.property=t,this},is:function(t){return this.type=t,this},flatten:function(t,e){let n;return null==t?null:(!0===e.symbolic?(n={})[this.property]=this.type.flatten(t[this.property],e):n=this.type.flatten(t[this.property],e),n)},unflatten:async function(t,e){if(null==t)return null;let n={};return!0===e.symbolic?n[this.property]=await this.type.unflatten(t[this.property],e):n[this.property]=await this.type.unflatten(t,e),n}})},Map:function(){return $2710795e2347ba2a$var$Schema.Type({flatten:function(t,e){if(null==t)return null;if(!0===e.symbolic)return t;let n=[];for(let e in t)n.push(e),n.push(t[e]);return n},unflatten:function(t,e){if(null==t)return null;if(!0===e.symbolic)return t;let n={};for(let e=0;e<t.length;e+=2)n[t[e]]=t[e+1];return n}})},Selector:function(){return $2710795e2347ba2a$var$Schema.Type({conditions:[],value:null,when:function(t,e){return this.conditions.push([e=>e===t,e]),this},with:function(t){return this.value=t,this},flatten:function(t,e){if(null==t)return null;for(let n of this.conditions)if(!0===n[0](this.value))return n[1].flatten(t,e);return null},unflatten:async function(t,e){if(null==t)return null;for(let n of this.conditions)if(!0===n[0](this.value))return await n[1].unflatten(t,e);return null}})}};var $2710795e2347ba2a$export$2e2bcd8739ae039=$2710795e2347ba2a$var$Schema,/**
+**	Class used to add flattening and unflattening capabilities to any object. A "flat" object is an object composed
+**	only of native types, that is: `null,` `boolean`, `integer`, `number`, `array` or `object`.
+*/$32651d5f38a8a64c$export$2e2bcd8739ae039=$2394d727dfd6a212$export$2e2bcd8739ae039.extend({/**
+	**	Name of the class.
+	*/className:"Flattenable",/**
+	**	Type schema used to flatten/unflatten the contents of this class. See Schema class for more information.
+	*/typeSchema:null,/**
+	**	Returns the flattened contents of the object.
+	*/flatten:function(t){return this.typeSchema.flatten(this,t)},/**
+	**	Unflattens the given object and overrides the local contents.
+	*/unflatten:async function(t,e){return Object.assign(this,await this.typeSchema.unflatten(t,e)),await this.onUnflattened(),this},/*
+	**	Executed when the unflatten() method is called on the object.
+	*/onUnflattened:async function(){}}),$fMUO1=parcelRequire("fMUO1"),/**
+**	Flattenable collection class, used to store items and manipulate them. The items should also be flattenable.
+*/$2bcce06113365814$export$2e2bcd8739ae039=$32651d5f38a8a64c$export$2e2bcd8739ae039.extend({/**
+	**	Name of the class.
+	*/className:"Collection",/**
+	**	Describes the type schema of the underlying items.
+	*/itemTypeSchema:null,/**
+	**	Array of items.
+	*/items:null,/* Array *//**
+	**	Constructs the collection.
+	*/__ctor:function(t){t||(t=this.itemTypeSchema),t&&(this.typeSchema=$2710795e2347ba2a$export$2e2bcd8739ae039.Property("items").is($2710795e2347ba2a$export$2e2bcd8739ae039.Array().of(t))),this.reset()},/*
+	**	Executed after the collection has been unflattened, re-adds the items to ensure onItemAdded() is called.
+	*/onUnflattened:function(){let t=this.items;for(let e of(this.reset(),t))this.add(e)},/**
+	 * 	Executed when the value in `items` is changed.
+	 */itemsReferenceChanged:function(){},/*
+	**	Resets the collection to empty. Note that onItemRemoved will not be called.
+	*/reset:function(){return this.items=[],this.itemsReferenceChanged(),this},/*
+	**	Clears the contents of the collection (removes each item manually, onItemRemoved will be called).
+	*/clear:function(){var t=this.items;this.reset();for(var e=0;e<t.length;e++)this.onItemRemoved(t[e],0);return this},/*
+	**	Sorts the collection. A comparison function should be provided, or the name of a property to sort by.
+	**
+	**	Object sort (fn: Function)
+	**	Object sort (prop: string, [desc:bool=false])
+	*/sort:function(t,e){return"function"!=typeof t?this.items.sort(function(n,r){return(n[t]<=r[t]?-1:1)*(!0===e?-1:1)}):this.items.sort(t),this},/*
+	**	Searches for an item with the specified fields and returns it. The "inc" object is the "inclusive" map, meaning all fields must match
+	**	and the optional "exc" is the exclusive map, meaning not even one field should match.
+	**
+	**	Object findItem (inc: Object, exc: Object);
+	*/findItem:function(t,e){if(!this.items)return null;for(var n=0;n<this.items.length;n++)if(!(e&&(0,$fMUO1.default).partialCompare(this.items[n],e))&&(0,$fMUO1.default).partialCompare(this.items[n],t))return this.items[n];return null},/*
+	**	Returns the container array.
+	*/getItems:function(){return this.items},/*
+	**	Returns the number of items in the collection.
+	*/length:function(){return this.items.length},/*
+	**	Returns true if the collection is empty.
+	*/isEmpty:function(){return!this.items.length},/*
+	**	Returns the index of the specified item, or -1 if not found.
+	*/indexOf:function(t){return this.items.indexOf(t)},/*
+	**	Returns the item at the specified index, or null if not found. When `relative` is true, negative offsets are allowed such that -1 refers to the last item.
+	*/getAt:function(t,e=!1){return t<0&&!0==e&&(t+=this.items.length),t>=0&&t<this.items.length?this.items[t]:null},/*
+	**	Returns the first item in the collection.
+	*/first:function(){return this.getAt(0)},/*
+	**	Returns the last item in the collection.
+	*/last:function(){return this.getAt(-1,!0)},/*
+	**	Adds an item at the specified index, effectively moving the remaining items to the right.
+	*/addAt:function(t,e){if(!e||!this.onBeforeItemAdded(e))return this;if(t<0&&(t=0),t>this.items.length&&(t=this.items.length),0==t)this.items.unshift(e);else if(t==this.items.length)this.items.push(e);else{var n=this.items.splice(0,t);n.push(e),this.items=n.concat(this.items),this.itemsReferenceChanged()}return this.onItemAdded(e),this},/*
+	**	Adds an item to the start of the collection, onBeforeItemAdded and onItemAdded will be triggered.
+	*/unshift:function(t){return this.addAt(0,t)},/*
+	**	Adds an item to the end of the collection, onBeforeItemAdded and onItemAdded will be triggered.
+	*/push:function(t){return this.addAt(this.items.length,t)},/*
+	**	Adds an item to the end of the collection, onBeforeItemAdded and onItemAdded will be triggered.
+	*/add:function(t){return this.push(t)},/*
+	**	Removes the item at the specified index. When `relative` is true, negative offsets are allowed such that -1 refers to the last item.
+	*/removeAt:function(t,e=!1){if(t<0&&!0==e&&(t+=this.items.length),t<0||t>=this.items.length)return null;var n=this.items[t];return this.items.splice(t,1),this.onItemRemoved(n,t),n},/*
+	**	Removes an item from the end of the collection.
+	*/pop:function(t){return this.removeAt(-1,!0)},/*
+	**	Removes an item from the start of the collection.
+	*/shift:function(t){return this.removeAt(0)},/*
+	**	Removes the specified item from the collection.
+	*/remove:function(t){return this.removeAt(this.indexOf(t))},/*
+	**	Runs the specified callback for each of the items in the collection, if false is returned by the callback this function
+	**	will exit immediately. Parameters to the callback are: (item, index, collection).
+	*/forEach:function(t){if(this.isEmpty())return this;for(var e=0;e<this.items.length&&!1!==t(this.items[e],e,this);e++);return this},/*
+	**	Executes a method call with the specified parameters on each of the items in the collection, if false is returned by the
+	**	item's method this function will exit immediately.
+	*/forEachCall:function(t,...e){if(this.isEmpty())return this;for(var n=0;n<this.items.length&&!1!==this.items[n][t](...e);n++);return this},/*
+	**	Exactly the same as forEach but in reverse order.
+	*/forEachRev:function(t){if(this.isEmpty())return this;for(var e=this.items.length-1;e>=0&&!1!==t(this.items[e],e,this);e--);return this},/*
+	**	Exactly the same as forEachCall but in reverse order.
+	*/forEachRevCall:function(t,...e){if(this.isEmpty())return this;for(var n=this.items.length-1;n>=0&&!1!==this.items[n][t](...e);n--);return this},/*
+	**	Handler for the beforeItemAdded event. If returns false the item will not be added.
+	*/onBeforeItemAdded:function(t){return!0},/*
+	**	Handler for the itemAdded event.
+	*/onItemAdded:function(t){},/*
+	**	Handler for the itemRemoved event.
+	*/onItemRemoved:function(t){}}),$fMUO1=parcelRequire("fMUO1");/**
+**	Templating module. The template formats available are shown below, note that the sym-open and sym-close symbols are by
+**	default the square brackets, however those can be modified since are just parameters.
+**
+**	HTML Escaped Output:			[data.value]					Escapes HTML characters from the output.
+**	Raw Output:						[!data.value]					Does not escape HTML characters from the output (used to output direct HTML).
+**	Double-Quoted Escaped Output:	[data.value]					Escapes HTML characters and surrounds with double quotes.
+**	Immediate Reparse:				[<....] [@....] "..." '...'		Reparses the contents as if parseTemplate() was called again.
+**	Immediate Output:				[:...]							Takes the contents and outputs exactly as-is without format and optionally surrounded by the
+**																	sym-open and sym-close symbols when the first character is not '<', sym_open or space.
+**	Filtered Output:				[functionName ... <expr> ...]	Runs a function call, 'expr' can be any of the allowed formats shown here (nested if desired),
+**																	functionName should map to one of the available expression functions registered in the
+**																	Rinn.Template.functions map, each of which have their own parameters.
+*/let $d261ccdafdfe12a9$var$Template={/*
+	**	Strict mode flag. When set, any undefined expression function will trigger an exception.
+	*/strict:!1,/**
+	**	Parses a template and returns the compiled 'parts' structure to be used by the 'expand' method.
+	**
+	**	>> array parseTemplate (string template, char sym_open, char sym_close, bool is_tpl=false);
+	*/parseTemplate:function(t,e,n,r=!1,i=1){let s="string",a=null,l=0,o=0,u="",f=[],h=f,c=!1;function p(t){if("object"==typeof t){if(t instanceof Array)for(let e=0;e<t.length;e++)p(t[e]);else t.data=p(t.data);return t}for(let e=0;e<t.length;e++)if("\\"==t[e]){let n=t[e+1];switch(n){case"n":n="\n";break;case"r":n="\r";break;case"f":n="\f";break;case"v":n="\v";break;case"t":n="	";break;case"s":n="s";break;case'"':n='"';break;case"'":n="'"}t=t.substr(0,e)+n+t.substr(e+2)}return t}function d(t,r){if("template"==t?r=$d261ccdafdfe12a9$var$Template.parseTemplate(r,e,n,!0,0):"parse"==t?(r=$d261ccdafdfe12a9$var$Template.parseTemplate(r,e,n,!1,0),t="base-string","array"==(0,$fMUO1.default).typeOf(r)&&(t=r[0].type,r=r[0].data)):"parse-trim-merge"==t?r=$d261ccdafdfe12a9$var$Template.parseTemplate(r.trim().split("\n").map(t=>t.trim()).join("\n"),e,n,!1,0):"parse-merge"==t?r=$d261ccdafdfe12a9$var$Template.parseTemplate(r,e,n,!1,0):"parse-merge-alt"==t&&(r=$d261ccdafdfe12a9$var$Template.parseTemplate(r,"{","}",!1,0)),"parse-merge"==t||"parse-merge-alt"==t||"parse-trim-merge"==t)for(let t=0;t<r.length;t++)f.push(r[t]);else f.push({type:t,data:r});c&&(h.push(f=[]),c=!1)}!0===r&&(t=t.trim(),s="identifier",l=10,h.push(f=[])),t+="\x00";for(let r=0;r<t.length;r++){if("\\"==t[r]){u+="\\"+t[++r];continue}switch(l){case 0:"\x00"==t[r]?a="string":t[r]==e&&"<"==t[r+1]?(l=1,o=1,a="string",s="parse-merge"):t[r]==e&&"@"==t[r+1]?(l=1,o=1,a="string",s="parse-trim-merge",r++):t[r]==e&&":"==t[r+1]?(l=12,o=1,a="string",s="string",r++):t[r]==e?(l=1,o=1,a="string",s="template"):u+=t[r];break;case 1:if("\x00"==t[r])throw Error("Parse error: Unexpected end of template");if(t[r]==n){if(--o<0)throw Error("Parse error: Unmatched "+n);if(0==o){l=0,a=s;break}}else t[r]==e&&o++;u+=t[r];break;case 10:if("\x00"==t[r]){a=s;break}if("."==t[r]){d(s,u),d("access","."),s="identifier",u="";break}if(null!=t[r].match(/[\t\n\r\f\v ]/)){for(a=s,s="identifier",c=!0;null!=t[r].match(/[\t\n\r\f\v ]/);)r++;r--;break}if(t[r]==e&&"<"==t[r+1]){u&&(a=s),l=11,o=1,s="parse-merge";break}else if(t[r]==e&&"@"==t[r+1]){u&&(a=s),l=11,o=1,s="parse-trim-merge",r++;break}else if('"'==t[r]){u&&(a=s),l=14,o=1,s="parse-merge";break}else if("'"==t[r]){u&&(a=s),l=15,o=1,s="parse-merge";break}else if("`"==t[r]){u&&(a=s),l=16,o=1,s="parse-merge-alt";break}else if(t[r]==e&&":"==t[r+1]){u&&(a=s),l=13,o=1,s="string",r++;break}else if(t[r]==e){u&&d(s,u),l=11,o=1,s="parse",u=""+t[r];break}"identifier"!=s&&(d(s,u),u="",s="identifier"),u+=t[r];break;case 11:if("\x00"==t[r])throw Error("Parse error: Unexpected end of template");if(t[r]==n){if(--o<0)throw Error("Parse error: Unmatched "+n);if(0==o&&(l=10,"parse-merge"==s||"parse-merge-alt"==s||"parse-trim-merge"==s))break}else t[r]==e&&o++;u+=t[r];break;case 12:if("\x00"==t[r])throw Error("Parse error: Unexpected end of template");if(t[r]==n){if(--o<0)throw Error("Parse error: Unmatched "+n);if(0==o){0==u.length||"<"==u[0]||"["==u[0]||" "==u[0]||(u=e+u+n),l=0,a=s;break}}else t[r]==e&&o++;u+=t[r];break;case 13:if("\x00"==t[r])throw Error("Parse error: Unexpected end of template");if(t[r]==n){if(--o<0)throw Error("Parse error: Unmatched "+n);if(0==o){"<"==u[0]||"["==u[0]||" "==u[0]||(u=e+u+n),l=10;break}}else t[r]==e&&o++;u+=t[r];break;case 14:if("\x00"==t[r])throw Error("Parse error: Unexpected end of template");if('"'==t[r]){if(--o<0)throw Error('Parse error: Unmatched "');if(0==o&&(l=10,"parse-merge"==s||"parse-merge-alt"==s||"parse-trim-merge"==s))break}u+=t[r];break;case 15:if("\x00"==t[r])throw Error("Parse error: Unexpected end of template");if("'"==t[r]){if(--o<0)throw Error("Parse error: Unmatched '");if(0==o&&(l=10,"parse-merge"==s||"parse-merge-alt"==s||"parse-trim-merge"==s))break}u+=t[r];break;case 16:if("\x00"==t[r])throw Error("Parse error: Unexpected end of template");if("`"==t[r]){if(--o<0)throw Error("Parse error: Unmatched `");if(0==o&&(l=10,"parse-merge"==s||"parse-merge-alt"==s||"parse-trim-merge"==s))break}u+=t[r]}a&&(d(a,u),a=u="")}if(!r){let t=0;for(;t<h.length;)if("string"==h[t].type&&""==h[t].data)h.splice(t,1);else break;for(t=h.length-1;t>0;)if("string"==h[t].type&&""==h[t].data)h.splice(t--,1);else break;0==h.length&&h.push({type:"string",data:""})}return i&&p(h),h},/**
+	**	Parses a template and returns the compiled 'parts' structure to be used by the 'expand' method. This
+	**	version assumes the sym_open and sym_close chars are [ and ] respectively.
+	**
+	**	>> array parse (string template);
+	*/parse:function(t){return this.parseTemplate(t.trim(),"[","]",!1)},/**
+	**	Removes all static parts from a parsed template.
+	**
+	**	>> array clean (array parts);
+	*/clean:function(t){for(let e=0;e<t.length;e++)"template"!=t[e].type&&(t.splice(e,1),e--);return t},/**
+	**	Expands a template using the given data object, ret can be set to 'text' or 'obj' allowing to expand the template as
+	**	a string (text) or an array of objects (obj) respectively. If none provided it will be expanded as text.
+	**
+	**	>> string/array expand (array parts, object data, string ret='text', string mode='base-string');
+	*/expand:function(t,e,n="text",r="base-string"){let i=[];// Expand variable parts.
+if("var"==r){let n=!0,r=!1,s=e,a=null,l=!0,o="";for(let i=0;i<t.length&&null!=e;i++)switch(t[i].type){case"identifier":case"string":o+=t[i].data,a=null;break;case"template":o+="object"!=typeof(a=this.expand(t[i].data,s,"arg","template"))?a:"";break;case"base-string":o+=this.expand(t[i].data,s,"arg","base-string"),a=null;break;case"access":if(a&&"object"==typeof a)e=a;else{for(""==o&&(o="this");;)if("!"==o[0])o=o.substr(1),n=!1;else if("$"==o[0])o=o.substr(1),r=!0;else break;if("this"!=o&&null!=e){let t=e;null===(e=o in e?e[o]:null)&&l&&o in $d261ccdafdfe12a9$var$Template.functions&&(e=$d261ccdafdfe12a9$var$Template.functions[o](null,null,t)),l=!1}}o=""}for(;""!=o;)if("!"==o[0])o=o.substr(1),n=!1;else if("$"==o[0])o=o.substr(1),r=!0;else break;if("this"!=o){let n=!1;if(null!=e?o in e?e=e[o]:(n=!0,e=null):n=!0,n&&1==t.length&&!0==$d261ccdafdfe12a9$var$Template.strict)throw Error("Expression function `"+o+"` not found.")}"string"==typeof e&&(n&&(e=e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")),r&&(e='"'+e+'"')),i.push(e)}// Expand variable parts and returns a reference to it.
+if("varref"==n){let n=e,r=null,i=!0,s="";for(let a=0;a<t.length&&null!=e;a++)switch(t[a].type){case"identifier":case"string":s+=t[a].data,r=null;break;case"template":s+="object"!=typeof(r=this.expand(t[a].data,n,"arg","template"))?r:"";break;case"base-string":s+=this.expand(t[a].data,n,"arg","base-string"),r=null;break;case"access":if(r&&"object"==typeof r)e=r;else{for(""==s&&(s="this");;)if("!"==s[0])s=s.substr(1);else if("$"==s[0])s=s.substr(1);else break;if("this"!=s&&null!=e){let t=e;null===(e=s in e?e[s]:null)&&i&&s in $d261ccdafdfe12a9$var$Template.functions&&(e=$d261ccdafdfe12a9$var$Template.functions[s](null,null,t)),i=!1}}s=""}for(;""!=s;)if("!"==s[0])s=s.substr(1);else if("$"==s[0])s=s.substr(1);else break;return"this"!=s?[e,s]:null}// Expand function parts.
+if("fn"==r){var s=[];if(s.push($d261ccdafdfe12a9$var$Template.expand(t[0],e,"text","base-string")),"_"+s[0] in $d261ccdafdfe12a9$var$Template.functions&&(s[0]="_"+s[0]),!(s[0]in $d261ccdafdfe12a9$var$Template.functions)){if(!0==$d261ccdafdfe12a9$var$Template.strict)throw Error("Expression function `"+s[0]+"` not found.");return`(Unknown: ${s[0]})`}if("_"==s[0][0])return $d261ccdafdfe12a9$var$Template.functions[s[0]](t,e);for(let n=1;n<t.length;n++)s.push($d261ccdafdfe12a9$var$Template.expand(t[n],e,"arg","base-string"));i.push($d261ccdafdfe12a9$var$Template.functions[s[0]](s,t,e))}// Template mode.
+if("template"==r){if(1==t.length){if(1==t[0].length&&"string"==t[0][0].type)return t[0][0].data;if(1==t[0].length&&"identifier"==t[0][0].type){let r=t[0][0].data;if(r in $d261ccdafdfe12a9$var$Template.functions||"_"+r in $d261ccdafdfe12a9$var$Template.functions)return $d261ccdafdfe12a9$var$Template.expand(t,e,n,"fn")}return $d261ccdafdfe12a9$var$Template.expand(t[0],e,n,"var")}return $d261ccdafdfe12a9$var$Template.expand(t,e,n,"fn")}// Expand parts.
+if("base-string"==r){let r=-1;for(let s of t){let a=null;switch(r++,s.type){case"template":a=$d261ccdafdfe12a9$var$Template.expand(s.data,e,n,"template");break;case"string":case"identifier":a=s.data;break;case"base-string":a=$d261ccdafdfe12a9$var$Template.expand(s.data,e,n,"base-string")}"void"!=n&&("last"!=n||r==t.length-1)&&i.push(a)}}// Return types for direct objects.
+if("obj"==n)return i;if("last"==n)return"Rose\\Arry"==typeOf(i)&&(i=i[0]),i;// When the output is not really needed.
+if("void"==n)return null;// Return as argument ('object' if only one, or string if more than one), that is, the first item in the result.
+if("arg"==n)return"array"==(0,$fMUO1.default).typeOf(i)?1!=i.length?i.join(""):i[0]:i;if("text"==n&&"array"==(0,$fMUO1.default).typeOf(i)){let t=e=>null!=e&&"object"==typeof e?"map"in e?e.map(t).join(""):"join"in e?e.join(""):e.toString():e;i=i.map(t).join("")}return i},/**
+	**	Parses the given template and returns a function that when called with an object will expand the template.
+	**
+	**	>> object compile (string template);
+	*/compile:function(t){return t=$d261ccdafdfe12a9$var$Template.parse(t),function(e=null,n="text"){return $d261ccdafdfe12a9$var$Template.expand(t,e||{},n)}},/**
+	**	Parses and expands the given template immediately.
+	**
+	**	>> object eval (string template, object data, string mode='text');
+	*/eval:function(t,e=null,n="text"){return t=$d261ccdafdfe12a9$var$Template.parse(t),$d261ccdafdfe12a9$var$Template.expand(t,e||{},n)},/**
+	**	Expands the template as 'arg' and returns the result.
+	**
+	**	>> object value (string parts, object data);
+	*/value:function(t,e=null){return"array"!=(0,$fMUO1.default).typeOf(t)?t:$d261ccdafdfe12a9$var$Template.expand(t,e||{},"arg")},/**
+	**	Registers an expression function.
+	**
+	**	>> object register (string name, function fn);
+	*/register:function(t,e){$d261ccdafdfe12a9$var$Template.functions[t]=e},/**
+	**	Calls an expression function.
+	**
+	**	>> object call (string name, object args, object data);
+	*/call:function(t,e,n=null){return t in $d261ccdafdfe12a9$var$Template.functions?$d261ccdafdfe12a9$var$Template.functions[t](e,null,n):null},/**
+	**	Returns a map given a 'parts' array having values of the form "name: value" or ":name value".
+	**
+	**	>> Map getNamedValues (array parts, object data, int i=1, bool expanded=true);
+	*/getNamedValues:function(t,e,n=1,r=!0){let i={},s=0;for(;n<t.length;n+=2){let a=$d261ccdafdfe12a9$var$Template.expand(t[n],e,"arg");s||(s=a.startsWith(":")?1:a.endsWith(":")?2:3),1==s?a=a.substr(1):2==s&&(a=a.substr(0,a.length-1)),r?i[a]=$d261ccdafdfe12a9$var$Template.expand(t[n+1],e,"arg"):i[a]=t[n+1]}return i}};/**
+**	Template functions, functions that are used to format data. Each function takes three parameters (args, parts and data). By default the function arguments
+**	are expanded and passed via 'args' for convenience, however if the function name starts with '_' the 'args' parameter will be skipped and only (parts, data)
+**	will be available, each 'part' must be expanded manually by calling Template.expand.
+*/$d261ccdafdfe12a9$var$Template.functions={/**
+	**	Expression functions.
+	*/global:function(t){return globalThis},null:function(t){return null},true:function(t){return!0},false:function(t){return!1},len:function(t){return t[1].toString().length},int:function(t){return~~t[1]},str:function(t){return t[1].toString()},float:function(t){return parseFloat(t[1])},chr:function(t){return String.fromCharCode(t[1])},ord:function(t){return t[1].toString().charCodeAt(0)},not:function(t){return!t[1]},neg:function(t){return-t[1]},abs:function(t){return Math.abs(t[1])},and:function(t){for(let e=1;e<t.length;e++)if(!t[e])return!1;return!0},or:function(t){for(let e=1;e<t.length;e++)if(~~t[e])return!0;return!1},eq:function(t){return t[1]==t[2]},ne:function(t){return t[1]!=t[2]},lt:function(t){return t[1]<t[2]},le:function(t){return t[1]<=t[2]},gt:function(t){return t[1]>t[2]},ge:function(t){return t[1]>=t[2]},isnotnull:function(t){return!!t[1]},isnull:function(t){return!t[1]},iszero:function(t){return 0==parseInt(t[1])},"eq?":function(t){return t[1]==t[2]},"ne?":function(t){return t[1]!=t[2]},"lt?":function(t){return t[1]<t[2]},"le?":function(t){return t[1]<=t[2]},"gt?":function(t){return t[1]>t[2]},"ge?":function(t){return t[1]>=t[2]},"notnull?":function(t){return!!t[1]},"null?":function(t){return!t[1]},"zero?":function(t){return 0==parseInt(t[1])},typeof:function(t){return(0,$fMUO1.default).typeOf(t[1])},"*":function(t){let e=t[1];for(let n=2;n<t.length;n++)e*=t[n];return e},"/":function(t){let e=t[1];for(let n=2;n<t.length;n++)e/=t[n];return e},"+":function(t){let e=t[1];for(let n=2;n<t.length;n++)e-=-t[n];return e},"-":function(t){let e=t[1];for(let n=2;n<t.length;n++)e-=t[n];return e},mul:function(t){let e=t[1];for(let n=2;n<t.length;n++)e*=t[n];return e},div:function(t){let e=t[1];for(let n=2;n<t.length;n++)e/=t[n];return e},sum:function(t){let e=t[1];for(let n=2;n<t.length;n++)e-=-t[n];return e},sub:function(t){let e=t[1];for(let n=2;n<t.length;n++)e-=t[n];return e},mod:function(t){let e=t[1];for(let n=2;n<t.length;n++)e%=t[n];return e},pow:function(t){let e=t[1];for(let n=2;n<t.length;n++)e=Math.pow(e,t[n]);return e},/**
+	**	Returns the JSON representation of the expression.
+	**
+	**	dump <expr>
+	*/dump:function(t){return JSON.stringify(t[1])},/**
+	**	Sets one or more variables in the data context.
+	**
+	**	set <var-name> <expr> [<var-name> <expr>]*
+	*/_set:function(t,e){for(let n=1;n+1<t.length;n+=2){let r=$d261ccdafdfe12a9$var$Template.value(t[n+1],e);if(t[n].length>1){let i=$d261ccdafdfe12a9$var$Template.expand(t[n],e,"varref");null!=i&&(i[0][i[1]]=r)}else e[$d261ccdafdfe12a9$var$Template.value(t[n],e)]=r}return""},/**
+	**	Removes one or more variables from the data context.
+	**
+	**	unset <var-name> [<var-name>]*
+	*/_unset:function(t,e){for(let n=1;n<t.length;n++)if(t[n].length>1){let r=$d261ccdafdfe12a9$var$Template.expand(t[n],e,"varref");null!=r&&delete r[0][r[1]]}else delete e[$d261ccdafdfe12a9$var$Template.value(t[n],e)];return null},/**
+	**	Returns the expression without white-space on the left or right. The expression can be a string or an array.
+	**
+	**	trim <expr>
+	*/trim:function(t){return t[1]?"object"==typeof t[1]?t[1].map(t=>t.trim()):t[1].trim():""},/**
+	**	Returns the expression in uppercase. The expression can be a string or an array.
+	**
+	**	upper <expr>
+	*/upper:function(t){return t[1]?"object"==typeof t[1]?t[1].map(t=>t.toUpperCase()):t[1].toUpperCase():""},/**
+	**	Returns the expression in lower. The expression can be a string or an array.
+	**
+	**	lower <expr>
+	*/lower:function(t){return t[1]?"object"==typeof t[1]?t[1].map(t=>t.toLowerCase()):t[1].toLowerCase():""},/**
+	**	Returns a sub-string of the given string.
+	**
+	**	substr <start> <count> <string>
+	**	substr <start> <string>
+	*/substr:function(t){let e=t[t.length-1].toString(),n=0,r=null;return 4==t.length?(n=~~t[1],r=~~t[2]):(n=~~t[1],r=null),n<0&&(n+=e.length),r<0&&(r+=e.length),null===r&&(r=e.length-n),e.substr(n,r)},/**
+	**	Replaces a matching string with the given replacement string in a given text.
+	**
+	**	replace <search> <replacement> <text>
+	*/replace:function(t){return t[3].split(t[1]).join(t[2])},/**
+	**	Converts all new-line chars in the expression to <br/>, the expression can be a string or an array.
+	**
+	**	nl2br <expr>
+	*/nl2br:function(t){return t[1]?"object"==typeof t[1]?t[1].map(t=>t.replace(/\n/g,"<br/>")):t[1].replace(/\n/g,"<br/>"):""},/**
+	**	Returns the expression inside an XML tag named 'tag-name', the expression can be a string or an array.
+	**
+	**	% <tag-name> <expr>
+	*/"%":function(t){t.shift();var e=t.shift();let n="";for(let r=0;r<t.length;r++)if("array"==(0,$fMUO1.default).typeOf(t[r])){n+=`<${e}>`;for(let e=0;e<t[r].length;e++)n+=t[r][e];n+=`</${e}>`}else n+=`<${e}>${t[r]}</${e}>`;return n},/**
+	**	Returns the expression inside an XML tag named 'tag-name', attributes are supported.
+	**
+	**	%% <tag-name> [<attr> <value>]* [<content>]
+	*/"%%":function(t){t.shift();var e=t.shift();let n="",r="";for(let e=0;e<t.length;e+=2)e+1<t.length?n+=` ${t[e]}="${t[e+1]}"`:r=t[e];return r?`<${e}${n}>${r}</${e}>`:`<${e}${n}/>`},/**
+	**	Joins the given array expression into a string. The provided string-expr will be used as separator.
+	**
+	**	join <string-expr> <array-expr>
+	*/join:function(t){return t[2]&&"array"==(0,$fMUO1.default).typeOf(t[2])?t[2].join(t[1]):""},/**
+	**	Splits the given expression by the specified string. Returns an array.
+	**
+	**	split <string-expr> <expr>
+	*/split:function(t){return t[2]&&"string"==typeof t[2]?t[2].split(t[1]):[]},/**
+	**	Returns an array with the keys of the given object-expr.
+	**
+	**	keys <object-expr>
+	*/keys:function(t){return t[1]&&"object"==typeof t[1]?Object.keys(t[1]):[]},/**
+	**	Returns an array with the values of the given object-expr.
+	**
+	**	values <object-expr>
+	*/values:function(t){return t[1]&&"object"==typeof t[1]?Object.values(t[1]):[]},/**
+	**	Constructs a string obtained by concatenating the expanded template for each of the items in the list-expr, the mandatory varname
+	**	parameter (namely 'i') indicates the name of the variable that will contain the data of each item as the list-expr is
+	**	traversed. Extra variables i# and i## (suffix '#' and '##') are introduced to denote the index/key and numeric index
+	**	of the current item respectively, note that the later will always have a numeric value.
+	**
+	**	each <varname> <list-expr> <template>
+	*/_each:function(t,e){let n=$d261ccdafdfe12a9$var$Template.expand(t[1],e,"arg"),r=$d261ccdafdfe12a9$var$Template.expand(t[2],e,"arg"),i="",s=0;if(!r)return i;for(let a in r)e[n]=r[a],e[n+"##"]=s++,e[n+"#"]=a,i+=$d261ccdafdfe12a9$var$Template.expand(t[3],e,"text");return delete e[n],delete e[n+"##"],delete e[n+"#"],i},/**
+	**	Expands the given template for each of the items in the list-expr, the mandatory varname parameter (namely 'i') indicates the name of the variable
+	**	that will contain the data of each item as the list-expr is traversed. Extra variables i# and i## (suffix '#' and '##') are introduced to denote
+	**	the index/key and numeric index of the current item respectively, note that the later will always have a numeric value.
+	**
+	**	Does not produce any output (returns null).
+	**
+	**	foreach <varname> <list-expr> <template>
+	*/_foreach:function(t,e){let n=$d261ccdafdfe12a9$var$Template.expand(t[1],e,"arg"),r=$d261ccdafdfe12a9$var$Template.expand(t[2],e,"arg"),i=0;if(!r)return null;for(let s in r)e[n]=r[s],e[n+"##"]=i++,e[n+"#"]=s,$d261ccdafdfe12a9$var$Template.expand(t[3],e,"text");return delete e[n],delete e[n+"##"],delete e[n+"#"],null},/**
+	**	Returns the valueA if the expression is true otherwise valueB, this is a short version of the 'if' function with the
+	**	difference that the result is 'obj' instead of text.
+	**
+	**	? <expr> <valueA> [<valueB>]
+	*/"_?":function(t,e){return $d261ccdafdfe12a9$var$Template.expand(t[1],e,"arg")?$d261ccdafdfe12a9$var$Template.expand(t[2],e,"arg"):t.length>3?$d261ccdafdfe12a9$var$Template.expand(t[3],e,"arg"):""},/**
+	**	Returns the valueA if it is not null (or empty or zero), otherwise returns valueB.
+	**
+	**	?? <valueA> <valueB>
+	*/"_??":function(t,e){return $d261ccdafdfe12a9$var$Template.expand(t[1],e,"arg")||$d261ccdafdfe12a9$var$Template.expand(t[2],e,"arg")},/**
+	**	Returns the value if the expression is true, supports 'elif' and 'else' as well. The result of this function is always text.
+	**
+	**	if <expr> <value> [elif <expr> <value>] [else <value>]
+	*/_if:function(t,e){for(let n=0;n<t.length;n+=3){if("else"==$d261ccdafdfe12a9$var$Template.expand(t[n],e,"arg"))return $d261ccdafdfe12a9$var$Template.expand(t[n+1],e,"text");if($d261ccdafdfe12a9$var$Template.expand(t[n+1],e,"arg"))return $d261ccdafdfe12a9$var$Template.expand(t[n+2],e,"text")}return""},/**
+	**	Loads the expression value and attempts to match one case.
+	**
+	**	switch <expr> <case1> <value1> ... <caseN> <valueN> default <defvalue> 
+	*/_switch:function(t,e){let n=$d261ccdafdfe12a9$var$Template.expand(t[1],e,"arg");for(let r=2;r<t.length;r+=2){let i=$d261ccdafdfe12a9$var$Template.expand(t[r],e,"arg");if(i==n||"default"==i)return $d261ccdafdfe12a9$var$Template.expand(t[r+1],e,"text")}return""},/**
+	**	Exits the current inner most loop.
+	**
+	**	break
+	*/_break:function(t,e){throw Error("EXC_BREAK")},/**
+	**	Skips execution and continues the next cycle of the current inner most loop.
+	**
+	**	continue
+	*/_continue:function(t,e){throw Error("EXC_CONTINUE")},/**
+	**	Constructs an array with the results of repeating the specified template for a number of times.
+	**
+	**	repeat <varname:i> [from <number>] [to <number>] [count <number>] [step <number>] <template>
+	*/_repeat:function(t,e){if(t.length<3||(1&t.length)!=1)return"(`repeat`: Wrong number of parameters)";let n=$d261ccdafdfe12a9$var$Template.value(t[1],e),r=null,i=0,s=null,a=null;for(let n=2;n<t.length-1;n+=2)switch($d261ccdafdfe12a9$var$Template.value(t[n],e).toLowerCase()){case"from":i=parseFloat($d261ccdafdfe12a9$var$Template.value(t[n+1],e));break;case"to":s=parseFloat($d261ccdafdfe12a9$var$Template.value(t[n+1],e));break;case"count":r=parseFloat($d261ccdafdfe12a9$var$Template.value(t[n+1],e));break;case"step":a=parseFloat($d261ccdafdfe12a9$var$Template.value(t[n+1],e))}let l=t[t.length-1],o=[];if(null!==s){if(null===a&&(a=i>s?-1:1),a<0)for(let t=i;t>=s;t+=a)try{e[n]=t,o.push($d261ccdafdfe12a9$var$Template.value(l,e))}catch(e){let t=e.message;if("EXC_BREAK"==t)break;if("EXC_CONTINUE"==t)continue;throw e}else for(let t=i;t<=s;t+=a)try{e[n]=t,o.push($d261ccdafdfe12a9$var$Template.value(l,e))}catch(e){let t=e.message;if("EXC_BREAK"==t)break;if("EXC_CONTINUE"==t)continue;throw e}}else if(null!==r){null===a&&(a=1);for(let t=i;r>0;r--,t+=a)try{e[n]=t,o.push($d261ccdafdfe12a9$var$Template.value(l,e))}catch(e){let t=e.message;if("EXC_BREAK"==t)break;if("EXC_CONTINUE"==t)continue;throw e}}else{null===a&&(a=1);for(let t=i;;t+=a)try{e[n]=t,o.push($d261ccdafdfe12a9$var$Template.value(l,e))}catch(e){let t=e.message;if("EXC_BREAK"==t)break;if("EXC_CONTINUE"==t)continue;throw e}}return delete e[n],o},/**
+	**	Repeats the specified template for a number of times.
+	**
+	**	for <varname:i> [from <number>] [to <number>] [count <number>] [step <number>] <template>
+	*/_for:function(t,e){if(t.length<3||(1&t.length)!=1)return"(`for`: Wrong number of parameters)";let n=$d261ccdafdfe12a9$var$Template.value(t[1],e),r=null,i=0;to=null;let s=null;for(let n=2;n<t.length-1;n+=2)switch((value=$d261ccdafdfe12a9$var$Template.value(t[n],e)).toLowerCase()){case"from":i=parseFloat($d261ccdafdfe12a9$var$Template.value(t[n+1],e));break;case"to":to=parseFloat($d261ccdafdfe12a9$var$Template.value(t[n+1],e));break;case"count":r=parseFloat($d261ccdafdfe12a9$var$Template.value(t[n+1],e));break;case"step":s=parseFloat($d261ccdafdfe12a9$var$Template.value(t[n+1],e))}let a=t[t.length-1];if(null!==to){if(null===s&&(s=i>to?-1:1),s<0)for(let t=i;t>=to;t+=s)try{e[n]=t,$d261ccdafdfe12a9$var$Template.value(a,e)}catch(e){let t=e.message;if("EXC_BREAK"==t)break;if("EXC_CONTINUE"==t)continue;throw e}else for(let t=i;t<=to;t+=s)try{e[n]=t,$d261ccdafdfe12a9$var$Template.value(a,e)}catch(e){let t=e.message;if("EXC_BREAK"==t)break;if("EXC_CONTINUE"==t)continue;throw e}}else if(null!==r){null===s&&(s=1);for(let t=i;r>0;r--,t+=s)try{e[n]=t,$d261ccdafdfe12a9$var$Template.value(a,e)}catch(e){let t=e.message;if("EXC_BREAK"==t)break;if("EXC_CONTINUE"==t)continue;throw e}}else{null===s&&(s=1);for(let t=i;;t+=s)try{e[n]=t,$d261ccdafdfe12a9$var$Template.value(a,e)}catch(e){let t=e.message;if("EXC_BREAK"==t)break;if("EXC_CONTINUE"==t)continue;throw e}}return delete e[n],null},/**
+	**	Repeats the specified template infinitely until a "break" is found.
+	**
+	**	loop <template>
+	*/_loop:function(t,e){if(t.length<2)return"(`loop`: Wrong number of parameters)";let n=t[1];for(;;)try{$d261ccdafdfe12a9$var$Template.value(n,e)}catch(e){let t=e.message;if("EXC_BREAK"==t)break;if("EXC_CONTINUE"==t)continue;throw e}return null},/**
+	**	Writes the specified arguments to the console.
+	**
+	**	echo <expr> [<expr>...]
+	*/_echo:function(t,e){let n="";for(let r=1;r<t.length;r++)n+=$d261ccdafdfe12a9$var$Template.expand(t[r],e,"arg");return console.log(n),""},/**
+	**	Constructs a list from the given arguments and returns it.
+	**
+	**	# <expr> [<expr>...]
+	*/"_#":function(t,e){let n=[];for(let r=1;r<t.length;r++)n.push($d261ccdafdfe12a9$var$Template.expand(t[r],e,"arg"));return n},/**
+	**	Constructs a non-expanded list from the given arguments and returns it.
+	**
+	**	## <expr> [<expr>...]
+	*/"_##":function(t,e){let n=[];for(let e=1;e<t.length;e++)n.push(t[e]);return n},/**
+	**	Constructs an associative array (dictionary) and returns it.
+	**
+	**	& <name>: <expr> [<name>: <expr>...]
+	**	& :<name> <expr> [:<name> <expr>...]
+	*/"_&":function(t,e){return $d261ccdafdfe12a9$var$Template.getNamedValues(t,e,1,!0)},/**
+	**	Constructs a non-expanded associative array (dictionary) and returns it.
+	**
+	**	&& <name>: <expr> [<name>: <expr>...]
+	**	&& :<name> <expr> [:<name> <expr>...]
+	*/"_&&":function(t,e){return $d261ccdafdfe12a9$var$Template.getNamedValues(t,e,1,!1)},/**
+	**	Returns true if the specified map contains all the specified keys. If it fails the global variable `err` will contain an error message.
+	**
+	**	contains <expr> <name> [<name>...]
+	*/contains:function(t,e,n){let r=t[1];if("object"!=typeof r)return n.err="Argument is not a Map",!1;let i="";for(let e=2;e<t.length;e++)t[e]in r||(i+=", "+t[e]);return""==i||(n.err=i.substr(1),!1)},/**
+	**	Returns true if the specified map has the specified key. Returns boolean.
+	**
+	**	has <name> <expr>
+	*/has:function(t,e,n){let r=t[2];return"object"==(0,$fMUO1.default).typeOf(r)&&t[1]in r},/**
+	**	Returns a new array/map contaning the transformed values of the array/map (evaluating the template). And just as in 'each', the i# and i## variables be available.
+	**
+	**	map <varname> <list-expr> <template>
+	*/_map:function(t,e){let n=$d261ccdafdfe12a9$var$Template.expand(t[1],e,"arg"),r=$d261ccdafdfe12a9$var$Template.expand(t[2],e,"arg");if(!r)return r;let i="array"==(0,$fMUO1.default).typeOf(r),s=i?[]:{},a=0;for(let l in r)e[n]=r[l],e[n+"##"]=a++,e[n+"#"]=l,i?s.push($d261ccdafdfe12a9$var$Template.expand(t[3],e,"arg")):s[l]=$d261ccdafdfe12a9$var$Template.expand(t[3],e,"arg");return delete e[n],delete e[n+"##"],delete e[n+"#"],s},/**
+	**	Returns a new array/map contaning the elements where the template evaluates to non-zero. Just as in 'each', the i# and i## variables be available.
+	**
+	**	filter <varname> <list-expr> <template>
+	*/_filter:function(t,e){let n=$d261ccdafdfe12a9$var$Template.expand(t[1],e,"arg"),r=$d261ccdafdfe12a9$var$Template.expand(t[2],e,"arg");if(!r)return r;let i="array"==(0,$fMUO1.default).typeOf(r),s=i?[]:{},a=0;for(let l in r)e[n]=r[l],e[n+"##"]=a++,e[n+"#"]=l,~~$d261ccdafdfe12a9$var$Template.expand(t[3],e,"arg")&&(i?s.push(r[l]):s[l]=r[l]);return delete e[n],delete e[n+"##"],delete e[n+"#"],s},/**
+	**	Expands the specified template string with the given data. The sym_open and sym_close will be '{' and '}' respectively.
+	**	If no data is provided, current data parameter will be used.
+	**
+	**	expand <template> <data>
+	*/expand:function(t,e,n){return $d261ccdafdfe12a9$var$Template.expand($d261ccdafdfe12a9$var$Template.parseTemplate(t[1],"{","}"),3==t.length?t[2]:n)},/**
+	**	Calls a function described by the given parameter.
+	**
+	**	call <function> <args...>
+	*/_call:function(t,e){let n=$d261ccdafdfe12a9$var$Template.expand(t[1],e,"varref");if(!n||"function"!=typeof n[0][n[1]])throw Error("Expression is not a function: "+$d261ccdafdfe12a9$var$Template.expand(t[1],e,"obj").map(t=>null==t?".":t).join(""));let r=[];for(let n=2;n<t.length;n++)r.push($d261ccdafdfe12a9$var$Template.value(t[n],e));return n[0][n[1]](...r)}};var $d261ccdafdfe12a9$export$2e2bcd8739ae039=$d261ccdafdfe12a9$var$Template;let $9ffb7151b8b2d038$export$eefcfe56efaaa57d=$fMUO1.default,$9ffb7151b8b2d038$export$4c85e640eb41c31b=$2394d727dfd6a212$export$2e2bcd8739ae039,$9ffb7151b8b2d038$export$d61e24a684f9e51=$13eda5a5dec8010f$export$2e2bcd8739ae039,$9ffb7151b8b2d038$export$ec8b666c5fe2c75a=$c43adaf9cb6d6dd3$export$2e2bcd8739ae039,$9ffb7151b8b2d038$export$a1edc412be3e1841=$4dfa0622e14576ea$export$2e2bcd8739ae039,$9ffb7151b8b2d038$export$59eced47f477f85a=$0890bed8a163f087$export$2e2bcd8739ae039,$9ffb7151b8b2d038$export$19342e026b58ebb7=$2710795e2347ba2a$export$2e2bcd8739ae039,$9ffb7151b8b2d038$export$3a9581c9ade29768=$32651d5f38a8a64c$export$2e2bcd8739ae039,$9ffb7151b8b2d038$export$fb8073518f34e6ec=$2bcce06113365814$export$2e2bcd8739ae039,$9ffb7151b8b2d038$export$14416b8d99d47caa=$d261ccdafdfe12a9$export$2e2bcd8739ae039;export{$9ffb7151b8b2d038$export$eefcfe56efaaa57d as Rinn,$9ffb7151b8b2d038$export$4c85e640eb41c31b as Class,$9ffb7151b8b2d038$export$d61e24a684f9e51 as Event,$9ffb7151b8b2d038$export$ec8b666c5fe2c75a as EventDispatcher,$9ffb7151b8b2d038$export$a1edc412be3e1841 as Model,$9ffb7151b8b2d038$export$59eced47f477f85a as ModelList,$9ffb7151b8b2d038$export$19342e026b58ebb7 as Schema,$9ffb7151b8b2d038$export$3a9581c9ade29768 as Flattenable,$9ffb7151b8b2d038$export$fb8073518f34e6ec as Collection,$9ffb7151b8b2d038$export$14416b8d99d47caa as Template};//# sourceMappingURL=rinn.m.js.map
+
 //# sourceMappingURL=rinn.m.js.map

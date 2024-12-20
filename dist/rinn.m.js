@@ -330,7 +330,7 @@ if(null!==n)for(let t in n)e[t]=n[t];return e};var $2394d727dfd6a212$export$2e2b
     **	final value if successful or throws an empty exception if errors occur.
     **
     **	>> T _validate (string name, T value);
-    */_validate:function(t,e){if(!this.constraints||!this.constraints[t])return e;var n=this.constraints[t],r=e;for(var i in n)if($4dfa0622e14576ea$var$_Model.Constraints[i])try{r=$4dfa0622e14576ea$var$_Model.Constraints[i](this,n[i],t,r)}catch(e){if("null"==e.message)break;throw Error(`Constraint [${i}:${n[i]}] failed on property '${t}'.`)}return r},/**
+    */_validate:function(t,e){if(!this.constraints||!this.constraints[t])return e;let n=this.constraints[t],r=e;for(let e in n)if($4dfa0622e14576ea$var$_Model.Constraints[e])try{r=$4dfa0622e14576ea$var$_Model.Constraints[e](this,n[e],t,r)}catch(r){if("stop"===r.message)break;if("ignore"===r.message)throw Error("ignore");throw Error(`Constraint [${e}:${n[e]}] failed on property '${t}'.`)}return r},/**
     **	Sets the value of a property and returns the value set. This method is internally used to set properties
     **	one at a time. If constraints are present in the model for the specified property all constraints will be
     **	verified. When constraint errors occur the constraintError event will be raised and the property value
@@ -349,7 +349,7 @@ if(null!==n)for(let t in n)e[t]=n[t];return e};var $2394d727dfd6a212$export$2e2b
     **	>> Model set (string name, T value, bool silent=false);
     **	>> Model set (string name, T value);
     **	>> Model set (object data);
-    */set:function(){var t=arguments.length,e=!1,n=!1;if((t>2||2==t&&"object"==(0,$fMUO1.default).typeOf(arguments[0]))&&"boolean"==(0,$fMUO1.default).typeOf(arguments[t-1])&&(e=arguments[--t],!1===e&&(n=!0)),0==this._level&&(this.changedList=[]),this._level++,2==t)(this.data[arguments[0]]!==arguments[1]||e)&&(this._silent||n?this._set(arguments[0],arguments[1]):this._propertyEvent(arguments[0],this.data[arguments[0]],this._validate(arguments[0],arguments[1])));else for(var r in arguments[0])(this.data[r]!==arguments[0][r]||e)&&(this._silent||n?this._set(r,arguments[0][r]):this._propertyEvent(r,this.data[r],this._validate(r,arguments[0][r])));return--this._level||!this.changedList.length||n||this._silent||this.dispatchEvent("modelChanged",{fields:this.changedList}),this},/**
+    */set:function(){var t=arguments.length,e=!1,n=!1;if((t>2||2==t&&"object"==(0,$fMUO1.default).typeOf(arguments[0]))&&"boolean"==(0,$fMUO1.default).typeOf(arguments[t-1])&&(e=arguments[--t],!1===e&&(n=!0)),0==this._level&&(this.changedList=[]),this._level++,2==t)try{(this.data[arguments[0]]!==arguments[1]||e)&&(this._silent||n?this._set(arguments[0],arguments[1]):this._propertyEvent(arguments[0],this.data[arguments[0]],this._validate(arguments[0],arguments[1])))}catch(t){if("ignore"===t.message)return this;throw t}else for(var r in arguments[0])if(this.data[r]!==arguments[0][r]||e)try{this._silent||n?this._set(r,arguments[0][r]):this._propertyEvent(r,this.data[r],this._validate(r,arguments[0][r]))}catch(t){if("ignore"===t.message)continue;throw t}return--this._level||!this.changedList.length||n||this._silent||this.dispatchEvent("modelChanged",{fields:this.changedList}),this},/**
     **	Returns true if the given key exists in the model.
     **
     **	>> boolean has (string name);

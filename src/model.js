@@ -429,19 +429,21 @@ let _Model = EventDispatcher.extend
 	*/
 	constraint: function (field, constraint, value)
 	{
-		if (arguments.length == 3 || arguments.length == 2 || (arguments.length == 1 && Rinn.typeOf(field) == "object"))
+		if (arguments.length == 3 || arguments.length == 2 || (arguments.length == 1 && Rinn.typeOf(field) === "object"))
 		{
 			if (this.constraints === this.constructor.prototype.constraints)
-				this.constraints = Rinn.clone (this.constraints);
+				this.constraints = Rinn.clone(this.constraints);
 
 			switch (arguments.length)
 			{
 				case 1:
-					Rinn.override (this.constraints, field);
+                    if (!this.constraints) this.constraints = {};
+					Rinn.override(this.constraints, field);
 					break;
 
 				case 2:
-					Rinn.override (this.constraints[field], constraint);
+                    if (!this.constraints) this.constraints = {};
+					Rinn.override(this.constraints[field], constraint);
 					break;
 
 				case 3:

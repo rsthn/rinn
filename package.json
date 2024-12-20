@@ -1,6 +1,6 @@
 {
     "name": "rinn",
-    "version": "2.0.48",
+    "version": "2.0.49",
     "description": "Rinn Library",
     "type": "module",
     "main": "./dist/rinn.m.js",
@@ -42,6 +42,6 @@
         "README.md"
     ],
     "devDependencies": {
-        "parcel": "^2.9.3"
+        "parcel": "^2.13.3"
     }
 }

@@ -166,11 +166,10 @@ let _Model = EventDispatcher.extend
         if (!this.constraints || !this.constraints[name])
             return value;
 
-        var constraints = this.constraints[name];
+        let constraints = this.constraints[name];
+        let nvalue = value;
 
-        var nvalue = value;
-
-        for (var ctname in constraints)
+        for (let ctname in constraints)
         {
             if (!_Model.Constraints[ctname])
                 continue;
@@ -180,8 +179,11 @@ let _Model = EventDispatcher.extend
             }
             catch (e)
             {
-                if (e.message == "null")
+                if (e.message === "stop")
                     break;
+
+                if (e.message === "ignore")
+                    throw new Error ("ignore");
 
                 throw new Error (`Constraint [${ctname}:${constraints[ctname]}] failed on property '${name}'.`);
             }
@@ -274,14 +276,12 @@ let _Model = EventDispatcher.extend
         var n = arguments.length;
         var force = false, silent = false;
 
-        if ((n > 2 || (n == 2 && Rinn.typeOf(arguments[0]) == "object")) && Rinn.typeOf(arguments[n-1]) == "boolean")
-        {
+        if ((n > 2 || (n == 2 && Rinn.typeOf(arguments[0]) == "object")) && Rinn.typeOf(arguments[n-1]) == "boolean") {
             force = arguments[--n];
             if (force === false) silent = true;
         }
 
-        if (this._level == 0)
-        {
+        if (this._level == 0) {
             this.changedList = [];
         }
 
@@ -289,12 +289,18 @@ let _Model = EventDispatcher.extend
 
         if (n == 2)
         {
-            if (this.data[arguments[0]] !== arguments[1] || force)
-            {
-                if (!this._silent && !silent)
-                    this._propertyEvent (arguments[0], this.data[arguments[0]], this._validate (arguments[0], arguments[1]));
-                else
-                    this._set (arguments[0], arguments[1]);
+            try {
+                if (this.data[arguments[0]] !== arguments[1] || force) {
+                    if (!this._silent && !silent)
+                        this._propertyEvent (arguments[0], this.data[arguments[0]], this._validate (arguments[0], arguments[1]));
+                    else
+                        this._set (arguments[0], arguments[1]);
+                }
+            }
+            catch (e) {
+                if (e.message === "ignore")
+                    return this;
+                throw e;
             }
         }
         else
@@ -303,10 +309,17 @@ let _Model = EventDispatcher.extend
             {
                 if (this.data[i] !== arguments[0][i] || force)
                 {
-                    if (!this._silent && !silent)
-                        this._propertyEvent (i, this.data[i], this._validate (i, arguments[0][i]));
-                    else
-                        this._set (i, arguments[0][i]);
+                    try {
+                        if (!this._silent && !silent)
+                            this._propertyEvent (i, this.data[i], this._validate (i, arguments[0][i]));
+                        else
+                            this._set (i, arguments[0][i]);
+                    }
+                    catch (e) {
+                        if (e.message === "ignore")
+                            continue;
+                        throw e;
+                    }
                 }
             }
         }

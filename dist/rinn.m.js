@@ -385,7 +385,7 @@ if(null!==n)for(let t in n)e[t]=n[t];return e};var $2394d727dfd6a212$export$2e2b
 	**	>> Model constraint (string field, object constraint);
 	**	>> Model constraint (object constraints);
 	**	>> object constraint (string field);
-	*/constraint:function(t,e,n){if(3==arguments.length||2==arguments.length||1==arguments.length&&"object"==(0,$fMUO1.default).typeOf(t)){switch(this.constraints===this.constructor.prototype.constraints&&(this.constraints=(0,$fMUO1.default).clone(this.constraints)),arguments.length){case 1:(0,$fMUO1.default).override(this.constraints,t);break;case 2:(0,$fMUO1.default).override(this.constraints[t],e);break;case 3:this.constraints[t][e]=n}return this}return t?this.constraints[t]:this},/**
+	*/constraint:function(t,e,n){if(3==arguments.length||2==arguments.length||1==arguments.length&&"object"==(0,$fMUO1.default).typeOf(t)){switch(this.constraints===this.constructor.prototype.constraints&&(this.constraints=(0,$fMUO1.default).clone(this.constraints)),arguments.length){case 1:this.constraints||(this.constraints={}),(0,$fMUO1.default).override(this.constraints,t);break;case 2:this.constraints||(this.constraints={}),(0,$fMUO1.default).override(this.constraints[t],e);break;case 3:this.constraints[t][e]=n}return this}return t?this.constraints[t]:this},/**
 	**	Returns a compact version of the model properties. That is, a map only with validated properties that are
 	**	also present in the default data map. Returns null if the object is not compliant. If the "safe" parameter
 	**	is set one last property named "class" will be attached, this specifies the original classPath of the object.

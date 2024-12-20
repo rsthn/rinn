@@ -97,6 +97,68 @@ export default
 	},
 
 
+    /**
+	**	Casts the value to the specified type when possible, if there is an error the field will be removed.
+	*/
+	cast: function (model, ctval, name, value)
+	{
+		switch (ctval)
+		{
+			case "int":
+				value = parseInt(value);
+				if (isNaN(value)) throw new Error("ignore");
+				break;
+
+			case "float":
+				value = parseFloat(value);
+				if (isNaN(value)) throw new Error("ignore");
+				break;
+
+			case "string":
+				value = (value === null || value === undefined) ? "" : value.toString();
+				break;
+
+			case "bit":
+				if (value === true || value === false) {
+					value = value ? 1 : 0;
+					break;
+				}
+
+				value = parseInt(value);
+				if (isNaN(value)) throw new Error("ignore");
+
+				value = value ? 1 : 0;
+				break;
+
+			case "array":
+				if (Rinn.typeOf(value) === "array")
+					break;
+
+				if (value === null || value === undefined) {
+					value = [];
+					break;
+				}
+
+				throw new Error ("ignore");
+
+			case "bool":
+				if (value === "true" || value === true) {
+					value = true;
+					break;
+				}
+
+				if (value === "false" || value === false) {
+					value = false;
+					break;
+				}
+
+				throw new Error ("ignore");
+		}
+
+		return value;
+	},
+
+
 	/**
 	**	Verifies that the field is of the specified model type.
 	*/
@@ -220,16 +282,16 @@ export default
 	required: function (model, ctval, name, value)
 	{
 		if (value === null || value === undefined)
-			throw new Error (ctval ? "" : "null");
+			throw new Error (ctval ? "" : "stop");
 
 		switch (Rinn.typeOf(value))
 		{
 			case "array":
-				if (value.length == 0) throw new Error (ctval ? "" : "null");
+				if (value.length == 0) throw new Error (ctval ? "" : "stop");
 				break;
 
 			default:
-				if (value.toString().length == 0) throw new Error (ctval ? "" : "null");
+				if (value.toString().length == 0) throw new Error (ctval ? "" : "stop");
 				break;
 		}
 

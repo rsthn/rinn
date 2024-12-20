@@ -9,6 +9,8 @@ function $parcel$export(t,e,n,r){Object.defineProperty(t,e,{get:n,set:r,enumerab
 	**	Verifies that the new value is of the valid type before storing it on the property. When possible if the
 	**	input is of compatible type it will be converted to the target type.
 	*/type:function(t,e,n,r){switch(e){case"int":if(isNaN(r=parseInt(r)))throw Error(e);break;case"float":if(isNaN(r=parseFloat(r)))throw Error(e);break;case"string":r=null==r?"":r.toString();break;case"bit":if(!0===r||!1===r){r=r?1:0;break}if(isNaN(r=parseInt(r)))throw Error(e);r=r?1:0;break;case"array":if("array"==(0,$1V76q.default).typeOf(r))break;if(null==r){r=[];break}throw Error(e);case"bool":if("true"===r||!0===r){r=!0;break}if("false"===r||!1===r){r=!1;break}throw Error(e)}return r},/**
+	**	Casts the value to the specified type when possible, if there is an error the field will be removed.
+	*/cast:function(t,e,n,r){switch(e){case"int":if(isNaN(r=parseInt(r)))throw Error("ignore");break;case"float":if(isNaN(r=parseFloat(r)))throw Error("ignore");break;case"string":r=null==r?"":r.toString();break;case"bit":if(!0===r||!1===r){r=r?1:0;break}if(isNaN(r=parseInt(r)))throw Error("ignore");r=r?1:0;break;case"array":if("array"===(0,$1V76q.default).typeOf(r))break;if(null==r){r=[];break}throw Error("ignore");case"bool":if("true"===r||!0===r){r=!0;break}if("false"===r||!1===r){r=!1;break}throw Error("ignore")}return r},/**
 	**	Verifies that the field is of the specified model type.
 	*/model:function(t,e,n,r){var i=this._getref(e,t);if(!i)throw Error(e);return r?i.ensure(r):new i},/**
 	**	Verifies that the field is of the specified class.
@@ -23,7 +25,7 @@ function $parcel$export(t,e,n,r){Object.defineProperty(t,e,{get:n,set:r,enumerab
 	**	a type:array constraint should be used before this one.
 	*/arraycompliant:function(t,e,n,r){var i=!1;if("object"==(0,$1V76q.default).typeOf(e)&&(e.remove&&(i=e.remove),e=e.value),!e)return r;if("array"!=(0,$1V76q.default).typeOf(r))throw Error(e);for(var s=0;s<r.length;s++)if(null!=r[s]&&!r[s].isCompliant()){if(i)r.splice(s--,1);else throw Error(e)}return r},/**
 	**	Verifies the presense of the field.
-	*/required:function(t,e,n,r){if(null==r)throw Error(e?"":"null");if("array"===(0,$1V76q.default).typeOf(r)){if(0==r.length)throw Error(e?"":"null")}else if(0==r.toString().length)throw Error(e?"":"null");return r},/**
+	*/required:function(t,e,n,r){if(null==r)throw Error(e?"":"stop");if("array"===(0,$1V76q.default).typeOf(r)){if(0==r.length)throw Error(e?"":"stop")}else if(0==r.toString().length)throw Error(e?"":"stop");return r},/**
 	**	Verifies the minimum length of the field.
 	*/minlen:function(t,e,n,r){if(r.toString().length<e)throw Error(e);return r},/**
 	**	Verifies the maximum length of the field.
@@ -150,7 +152,7 @@ const $948f072c447a9569$var$Class=function(){};/**
  * !instanceOf (object: object, className: string|function|object) : boolean;
  */$948f072c447a9569$var$Class.instanceOf=function(t,e){return null!==t&&null!==e&&t.isInstanceOf(e)},/**
  * Internal method to ensure the _super field of an instance has all functions properly bound to the instance.
- */$948f072c447a9569$var$Class.prototype._initSuperRefs=function(){let t=this.constructor._super,e={},n=this;for(let r in t){let i={},s=t[r].prototype;for(let t in s)"function"===(0,$1V76q.default).typeOf(s[t])&&(i[t]=function(t){return function(e,r,i,s,a,l,u,o,f,h,c){return t.call(n,e,r,i,s,a,l,u,o,f,h,c)}}(s[t]));e[r]=i}this._super=e},/*
+ */$948f072c447a9569$var$Class.prototype._initSuperRefs=function(){let t=this.constructor._super,e={},n=this;for(let r in t){let i={},s=t[r].prototype;for(let t in s)"function"===(0,$1V76q.default).typeOf(s[t])&&(i[t]=function(t){return function(e,r,i,s,a,l,o,u,f,h,c){return t.call(n,e,r,i,s,a,l,o,u,f,h,c)}}(s[t]));e[r]=i}this._super=e},/*
 **	Extends the class with the specified prototype. The prototype can be a function (class constructor) or an object. Note that the
 **	class will be modified (and returned) instead of creating a new class. Must be called at the class-level (**not** instance level).
 **	When a class is provided all fields starting with uppercase at the class-level will not be inherited, this is used to create constants
@@ -261,7 +263,7 @@ if(null!==n)for(let t in n)e[t]=n[t];return e};var $948f072c447a9569$export$2e2b
 	**	context will be removed. Special event name "*" can be used to match all event names.
 	**
 	**	EventDispatcher removeEventListener (eventName: string, handler: function, context: object);
-	*/removeEventListener:function(t,e,n){var r=(t=t.split(":"))[t.length-1],i=t.length>1?t[0]:null;if("*"==r)for(var s in this.listeners)for(var a=this.listeners[s],l=0;l<a.length;l++){var u=!0;e&&(u=u&&a[l].handler===e),n&&(u=u&&a[l].context===n),i&&(u=u&&a[l].ns==i),u&&a.splice(l--,1)}else{if(!this.listeners[r])return this;for(var a=this.listeners[r],l=0;l<a.length;l++){var u=!0;e&&(u=u&&a[l].handler===e),n&&(u=u&&a[l].context===n),i&&(u=u&&a[l].ns==i),u&&a.splice(l--,1)}}return this},/**
+	*/removeEventListener:function(t,e,n){var r=(t=t.split(":"))[t.length-1],i=t.length>1?t[0]:null;if("*"==r)for(var s in this.listeners)for(var a=this.listeners[s],l=0;l<a.length;l++){var o=!0;e&&(o=o&&a[l].handler===e),n&&(o=o&&a[l].context===n),i&&(o=o&&a[l].ns==i),o&&a.splice(l--,1)}else{if(!this.listeners[r])return this;for(var a=this.listeners[r],l=0;l<a.length;l++){var o=!0;e&&(o=o&&a[l].handler===e),n&&(o=o&&a[l].context===n),i&&(o=o&&a[l].ns==i),o&&a.splice(l--,1)}}return this},/**
 	**	Prepares an event with the specified parameters for its later usage. The event is started when
 	**	the resume() method is called. If a callback is specified it will be executed once all event
 	**	handlers have been processed.
@@ -283,163 +285,164 @@ if(null!==n)for(let t in n)e[t]=n[t];return e};var $948f072c447a9569$export$2e2b
 **	A model is a high-integrity data object used to store properties and more importantly to provide event support to notify of any
 **	kind of change that occurs to the model's properties. Integrity of the model is maintained by optionally using property constraints.
 */let $d7fcaaa29d0ffaa7$var$_Model=$0681abc29226a7a0$export$2e2bcd8739ae039.extend({/**
-	**	Name of the class.
-	*/className:"Model",/**
-	**	Default properties for the model. Can be a map with the property name and its default value or a function
-	**	returning a map with dynamic default values. This is used to reset the model to its initial state.
-	*/defaults:null,/**
-	**	Model property contraints. A map with the property name and an object specifying the constraints of the
-	**	property. This is used to determine the type, format and behavior of each property in the model.
-	*/constraints:null,/**
-	**	Properties of the model.
-	*/data:null,/**
-	**	Array with the name of the properties that have changed. Populated prior modelChanged event.
-	*/changedList:null,/**
-	**	Silent mode indicator. While in silent mode events will not be dispatched.
-	*/_silent:0,/**
-	**	Current nesting level of the set() method. This is used to determine when all the property
-	**	changes are done.
-	*/_level:0,/**
-	**	Initializes the model and sets the properties to the specified data object.
-	**
-	**	>> Model __ctor (object data);
-	**	>> Model __ctor (object data, object defaults);
-	*/__ctor:function(t,e){if(this._super.EventDispatcher.__ctor(),this.data={},null!=e)this.reset(e,!1);else{let t=null;if(!this.defaults&&this.constraints)for(let e in t={},this.constraints){let n=this.constraints[e];if(null===n.def||void 0===n.def){t[e]=null;continue}"function"==typeof n.def?t[e]=n.def():t[e]=n.def}this.reset(t)}this.init(),null!=t&&this.set(t,!0),this.constraints&&this.update(),this.ready()},/**
-	**	Resets the model to its default state and triggers update events. If a map is provided the defaults of
-	**	the model will be set to the specified map.
-	**
-	**	>> Model reset (object defaults, [bool nsilent=true]);
-	**	>> Model reset ([bool nsilent=true]);
-	*/reset:function(t,e){if(!this.defaults){if(!t||"object"!==(0,$1V76q.default).typeOf(t)&&"function"!==(0,$1V76q.default).typeOf(t))return this;this.defaults=t}return"function"===(0,$1V76q.default).typeOf(this.defaults)?this.data=this.defaults():this.data=(0,$1V76q.default).clone(this.defaults),!1===e||!1===t?this:this.update(null,!0)},/**
-	**	Initializes the model. Called before the model properties are set.
-	**
-	**	>> void init ();
-	*/init:function(){},/**
-	**	Initialization epilogue. Called after initialization and after model properties are set.
-	**
-	**	>> void ready ();
-	*/ready:function(){},/**
-	**	Enables or disables silent mode. When the model is in silent mode events will not be dispatched.
-	**
-	**	>> Model silent (value: bool);
-	*/silent:function(t){return this._silent+=t?1:-1,this},/**
-	**	Validates a property name and value against the constraints defined in the model (if any). Returns the
-	**	final value if successful or throws an empty exception if errors occur.
-	**
-	**	>> T _validate (string name, T value);
-	*/_validate:function(t,e){if(!this.constraints||!this.constraints[t])return e;var n=this.constraints[t],r=e;for(var i in n)if($d7fcaaa29d0ffaa7$var$_Model.Constraints[i])try{r=$d7fcaaa29d0ffaa7$var$_Model.Constraints[i](this,n[i],t,r)}catch(e){if("null"==e.message)break;throw Error(`Constraint [${i}:${n[i]}] failed on property '${t}'.`)}return r},/**
-	**	Sets the value of a property and returns the value set. This method is internally used to set properties
-	**	one at a time. If constraints are present in the model for the specified property all constraints will be
-	**	verified. When constraint errors occur the constraintError event will be raised and the property value
-	**	will not be changed.
-	**
-	**	>> T _set (string name, T value);
-	*/_set:function(t,e){if(!this.constraints||!this.constraints[t])return this.data[t]=e,e;var n=this.constraints[t];this.data[t];var r=e;for(var i in n)if($d7fcaaa29d0ffaa7$var$_Model.Constraints[i])try{r=$d7fcaaa29d0ffaa7$var$_Model.Constraints[i](this,n[i],t,r)}catch(n){if("null"==n.message)break;this._silent||this.dispatchEvent("constraintError",{constraint:i,message:n.message,name:t,value:e});break}return this.data[t]=r},/**
-	**	Triggers property events to indicate a property is changing. First triggers "propertyChanging" and then
-	**	"propertyChanged". If the first event returns false the second event will not be triggered.
-	**
-	**	>> void _propertyEvent (string name, T prev, T value, bool direct=false);
-	*/_propertyEvent:function(t,e,n,r){var i={name:t,old:e,value:n,level:this._level},s=this.dispatchEvent("propertyChanging",i);r?this.data[t]=i.value:i.value=this._set(t,i.value),null!=s&&s.ret.length&&!1===s.ret[0]||(this.dispatchEvent("propertyChanged."+t,i),this.dispatchEvent("propertyChanged",i),this.changedList.push(t))},/**
-	**	Sets one or more properties of the model. Possible arguments can be two strings or a map.
-	**
-	**	>> Model set (string name, T value, bool force=true);
-	**	>> Model set (string name, T value, bool silent=false);
-	**	>> Model set (string name, T value);
-	**	>> Model set (object data);
-	*/set:function(){var t=arguments.length,e=!1,n=!1;if((t>2||2==t&&"object"==(0,$1V76q.default).typeOf(arguments[0]))&&"boolean"==(0,$1V76q.default).typeOf(arguments[t-1])&&(e=arguments[--t],!1===e&&(n=!0)),0==this._level&&(this.changedList=[]),this._level++,2==t)(this.data[arguments[0]]!==arguments[1]||e)&&(this._silent||n?this._set(arguments[0],arguments[1]):this._propertyEvent(arguments[0],this.data[arguments[0]],this._validate(arguments[0],arguments[1])));else for(var r in arguments[0])(this.data[r]!==arguments[0][r]||e)&&(this._silent||n?this._set(r,arguments[0][r]):this._propertyEvent(r,this.data[r],this._validate(r,arguments[0][r])));return--this._level||!this.changedList.length||n||this._silent||this.dispatchEvent("modelChanged",{fields:this.changedList}),this},/**
-	**	Returns true if the given key exists in the model.
-	**
-	**	>> boolean has (string name);
-	*/has:function(t){return t in this.data},/**
-	**	Returns the value of a property. If no name is specified the whole map of properties will be returned.
-	**	If a boolean value of "true" is provided the properties map will be returned but first will be compacted
-	**	using the default data to ensure only valid properties are present.
-	**
-	**	>> T get (string name);
-	**	>> object get ();
-	**	>> object get (true);
-	**	>> object get (false);
-	**	
-	*/get:function(t,e){return 0==arguments.length||!1===t?this.data:1==arguments.length&&!0===t?this.flatten():2==arguments.length&&void 0===this.data[t]?e:this.data[t]},/**
-	**	Returns the value of a property as an integer number.
-	**
-	**	>> int getInt (string name, [int def]);
-	*/getInt:function(t,e){return 2==arguments.length&&void 0===this.data[t]?e:parseInt(this.data[t])},/**
-	**	Returns the value of a property as a floating point number.
-	**
-	**	>> float getFloat (string name, [float def]);
-	*/getFloat:function(t,e){return 2==arguments.length&&void 0===this.data[t]?e:parseFloat(this.data[t])},/**
-	**	Returns the value of a property as a boolean value (true or false).
-	**
-	**	>> bool getBool (string name, [bool def]);
-	**	
-	*/getBool:function(t,e){return t=2==arguments.length&&void 0===this.data[t]?e:this.data[t],"true"===t||!0===t||"false"!==t&&!1!==t&&!!parseInt(t)},/**
-	**	Returns a reference object for a model property. The resulting object contains two methods
-	**	named "get" and "set" to modify the value of the property.
-	**
-	**	>> object getReference (string name);
-	*/getReference:function(t){var e=this;return{get:function(){return e.get(t)},set:function(n){e.set(t,n)}}},/**
-	**	Sets or returns a constraint given the property name. 
-	**
-	**	>> Model constraint (string field, string constraint, T value);
-	**	>> Model constraint (string field, object constraint);
-	**	>> Model constraint (object constraints);
-	**	>> object constraint (string field);
-	*/constraint:function(t,e,n){if(3==arguments.length||2==arguments.length||1==arguments.length&&"object"==(0,$1V76q.default).typeOf(t)){switch(this.constraints===this.constructor.prototype.constraints&&(this.constraints=(0,$1V76q.default).clone(this.constraints)),arguments.length){case 1:this.constraints||(this.constraints={}),(0,$1V76q.default).override(this.constraints,t);break;case 2:this.constraints||(this.constraints={}),(0,$1V76q.default).override(this.constraints[t],e);break;case 3:this.constraints[t][e]=n}return this}return t?this.constraints[t]:this},/**
-	**	Returns a compact version of the model properties. That is, a map only with validated properties that are
-	**	also present in the default data map. Returns null if the object is not compliant. If the "safe" parameter
-	**	is set one last property named "class" will be attached, this specifies the original classPath of the object.
-	**
-	**	>> object flatten ([bool safe=false]);
-	*/flatten:function(t,e){if(t){var n=this.flatten(!1,!0);return null==n?null:(n.class=this.classPath,n)}if(!this.constraints&&!this.defaults)return this.data;if(!this.isCompliant())return{};var r=this.constraints,i=this.defaults?"function"==(0,$1V76q.default).typeOf(this.defaults)?this.defaults():this.defaults:this.constraints,n={};for(var s in this.data)if(s in i){if(r&&r[s]){var a=r[s];if(a.model){n[s]=this.data[s]?this.data[s].flatten(e):null;continue}if(a.arrayof){n[s]=[];for(var l=0;l<this.data[s].length;l++)n[s][l]=this.data[s][l]?this.data[s][l].flatten(e):null;continue}if(a.cls){n[s]=this.data[s]?this.data[s].flatten():null;continue}}n[s]=this.data[s]}return n},/**
-	**	Removes a property or a list of properties.
-	**
-	**	>> void remove (string name, [bool nsilent=true]);
-	**	>> void remove (array name, [bool nsilent=true]);
-	*/remove:function(t,e){if("array"==(0,$1V76q.default).typeOf(t)){for(var n=0;n<t.length;n++)delete this.data[t[n]];!1===e||this._silent||this.dispatchEvent("propertyRemoved",{fields:t})}else delete this.data[t],!1===e||this._silent||this.dispatchEvent("propertyRemoved",{fields:[t]})},/**
-	**	Triggers data change events for one or more properties. Ensure that silent mode is not enabled or else
-	**	this method will have no effect. If no parameters are provided a full update will be triggered on all of
-	**	the model properties.
-	**
-	**	>> Model update (array fields);
-	**	>> Model update (string name);
-	**	>> Model update (bool forceModelChanged);
-	**	>> Model update ();
-	*/update:function(t,e){if(this._silent)return this;if(0==this._level&&(this.changedList=[]),this._level++,t&&"string"==(0,$1V76q.default).typeOf(t))this._propertyEvent(t,this.data[t],this.data[t],e);else if(t&&"array"==(0,$1V76q.default).typeOf(t))for(var n of t)this._propertyEvent(n,this.data[n],this.data[n],e);else for(var n in this.data)this._propertyEvent(n,this.data[n],this.data[n],e);return--this._level||this._silent||0==this.changedList.length&&!0!==t||this.dispatchEvent("modelChanged",{fields:this.changedList}),this},/**
-	**	Validates one or mode model properties using the defined constraints. If no parameters are provided all of
-	**	the properties in the model will be validated.
-	**
-	**	>> Model validate (array fields);
-	**	>> Model validate (string name);
-	**	>> Model validate ();
-	*/validate:function(t){if(!this.constraints)return this;if(t&&"string"==(0,$1V76q.default).typeOf(t))this._set(t,this.data[t]);else for(var e in this.data)t&&-1==(0,$1V76q.default).indexOf(t,e)||this._set(e,this.data[e]);return this},/**
-	**	Validates all the properties in the model and returns a boolean indicating if all of them comply with the
-	**	constraints defined in the model.
-	**
-	**	>> bool isCompliant ();
-	*/isCompliant:function(){if(!this.constraints)return!0;try{for(var t in this.data)this._validate(t,this.data[t]);return!0}catch(t){}return!1},/**
-	**	Registers an event handler for changes in a specific property of the model.
-	**
-	**	>> void observe (string property, function handler, object context);
-	*/observe:function(t,e,n){this.addEventListener("propertyChanged."+t,e,n)},/**
-	**	Unregisters an event handler from changes in a specific property of the model.
-	**
-	**	>> void unobserve (string property, function handler, object context);
-	*/unobserve:function(t,e,n){this.removeEventListener("propertyChanged."+t,e,n)},/**
-	**	Adds a propertyChanged event handler for the given property. The property name can have an event namespace prepended and separated by colon.
-	**
-	**	>> void watch (string property, function handler);
-	*/watch:function(t,e){1==(t=t.split(":")).length&&(t[1]=t[0],t[0]="watch"),this.addEventListener(t[0]+":propertyChanged."+t[1],function(t,n){e(n.value,n,t)})},/**
-	**	Removes propertyChanged handlers related to the specified property. The property name can have an event namespace prepended and separated by colon.
-	**
-	**	>> void unwatch (string property);
-	*/unwatch:function(t){1==(t=t.split(":")).length&&(t[1]=t[0],t[0]="watch"),this.removeEventListener(t[0]+":propertyChanged."+t[1])},/**
-	 * Triggers a field change event. Even if the value of the field is the same as the model's, the event will still be triggered.
-	 */trigger:function(t,e=null){return this.set(t,e,!0)},/**
-	**	Serializes the model into a string.
-	**
-	**	string toString ();
-	*/toString:function(){return(0,$1V76q.default).serialize(this.get(!0))}});$d7fcaaa29d0ffaa7$var$_Model.Constraints=$leTsS.default;var $d7fcaaa29d0ffaa7$export$2e2bcd8739ae039=$d7fcaaa29d0ffaa7$var$_Model,$1V76q=parcelRequire("1V76q"),/**
+    **	Name of the class.
+    */className:"Model",/**
+    **	Default properties for the model. Can be a map with the property name and its default value or a function
+    **	returning a map with dynamic default values. This is used to reset the model to its initial state.
+    */defaults:null,/**
+    **	Model property contraints. A map with the property name and an object specifying the constraints of the
+    **	property. This is used to determine the type, format and behavior of each property in the model.
+    */constraints:null,/**
+    **	Properties of the model.
+    */data:null,/**
+    **	Array with the name of the properties that have changed. Populated prior modelChanged event.
+    */changedList:null,/**
+    **	Silent mode indicator. While in silent mode events will not be dispatched.
+    */_silent:0,/**
+    **	Current nesting level of the set() method. This is used to determine when all the property
+    **	changes are done.
+    */_level:0,/**
+    **	Initializes the model and sets the properties to the specified data object.
+    **
+    **	>> Model __ctor (object data);
+    **	>> Model __ctor (object data, object defaults);
+    **	>> Model __ctor (object data, object defaults, object constraints);
+    */__ctor:function(t,e,n=null){if(this._super.EventDispatcher.__ctor(),this.data={},null!=n&&(this.constraints=n),null!=e)this.reset(e,!1);else{let t=null;if(!this.defaults&&this.constraints)for(let e in t={},this.constraints){let n=this.constraints[e];if(null===n.def||void 0===n.def){t[e]=null;continue}"function"==typeof n.def?t[e]=n.def():t[e]=n.def}this.reset(t)}this.init(),null!=t&&this.set(t,!0),this.constraints&&this.update(),this.ready()},/**
+    **	Resets the model to its default state and triggers update events. If a map is provided the defaults of
+    **	the model will be set to the specified map.
+    **
+    **	>> Model reset (object defaults, [bool nsilent=true]);
+    **	>> Model reset ([bool nsilent=true]);
+    */reset:function(t,e){if(!this.defaults){if(!t||"object"!==(0,$1V76q.default).typeOf(t)&&"function"!==(0,$1V76q.default).typeOf(t))return this;this.defaults=t}return"function"===(0,$1V76q.default).typeOf(this.defaults)?this.data=this.defaults():this.data=(0,$1V76q.default).clone(this.defaults),!1===e||!1===t?this:this.update(null,!0)},/**
+    **	Initializes the model. Called before the model properties are set.
+    **
+    **	>> void init ();
+    */init:function(){},/**
+    **	Initialization epilogue. Called after initialization and after model properties are set.
+    **
+    **	>> void ready ();
+    */ready:function(){},/**
+    **	Enables or disables silent mode. When the model is in silent mode events will not be dispatched.
+    **
+    **	>> Model silent (value: bool);
+    */silent:function(t){return this._silent+=t?1:-1,this},/**
+    **	Validates a property name and value against the constraints defined in the model (if any). Returns the
+    **	final value if successful or throws an empty exception if errors occur.
+    **
+    **	>> T _validate (string name, T value);
+    */_validate:function(t,e){if(!this.constraints||!this.constraints[t])return e;var n=this.constraints[t],r=e;for(var i in n)if($d7fcaaa29d0ffaa7$var$_Model.Constraints[i])try{r=$d7fcaaa29d0ffaa7$var$_Model.Constraints[i](this,n[i],t,r)}catch(e){if("null"==e.message)break;throw Error(`Constraint [${i}:${n[i]}] failed on property '${t}'.`)}return r},/**
+    **	Sets the value of a property and returns the value set. This method is internally used to set properties
+    **	one at a time. If constraints are present in the model for the specified property all constraints will be
+    **	verified. When constraint errors occur the constraintError event will be raised and the property value
+    **	will not be changed.
+    **
+    **	>> T _set (string name, T value);
+    */_set:function(t,e){if(!this.constraints||!this.constraints[t])return this.data[t]=e,e;var n=this.constraints[t],r=this.data[t],i=e;for(var s in n)if($d7fcaaa29d0ffaa7$var$_Model.Constraints[s])try{i=$d7fcaaa29d0ffaa7$var$_Model.Constraints[s](this,n[s],t,i)}catch(n){if("stop"===n.message)break;if("ignore"===n.message)return r;this._silent||this.dispatchEvent("constraintError",{constraint:s,message:n.message,name:t,value:e});break}return this.data[t]=i},/**
+    **	Triggers property events to indicate a property is changing. First triggers "propertyChanging" and then
+    **	"propertyChanged". If the first event returns false the second event will not be triggered.
+    **
+    **	>> void _propertyEvent (string name, T prev, T value, bool direct=false);
+    */_propertyEvent:function(t,e,n,r){var i={name:t,old:e,value:n,level:this._level},s=this.dispatchEvent("propertyChanging",i);r?this.data[t]=i.value:i.value=this._set(t,i.value),null!=s&&s.ret.length&&!1===s.ret[0]||(this.dispatchEvent("propertyChanged."+t,i),this.dispatchEvent("propertyChanged",i),this.changedList.push(t))},/**
+    **	Sets one or more properties of the model. Possible arguments can be two strings or a map.
+    **
+    **	>> Model set (string name, T value, bool force=true);
+    **	>> Model set (string name, T value, bool silent=false);
+    **	>> Model set (string name, T value);
+    **	>> Model set (object data);
+    */set:function(){var t=arguments.length,e=!1,n=!1;if((t>2||2==t&&"object"==(0,$1V76q.default).typeOf(arguments[0]))&&"boolean"==(0,$1V76q.default).typeOf(arguments[t-1])&&(e=arguments[--t],!1===e&&(n=!0)),0==this._level&&(this.changedList=[]),this._level++,2==t)(this.data[arguments[0]]!==arguments[1]||e)&&(this._silent||n?this._set(arguments[0],arguments[1]):this._propertyEvent(arguments[0],this.data[arguments[0]],this._validate(arguments[0],arguments[1])));else for(var r in arguments[0])(this.data[r]!==arguments[0][r]||e)&&(this._silent||n?this._set(r,arguments[0][r]):this._propertyEvent(r,this.data[r],this._validate(r,arguments[0][r])));return--this._level||!this.changedList.length||n||this._silent||this.dispatchEvent("modelChanged",{fields:this.changedList}),this},/**
+    **	Returns true if the given key exists in the model.
+    **
+    **	>> boolean has (string name);
+    */has:function(t){return t in this.data},/**
+    **	Returns the value of a property. If no name is specified the whole map of properties will be returned.
+    **	If a boolean value of "true" is provided the properties map will be returned but first will be compacted
+    **	using the default data to ensure only valid properties are present.
+    **
+    **	>> T get (string name);
+    **	>> object get ();
+    **	>> object get (true);
+    **	>> object get (false);
+    **	
+    */get:function(t,e){return 0==arguments.length||!1===t?this.data:1==arguments.length&&!0===t?this.flatten():2==arguments.length&&void 0===this.data[t]?e:this.data[t]},/**
+    **	Returns the value of a property as an integer number.
+    **
+    **	>> int getInt (string name, [int def]);
+    */getInt:function(t,e){return 2==arguments.length&&void 0===this.data[t]?e:parseInt(this.data[t])},/**
+    **	Returns the value of a property as a floating point number.
+    **
+    **	>> float getFloat (string name, [float def]);
+    */getFloat:function(t,e){return 2==arguments.length&&void 0===this.data[t]?e:parseFloat(this.data[t])},/**
+    **	Returns the value of a property as a boolean value (true or false).
+    **
+    **	>> bool getBool (string name, [bool def]);
+    **	
+    */getBool:function(t,e){return t=2==arguments.length&&void 0===this.data[t]?e:this.data[t],"true"===t||!0===t||"false"!==t&&!1!==t&&!!parseInt(t)},/**
+    **	Returns a reference object for a model property. The resulting object contains two methods
+    **	named "get" and "set" to modify the value of the property.
+    **
+    **	>> object getReference (string name);
+    */getReference:function(t){var e=this;return{get:function(){return e.get(t)},set:function(n){e.set(t,n)}}},/**
+    **	Sets or returns a constraint given the property name. 
+    **
+    **	>> Model constraint (string field, string constraint, T value);
+    **	>> Model constraint (string field, object constraint);
+    **	>> Model constraint (object constraints);
+    **	>> object constraint (string field);
+    */constraint:function(t,e,n){if(3==arguments.length||2==arguments.length||1==arguments.length&&"object"==(0,$1V76q.default).typeOf(t)){switch(this.constraints===this.constructor.prototype.constraints&&(this.constraints=(0,$1V76q.default).clone(this.constraints)),arguments.length){case 1:this.constraints||(this.constraints={}),(0,$1V76q.default).override(this.constraints,t);break;case 2:this.constraints||(this.constraints={}),(0,$1V76q.default).override(this.constraints[t],e);break;case 3:this.constraints[t][e]=n}return this}return t?this.constraints[t]:this},/**
+    **	Returns a compact version of the model properties. That is, a map only with validated properties that are
+    **	also present in the default data map. Returns null if the object is not compliant. If the "safe" parameter
+    **	is set one last property named "class" will be attached, this specifies the original classPath of the object.
+    **
+    **	>> object flatten ([bool safe=false]);
+    */flatten:function(t,e){if(t){var n=this.flatten(!1,!0);return null==n?null:(n.class=this.classPath,n)}if(!this.constraints&&!this.defaults)return this.data;if(!this.isCompliant())return{};var r=this.constraints,i=this.defaults?"function"==(0,$1V76q.default).typeOf(this.defaults)?this.defaults():this.defaults:this.constraints,n={};for(var s in this.data)if(s in i){if(r&&r[s]){var a=r[s];if(a.model){n[s]=this.data[s]?this.data[s].flatten(e):null;continue}if(a.arrayof){n[s]=[];for(var l=0;l<this.data[s].length;l++)n[s][l]=this.data[s][l]?this.data[s][l].flatten(e):null;continue}if(a.cls){n[s]=this.data[s]?this.data[s].flatten():null;continue}}n[s]=this.data[s]}return n},/**
+    **	Removes a property or a list of properties.
+    **
+    **	>> void remove (string name, [bool nsilent=true]);
+    **	>> void remove (array name, [bool nsilent=true]);
+    */remove:function(t,e){if("array"==(0,$1V76q.default).typeOf(t)){for(var n=0;n<t.length;n++)delete this.data[t[n]];!1===e||this._silent||this.dispatchEvent("propertyRemoved",{fields:t})}else delete this.data[t],!1===e||this._silent||this.dispatchEvent("propertyRemoved",{fields:[t]})},/**
+    **	Triggers data change events for one or more properties. Ensure that silent mode is not enabled or else
+    **	this method will have no effect. If no parameters are provided a full update will be triggered on all of
+    **	the model properties.
+    **
+    **	>> Model update (array fields);
+    **	>> Model update (string name);
+    **	>> Model update (bool forceModelChanged);
+    **	>> Model update ();
+    */update:function(t,e){if(this._silent)return this;if(0==this._level&&(this.changedList=[]),this._level++,t&&"string"==(0,$1V76q.default).typeOf(t))this._propertyEvent(t,this.data[t],this.data[t],e);else if(t&&"array"==(0,$1V76q.default).typeOf(t))for(var n of t)this._propertyEvent(n,this.data[n],this.data[n],e);else for(var n in this.data)this._propertyEvent(n,this.data[n],this.data[n],e);return--this._level||this._silent||0==this.changedList.length&&!0!==t||this.dispatchEvent("modelChanged",{fields:this.changedList}),this},/**
+    **	Validates one or mode model properties using the defined constraints. If no parameters are provided all of
+    **	the properties in the model will be validated.
+    **
+    **	>> Model validate (array fields);
+    **	>> Model validate (string name);
+    **	>> Model validate ();
+    */validate:function(t){if(!this.constraints)return this;if(t&&"string"==(0,$1V76q.default).typeOf(t))this._set(t,this.data[t]);else for(var e in this.data)t&&-1==(0,$1V76q.default).indexOf(t,e)||this._set(e,this.data[e]);return this},/**
+    **	Validates all the properties in the model and returns a boolean indicating if all of them comply with the
+    **	constraints defined in the model.
+    **
+    **	>> bool isCompliant ();
+    */isCompliant:function(){if(!this.constraints)return!0;try{for(var t in this.data)this._validate(t,this.data[t]);return!0}catch(t){}return!1},/**
+    **	Registers an event handler for changes in a specific property of the model.
+    **
+    **	>> void observe (string property, function handler, object context);
+    */observe:function(t,e,n){this.addEventListener("propertyChanged."+t,e,n)},/**
+    **	Unregisters an event handler from changes in a specific property of the model.
+    **
+    **	>> void unobserve (string property, function handler, object context);
+    */unobserve:function(t,e,n){this.removeEventListener("propertyChanged."+t,e,n)},/**
+    **	Adds a propertyChanged event handler for the given property. The property name can have an event namespace prepended and separated by colon.
+    **
+    **	>> void watch (string property, function handler);
+    */watch:function(t,e){1==(t=t.split(":")).length&&(t[1]=t[0],t[0]="watch"),this.addEventListener(t[0]+":propertyChanged."+t[1],function(t,n){e(n.value,n,t)})},/**
+    **	Removes propertyChanged handlers related to the specified property. The property name can have an event namespace prepended and separated by colon.
+    **
+    **	>> void unwatch (string property);
+    */unwatch:function(t){1==(t=t.split(":")).length&&(t[1]=t[0],t[0]="watch"),this.removeEventListener(t[0]+":propertyChanged."+t[1])},/**
+     * Triggers a field change event. Even if the value of the field is the same as the model's, the event will still be triggered.
+     */trigger:function(t,e=null){return this.set(t,e,!0)},/**
+    **	Serializes the model into a string.
+    **
+    **	string toString ();
+    */toString:function(){return(0,$1V76q.default).serialize(this.get(!0))}});$d7fcaaa29d0ffaa7$var$_Model.Constraints=$leTsS.default;var $d7fcaaa29d0ffaa7$export$2e2bcd8739ae039=$d7fcaaa29d0ffaa7$var$_Model,$1V76q=parcelRequire("1V76q"),/**
 **	Generic list for models.
 */$7a8546796ed70f75$export$2e2bcd8739ae039=$d7fcaaa29d0ffaa7$export$2e2bcd8739ae039.extend({/**
 	**	Name of the class.
@@ -640,7 +643,7 @@ if(null!==n)for(let t in n)e[t]=n[t];return e};var $948f072c447a9569$export$2e2b
 	**	Parses a template and returns the compiled 'parts' structure to be used by the 'expand' method.
 	**
 	**	>> array parseTemplate (string template, char sym_open, char sym_close, bool is_tpl=false);
-	*/parseTemplate:function(t,e,n,r=!1,i=1){let s="string",a=null,l=0,u=0,o="",f=[],h=f,c=!1;function p(t){if("object"==typeof t){if(t instanceof Array)for(let e=0;e<t.length;e++)p(t[e]);else t.data=p(t.data);return t}for(let e=0;e<t.length;e++)if("\\"==t[e]){let n=t[e+1];switch(n){case"n":n="\n";break;case"r":n="\r";break;case"f":n="\f";break;case"v":n="\v";break;case"t":n="	";break;case"s":n="s";break;case'"':n='"';break;case"'":n="'"}t=t.substr(0,e)+n+t.substr(e+2)}return t}function d(t,r){if("template"==t?r=$5965a8a303d1bb14$var$Template.parseTemplate(r,e,n,!0,0):"parse"==t?(r=$5965a8a303d1bb14$var$Template.parseTemplate(r,e,n,!1,0),t="base-string","array"==(0,$1V76q.default).typeOf(r)&&(t=r[0].type,r=r[0].data)):"parse-trim-merge"==t?r=$5965a8a303d1bb14$var$Template.parseTemplate(r.trim().split("\n").map(t=>t.trim()).join("\n"),e,n,!1,0):"parse-merge"==t?r=$5965a8a303d1bb14$var$Template.parseTemplate(r,e,n,!1,0):"parse-merge-alt"==t&&(r=$5965a8a303d1bb14$var$Template.parseTemplate(r,"{","}",!1,0)),"parse-merge"==t||"parse-merge-alt"==t||"parse-trim-merge"==t)for(let t=0;t<r.length;t++)f.push(r[t]);else f.push({type:t,data:r});c&&(h.push(f=[]),c=!1)}!0===r&&(t=t.trim(),s="identifier",l=10,h.push(f=[])),t+="\x00";for(let r=0;r<t.length;r++){if("\\"==t[r]){o+="\\"+t[++r];continue}switch(l){case 0:"\x00"==t[r]?a="string":t[r]==e&&"<"==t[r+1]?(l=1,u=1,a="string",s="parse-merge"):t[r]==e&&"@"==t[r+1]?(l=1,u=1,a="string",s="parse-trim-merge",r++):t[r]==e&&":"==t[r+1]?(l=12,u=1,a="string",s="string",r++):t[r]==e?(l=1,u=1,a="string",s="template"):o+=t[r];break;case 1:if("\x00"==t[r])throw Error("Parse error: Unexpected end of template");if(t[r]==n){if(--u<0)throw Error("Parse error: Unmatched "+n);if(0==u){l=0,a=s;break}}else t[r]==e&&u++;o+=t[r];break;case 10:if("\x00"==t[r]){a=s;break}if("."==t[r]){d(s,o),d("access","."),s="identifier",o="";break}if(null!=t[r].match(/[\t\n\r\f\v ]/)){for(a=s,s="identifier",c=!0;null!=t[r].match(/[\t\n\r\f\v ]/);)r++;r--;break}if(t[r]==e&&"<"==t[r+1]){o&&(a=s),l=11,u=1,s="parse-merge";break}else if(t[r]==e&&"@"==t[r+1]){o&&(a=s),l=11,u=1,s="parse-trim-merge",r++;break}else if('"'==t[r]){o&&(a=s),l=14,u=1,s="parse-merge";break}else if("'"==t[r]){o&&(a=s),l=15,u=1,s="parse-merge";break}else if("`"==t[r]){o&&(a=s),l=16,u=1,s="parse-merge-alt";break}else if(t[r]==e&&":"==t[r+1]){o&&(a=s),l=13,u=1,s="string",r++;break}else if(t[r]==e){o&&d(s,o),l=11,u=1,s="parse",o=""+t[r];break}"identifier"!=s&&(d(s,o),o="",s="identifier"),o+=t[r];break;case 11:if("\x00"==t[r])throw Error("Parse error: Unexpected end of template");if(t[r]==n){if(--u<0)throw Error("Parse error: Unmatched "+n);if(0==u&&(l=10,"parse-merge"==s||"parse-merge-alt"==s||"parse-trim-merge"==s))break}else t[r]==e&&u++;o+=t[r];break;case 12:if("\x00"==t[r])throw Error("Parse error: Unexpected end of template");if(t[r]==n){if(--u<0)throw Error("Parse error: Unmatched "+n);if(0==u){0==o.length||"<"==o[0]||"["==o[0]||" "==o[0]||(o=e+o+n),l=0,a=s;break}}else t[r]==e&&u++;o+=t[r];break;case 13:if("\x00"==t[r])throw Error("Parse error: Unexpected end of template");if(t[r]==n){if(--u<0)throw Error("Parse error: Unmatched "+n);if(0==u){"<"==o[0]||"["==o[0]||" "==o[0]||(o=e+o+n),l=10;break}}else t[r]==e&&u++;o+=t[r];break;case 14:if("\x00"==t[r])throw Error("Parse error: Unexpected end of template");if('"'==t[r]){if(--u<0)throw Error('Parse error: Unmatched "');if(0==u&&(l=10,"parse-merge"==s||"parse-merge-alt"==s||"parse-trim-merge"==s))break}o+=t[r];break;case 15:if("\x00"==t[r])throw Error("Parse error: Unexpected end of template");if("'"==t[r]){if(--u<0)throw Error("Parse error: Unmatched '");if(0==u&&(l=10,"parse-merge"==s||"parse-merge-alt"==s||"parse-trim-merge"==s))break}o+=t[r];break;case 16:if("\x00"==t[r])throw Error("Parse error: Unexpected end of template");if("`"==t[r]){if(--u<0)throw Error("Parse error: Unmatched `");if(0==u&&(l=10,"parse-merge"==s||"parse-merge-alt"==s||"parse-trim-merge"==s))break}o+=t[r]}a&&(d(a,o),a=o="")}if(!r){let t=0;for(;t<h.length;)if("string"==h[t].type&&""==h[t].data)h.splice(t,1);else break;for(t=h.length-1;t>0;)if("string"==h[t].type&&""==h[t].data)h.splice(t--,1);else break;0==h.length&&h.push({type:"string",data:""})}return i&&p(h),h},/**
+	*/parseTemplate:function(t,e,n,r=!1,i=1){let s="string",a=null,l=0,o=0,u="",f=[],h=f,c=!1;function p(t){if("object"==typeof t){if(t instanceof Array)for(let e=0;e<t.length;e++)p(t[e]);else t.data=p(t.data);return t}for(let e=0;e<t.length;e++)if("\\"==t[e]){let n=t[e+1];switch(n){case"n":n="\n";break;case"r":n="\r";break;case"f":n="\f";break;case"v":n="\v";break;case"t":n="	";break;case"s":n="s";break;case'"':n='"';break;case"'":n="'"}t=t.substr(0,e)+n+t.substr(e+2)}return t}function d(t,r){if("template"==t?r=$5965a8a303d1bb14$var$Template.parseTemplate(r,e,n,!0,0):"parse"==t?(r=$5965a8a303d1bb14$var$Template.parseTemplate(r,e,n,!1,0),t="base-string","array"==(0,$1V76q.default).typeOf(r)&&(t=r[0].type,r=r[0].data)):"parse-trim-merge"==t?r=$5965a8a303d1bb14$var$Template.parseTemplate(r.trim().split("\n").map(t=>t.trim()).join("\n"),e,n,!1,0):"parse-merge"==t?r=$5965a8a303d1bb14$var$Template.parseTemplate(r,e,n,!1,0):"parse-merge-alt"==t&&(r=$5965a8a303d1bb14$var$Template.parseTemplate(r,"{","}",!1,0)),"parse-merge"==t||"parse-merge-alt"==t||"parse-trim-merge"==t)for(let t=0;t<r.length;t++)f.push(r[t]);else f.push({type:t,data:r});c&&(h.push(f=[]),c=!1)}!0===r&&(t=t.trim(),s="identifier",l=10,h.push(f=[])),t+="\x00";for(let r=0;r<t.length;r++){if("\\"==t[r]){u+="\\"+t[++r];continue}switch(l){case 0:"\x00"==t[r]?a="string":t[r]==e&&"<"==t[r+1]?(l=1,o=1,a="string",s="parse-merge"):t[r]==e&&"@"==t[r+1]?(l=1,o=1,a="string",s="parse-trim-merge",r++):t[r]==e&&":"==t[r+1]?(l=12,o=1,a="string",s="string",r++):t[r]==e?(l=1,o=1,a="string",s="template"):u+=t[r];break;case 1:if("\x00"==t[r])throw Error("Parse error: Unexpected end of template");if(t[r]==n){if(--o<0)throw Error("Parse error: Unmatched "+n);if(0==o){l=0,a=s;break}}else t[r]==e&&o++;u+=t[r];break;case 10:if("\x00"==t[r]){a=s;break}if("."==t[r]){d(s,u),d("access","."),s="identifier",u="";break}if(null!=t[r].match(/[\t\n\r\f\v ]/)){for(a=s,s="identifier",c=!0;null!=t[r].match(/[\t\n\r\f\v ]/);)r++;r--;break}if(t[r]==e&&"<"==t[r+1]){u&&(a=s),l=11,o=1,s="parse-merge";break}else if(t[r]==e&&"@"==t[r+1]){u&&(a=s),l=11,o=1,s="parse-trim-merge",r++;break}else if('"'==t[r]){u&&(a=s),l=14,o=1,s="parse-merge";break}else if("'"==t[r]){u&&(a=s),l=15,o=1,s="parse-merge";break}else if("`"==t[r]){u&&(a=s),l=16,o=1,s="parse-merge-alt";break}else if(t[r]==e&&":"==t[r+1]){u&&(a=s),l=13,o=1,s="string",r++;break}else if(t[r]==e){u&&d(s,u),l=11,o=1,s="parse",u=""+t[r];break}"identifier"!=s&&(d(s,u),u="",s="identifier"),u+=t[r];break;case 11:if("\x00"==t[r])throw Error("Parse error: Unexpected end of template");if(t[r]==n){if(--o<0)throw Error("Parse error: Unmatched "+n);if(0==o&&(l=10,"parse-merge"==s||"parse-merge-alt"==s||"parse-trim-merge"==s))break}else t[r]==e&&o++;u+=t[r];break;case 12:if("\x00"==t[r])throw Error("Parse error: Unexpected end of template");if(t[r]==n){if(--o<0)throw Error("Parse error: Unmatched "+n);if(0==o){0==u.length||"<"==u[0]||"["==u[0]||" "==u[0]||(u=e+u+n),l=0,a=s;break}}else t[r]==e&&o++;u+=t[r];break;case 13:if("\x00"==t[r])throw Error("Parse error: Unexpected end of template");if(t[r]==n){if(--o<0)throw Error("Parse error: Unmatched "+n);if(0==o){"<"==u[0]||"["==u[0]||" "==u[0]||(u=e+u+n),l=10;break}}else t[r]==e&&o++;u+=t[r];break;case 14:if("\x00"==t[r])throw Error("Parse error: Unexpected end of template");if('"'==t[r]){if(--o<0)throw Error('Parse error: Unmatched "');if(0==o&&(l=10,"parse-merge"==s||"parse-merge-alt"==s||"parse-trim-merge"==s))break}u+=t[r];break;case 15:if("\x00"==t[r])throw Error("Parse error: Unexpected end of template");if("'"==t[r]){if(--o<0)throw Error("Parse error: Unmatched '");if(0==o&&(l=10,"parse-merge"==s||"parse-merge-alt"==s||"parse-trim-merge"==s))break}u+=t[r];break;case 16:if("\x00"==t[r])throw Error("Parse error: Unexpected end of template");if("`"==t[r]){if(--o<0)throw Error("Parse error: Unmatched `");if(0==o&&(l=10,"parse-merge"==s||"parse-merge-alt"==s||"parse-trim-merge"==s))break}u+=t[r]}a&&(d(a,u),a=u="")}if(!r){let t=0;for(;t<h.length;)if("string"==h[t].type&&""==h[t].data)h.splice(t,1);else break;for(t=h.length-1;t>0;)if("string"==h[t].type&&""==h[t].data)h.splice(t--,1);else break;0==h.length&&h.push({type:"string",data:""})}return i&&p(h),h},/**
 	**	Parses a template and returns the compiled 'parts' structure to be used by the 'expand' method. This
 	**	version assumes the sym_open and sym_close chars are [ and ] respectively.
 	**
@@ -655,7 +658,7 @@ if(null!==n)for(let t in n)e[t]=n[t];return e};var $948f072c447a9569$export$2e2b
 	**
 	**	>> string/array expand (array parts, object data, string ret='text', string mode='base-string');
 	*/expand:function(t,e,n="text",r="base-string"){let i=[];// Expand variable parts.
-if("var"==r){let n=!0,r=!1,s=e,a=null,l=!0,u="";for(let i=0;i<t.length&&null!=e;i++)switch(t[i].type){case"identifier":case"string":u+=t[i].data,a=null;break;case"template":u+="object"!=typeof(a=this.expand(t[i].data,s,"arg","template"))?a:"";break;case"base-string":u+=this.expand(t[i].data,s,"arg","base-string"),a=null;break;case"access":if(a&&"object"==typeof a)e=a;else{for(""==u&&(u="this");;)if("!"==u[0])u=u.substr(1),n=!1;else if("$"==u[0])u=u.substr(1),r=!0;else break;if("this"!=u&&null!=e){let t=e;null===(e=u in e?e[u]:null)&&l&&u in $5965a8a303d1bb14$var$Template.functions&&(e=$5965a8a303d1bb14$var$Template.functions[u](null,null,t)),l=!1}}u=""}for(;""!=u;)if("!"==u[0])u=u.substr(1),n=!1;else if("$"==u[0])u=u.substr(1),r=!0;else break;if("this"!=u){let n=!1;if(null!=e?u in e?e=e[u]:(n=!0,e=null):n=!0,n&&1==t.length&&!0==$5965a8a303d1bb14$var$Template.strict)throw Error("Expression function `"+u+"` not found.")}"string"==typeof e&&(n&&(e=e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")),r&&(e='"'+e+'"')),i.push(e)}// Expand variable parts and returns a reference to it.
+if("var"==r){let n=!0,r=!1,s=e,a=null,l=!0,o="";for(let i=0;i<t.length&&null!=e;i++)switch(t[i].type){case"identifier":case"string":o+=t[i].data,a=null;break;case"template":o+="object"!=typeof(a=this.expand(t[i].data,s,"arg","template"))?a:"";break;case"base-string":o+=this.expand(t[i].data,s,"arg","base-string"),a=null;break;case"access":if(a&&"object"==typeof a)e=a;else{for(""==o&&(o="this");;)if("!"==o[0])o=o.substr(1),n=!1;else if("$"==o[0])o=o.substr(1),r=!0;else break;if("this"!=o&&null!=e){let t=e;null===(e=o in e?e[o]:null)&&l&&o in $5965a8a303d1bb14$var$Template.functions&&(e=$5965a8a303d1bb14$var$Template.functions[o](null,null,t)),l=!1}}o=""}for(;""!=o;)if("!"==o[0])o=o.substr(1),n=!1;else if("$"==o[0])o=o.substr(1),r=!0;else break;if("this"!=o){let n=!1;if(null!=e?o in e?e=e[o]:(n=!0,e=null):n=!0,n&&1==t.length&&!0==$5965a8a303d1bb14$var$Template.strict)throw Error("Expression function `"+o+"` not found.")}"string"==typeof e&&(n&&(e=e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")),r&&(e='"'+e+'"')),i.push(e)}// Expand variable parts and returns a reference to it.
 if("varref"==n){let n=e,r=null,i=!0,s="";for(let a=0;a<t.length&&null!=e;a++)switch(t[a].type){case"identifier":case"string":s+=t[a].data,r=null;break;case"template":s+="object"!=typeof(r=this.expand(t[a].data,n,"arg","template"))?r:"";break;case"base-string":s+=this.expand(t[a].data,n,"arg","base-string"),r=null;break;case"access":if(r&&"object"==typeof r)e=r;else{for(""==s&&(s="this");;)if("!"==s[0])s=s.substr(1);else if("$"==s[0])s=s.substr(1);else break;if("this"!=s&&null!=e){let t=e;null===(e=s in e?e[s]:null)&&i&&s in $5965a8a303d1bb14$var$Template.functions&&(e=$5965a8a303d1bb14$var$Template.functions[s](null,null,t)),i=!1}}s=""}for(;""!=s;)if("!"==s[0])s=s.substr(1);else if("$"==s[0])s=s.substr(1);else break;return"this"!=s?[e,s]:null}// Expand function parts.
 if("fn"==r){var s=[];if(s.push($5965a8a303d1bb14$var$Template.expand(t[0],e,"text","base-string")),"_"+s[0] in $5965a8a303d1bb14$var$Template.functions&&(s[0]="_"+s[0]),!(s[0]in $5965a8a303d1bb14$var$Template.functions)){if(!0==$5965a8a303d1bb14$var$Template.strict)throw Error("Expression function `"+s[0]+"` not found.");return`(Unknown: ${s[0]})`}if("_"==s[0][0])return $5965a8a303d1bb14$var$Template.functions[s[0]](t,e);for(let n=1;n<t.length;n++)s.push($5965a8a303d1bb14$var$Template.expand(t[n],e,"arg","base-string"));i.push($5965a8a303d1bb14$var$Template.functions[s[0]](s,t,e))}// Template mode.
 if("template"==r){if(1==t.length){if(1==t[0].length&&"string"==t[0][0].type)return t[0][0].data;if(1==t[0].length&&"identifier"==t[0][0].type){let r=t[0][0].data;if(r in $5965a8a303d1bb14$var$Template.functions||"_"+r in $5965a8a303d1bb14$var$Template.functions)return $5965a8a303d1bb14$var$Template.expand(t,e,n,"fn")}return $5965a8a303d1bb14$var$Template.expand(t[0],e,n,"var")}return $5965a8a303d1bb14$var$Template.expand(t,e,n,"fn")}// Expand parts.
@@ -797,7 +800,7 @@ if("arg"==n)return"array"==(0,$1V76q.default).typeOf(i)?1!=i.length?i.join(""):i
 	**	Constructs an array with the results of repeating the specified template for a number of times.
 	**
 	**	repeat <varname:i> [from <number>] [to <number>] [count <number>] [step <number>] <template>
-	*/_repeat:function(t,e){if(t.length<3||(1&t.length)!=1)return"(`repeat`: Wrong number of parameters)";let n=$5965a8a303d1bb14$var$Template.value(t[1],e),r=null,i=0,s=null,a=null;for(let n=2;n<t.length-1;n+=2)switch($5965a8a303d1bb14$var$Template.value(t[n],e).toLowerCase()){case"from":i=parseFloat($5965a8a303d1bb14$var$Template.value(t[n+1],e));break;case"to":s=parseFloat($5965a8a303d1bb14$var$Template.value(t[n+1],e));break;case"count":r=parseFloat($5965a8a303d1bb14$var$Template.value(t[n+1],e));break;case"step":a=parseFloat($5965a8a303d1bb14$var$Template.value(t[n+1],e))}let l=t[t.length-1],u=[];if(null!==s){if(null===a&&(a=i>s?-1:1),a<0)for(let t=i;t>=s;t+=a)try{e[n]=t,u.push($5965a8a303d1bb14$var$Template.value(l,e))}catch(e){let t=e.message;if("EXC_BREAK"==t)break;if("EXC_CONTINUE"==t)continue;throw e}else for(let t=i;t<=s;t+=a)try{e[n]=t,u.push($5965a8a303d1bb14$var$Template.value(l,e))}catch(e){let t=e.message;if("EXC_BREAK"==t)break;if("EXC_CONTINUE"==t)continue;throw e}}else if(null!==r){null===a&&(a=1);for(let t=i;r>0;r--,t+=a)try{e[n]=t,u.push($5965a8a303d1bb14$var$Template.value(l,e))}catch(e){let t=e.message;if("EXC_BREAK"==t)break;if("EXC_CONTINUE"==t)continue;throw e}}else{null===a&&(a=1);for(let t=i;;t+=a)try{e[n]=t,u.push($5965a8a303d1bb14$var$Template.value(l,e))}catch(e){let t=e.message;if("EXC_BREAK"==t)break;if("EXC_CONTINUE"==t)continue;throw e}}return delete e[n],u},/**
+	*/_repeat:function(t,e){if(t.length<3||(1&t.length)!=1)return"(`repeat`: Wrong number of parameters)";let n=$5965a8a303d1bb14$var$Template.value(t[1],e),r=null,i=0,s=null,a=null;for(let n=2;n<t.length-1;n+=2)switch($5965a8a303d1bb14$var$Template.value(t[n],e).toLowerCase()){case"from":i=parseFloat($5965a8a303d1bb14$var$Template.value(t[n+1],e));break;case"to":s=parseFloat($5965a8a303d1bb14$var$Template.value(t[n+1],e));break;case"count":r=parseFloat($5965a8a303d1bb14$var$Template.value(t[n+1],e));break;case"step":a=parseFloat($5965a8a303d1bb14$var$Template.value(t[n+1],e))}let l=t[t.length-1],o=[];if(null!==s){if(null===a&&(a=i>s?-1:1),a<0)for(let t=i;t>=s;t+=a)try{e[n]=t,o.push($5965a8a303d1bb14$var$Template.value(l,e))}catch(e){let t=e.message;if("EXC_BREAK"==t)break;if("EXC_CONTINUE"==t)continue;throw e}else for(let t=i;t<=s;t+=a)try{e[n]=t,o.push($5965a8a303d1bb14$var$Template.value(l,e))}catch(e){let t=e.message;if("EXC_BREAK"==t)break;if("EXC_CONTINUE"==t)continue;throw e}}else if(null!==r){null===a&&(a=1);for(let t=i;r>0;r--,t+=a)try{e[n]=t,o.push($5965a8a303d1bb14$var$Template.value(l,e))}catch(e){let t=e.message;if("EXC_BREAK"==t)break;if("EXC_CONTINUE"==t)continue;throw e}}else{null===a&&(a=1);for(let t=i;;t+=a)try{e[n]=t,o.push($5965a8a303d1bb14$var$Template.value(l,e))}catch(e){let t=e.message;if("EXC_BREAK"==t)break;if("EXC_CONTINUE"==t)continue;throw e}}return delete e[n],o},/**
 	**	Repeats the specified template for a number of times.
 	**
 	**	for <varname:i> [from <number>] [to <number>] [count <number>] [step <number>] <template>

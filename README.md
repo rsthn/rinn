@@ -60,7 +60,6 @@ The `Template` module is a small templating engine. Templates are first parsed i
 | ------------------------------ | -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
 | HTML-escaped output            | `[data.value]`                   | Looks up `data.value` and HTML-escapes it.                                                                                   |
 | Raw output                     | `[!data.value]`                  | Looks up the value without escaping (useful for emitting raw HTML).                                                          |
-| Double-quoted escaped output   | `[$data.value]`                  | Escapes HTML and surrounds the result with double quotes.                                                                    |
 | Immediate reparse              | `[<...]`, `[@...]`, `"..."`, `'...'` | Reparses the contents as if `parseTemplate` was called again. The `@` form trims and merges lines. Pick the form by content: `[<...]` for HTML bodies (its bracket delimiters let `"`/`'` survive intact in attributes), `'...'`/`"..."` for plain strings, `[@...]` for multi-line strings that should be trimmed/joined. |
 | Immediate output (literal)     | `[:...]`                         | Outputs the contents verbatim. Wraps the content in delimiters when the first character is not `<`, `[` or space.            |
 | Filtered/function output       | `[functionName arg1 arg2 ...]`   | Calls a registered expression function. Arguments may themselves be templates and are nested freely.                         |
@@ -99,7 +98,7 @@ Template.eval('[if [ne [name] ""] "Hello [name]!"]', { name: 'Ada' });
 Reserve `[<...]` for **HTML** bodies, where its bracket delimiters keep `"` and `'` literal so attribute quoting works:
 
 ```js
-const tpl = '[each item [items] [<li class="row" data-id=[$item.id]>[item.name]</li>]]';
+const tpl = '[each item [items] [<li class="row" data-id="[item.id]">[item.name]</li>]]';
 ```
 
 Don't use `[<...]` for plain strings (`[<is-open]`, `[<page]`, `[<]`) — those would be `is-open`, `page`, `""`. Don't use `\"`/`\'` inside any reparse form; Rinn has no backslash escapes, so the literal backslash will appear in the output.

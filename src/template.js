@@ -7,7 +7,7 @@ import Rinn from './alpha.js';
 **
 **	HTML Escaped Output:			[data.value]					Escapes HTML characters from the output.
 **	Raw Output:						[!data.value]					Does not escape HTML characters from the output (used to output direct HTML).
-**	Double-Quoted Escaped Output:	[data.value]					Escapes HTML characters and surrounds with double quotes.
+**	Double-Quoted Escaped Output:	[$data.value]					Escapes HTML characters and surrounds with double quotes.
 **	Immediate Reparse:				[<....] [@....] "..." '...'		Reparses the contents as if parseTemplate() was called again.
 **	Immediate Output:				[:...]							Takes the contents and outputs exactly as-is without format and optionally surrounded by the
 **																	sym-open and sym-close symbols when the first character is not '<', sym_open or space.
@@ -46,7 +46,7 @@ let Template =
 
 		function unescape (value)
 		{
-			if (typeof(value) == 'object')
+			if (typeof(value) === 'object')
 			{
 				if (value instanceof Array)
 				{
@@ -63,7 +63,7 @@ let Template =
 
 			for (let i = 0; i < value.length; i++)
 			{
-				if (value[i] == '\\')
+				if (value[i] === '\\')
 				{
 					let r = value[i+1];
 
@@ -88,35 +88,35 @@ let Template =
 
 		function emit (type, data)
 		{
-			if (type == 'template')
+			if (type === 'template')
 			{
 				data = Template.parseTemplate (data, sym_open, sym_close, true, 0);
 			}
-			else if (type == 'parse')
+			else if (type === 'parse')
 			{
 				data = Template.parseTemplate (data, sym_open, sym_close, false, 0);
 				type = 'base-string';
 
-				if (Rinn.typeOf(data) == 'array')
+				if (Rinn.typeOf(data) === 'array')
 				{
 					type = data[0].type;
 					data = data[0].data;
 				}
 			}
-			else if (type == 'parse-trim-merge')
+			else if (type === 'parse-trim-merge')
 			{
 				data = Template.parseTemplate (data.trim().split('\n').map(i => i.trim()).join("\n"), sym_open, sym_close, false, 0);
 			}
-			else if (type == 'parse-merge')
+			else if (type === 'parse-merge')
 			{
 				data = Template.parseTemplate (data, sym_open, sym_close, false, 0);
 			}
-			else if (type == 'parse-merge-alt')
+			else if (type === 'parse-merge-alt')
 			{
 				data = Template.parseTemplate (data, '{', '}', false, 0);
 			}
 
-			if (type == 'parse-merge' || type == 'parse-merge-alt' || type == 'parse-trim-merge')
+			if (type === 'parse-merge' || type === 'parse-merge-alt' || type === 'parse-trim-merge')
 			{
 				for (let i = 0; i < data.length; i++)
 				{
@@ -135,7 +135,7 @@ let Template =
 
 		for (let i = 0; i < template.length; i++)
 		{
-			if (template[i] == '\\')
+			if (template[i] === '\\')
 			{
 				str += '\\';
 				str += template[++i];
@@ -145,24 +145,24 @@ let Template =
 			switch (state)
 			{
 				case 0:
-					if (template[i] == '\0')
+					if (template[i] === '\0')
 					{
 						flush = 'string';
 					}
-					else if (template[i] == sym_open && template[i+1] == '<')
+					else if (template[i] == sym_open && template[i+1] === '<')
 					{
 						state = 1; count = 1;
 						flush = 'string';
 						nflush = 'parse-merge';
 					}
-					else if (template[i] == sym_open && template[i+1] == '@')
+					else if (template[i] == sym_open && template[i+1] === '@')
 					{
 						state = 1; count = 1;
 						flush = 'string';
 						nflush = 'parse-trim-merge';
 						i++;
 					}
-					else if (template[i] == sym_open && template[i+1] == ':')
+					else if (template[i] == sym_open && template[i+1] === ':')
 					{
 						state = 12; count = 1;
 						flush = 'string';
@@ -183,7 +183,7 @@ let Template =
 					break;
 	
 				case 1:
-					if (template[i] == '\0')
+					if (template[i] === '\0')
 					{
 						throw new Error ("Parse error: Unexpected end of template");
 					}
@@ -211,12 +211,12 @@ let Template =
 					break;
 
 				case 10:
-					if (template[i] == '\0')
+					if (template[i] === '\0')
 					{
 						flush = nflush;
 						break;
 					}
-					else if (template[i] == '.')
+					else if (template[i] === '.')
 					{
 						emit (nflush, str);
 						emit ('access', '.');
@@ -236,38 +236,38 @@ let Template =
 
 						break;
 					}
-					else if (template[i] == sym_open && template[i+1] == '<')
+					else if (template[i] == sym_open && template[i+1] === '<')
 					{
 						if (str) flush = nflush;
 						state = 11; count = 1; nflush = 'parse-merge';
 						break;
 					}
-					else if (template[i] == sym_open && template[i+1] == '@')
+					else if (template[i] == sym_open && template[i+1] === '@')
 					{
 						if (str) flush = nflush;
 						state = 11; count = 1; nflush = 'parse-trim-merge';
 						i++;
 						break;
 					}
-					else if (template[i] == '"')
+					else if (template[i] === '"')
 					{
 						if (str) flush = nflush;
 						state = 14; count = 1; nflush = 'parse-merge';
 						break;
 					}
-					else if (template[i] == '\'')
+					else if (template[i] === '\'')
 					{
 						if (str) flush = nflush;
 						state = 15; count = 1; nflush = 'parse-merge';
 						break;
 					}
-					else if (template[i] == '`')
+					else if (template[i] === '`')
 					{
 						if (str) flush = nflush;
 						state = 16; count = 1; nflush = 'parse-merge-alt';
 						break;
 					}
-					else if (template[i] == sym_open && template[i+1] == ':')
+					else if (template[i] == sym_open && template[i+1] === ':')
 					{
 						if (str) flush = nflush;
 						state = 13; count = 1; nflush = 'string';
@@ -282,7 +282,7 @@ let Template =
 						break;
 					}
 
-					if (nflush != 'identifier')
+					if (nflush !== 'identifier')
 					{
 						emit (nflush, str);
 						str = '';
@@ -293,7 +293,7 @@ let Template =
 					break;
 	
 				case 11:
-					if (template[i] == '\0')
+					if (template[i] === '\0')
 						throw new Error ("Parse error: Unexpected end of template");
 	
 					if (template[i] == sym_close)
@@ -307,7 +307,7 @@ let Template =
 						{
 							state = 10;
 	
-							if (nflush == 'parse-merge' || nflush == 'parse-merge-alt' || nflush == 'parse-trim-merge')
+							if (nflush === 'parse-merge' || nflush === 'parse-merge-alt' || nflush === 'parse-trim-merge')
 								break;
 						}
 					}
@@ -320,7 +320,7 @@ let Template =
 					break;
 
 				case 12:
-					if (template[i] == '\0')
+					if (template[i] === '\0')
 						throw new Error ("Parse error: Unexpected end of template");
 	
 					if (template[i] == sym_close)
@@ -334,7 +334,7 @@ let Template =
 						{
 							if (str.length != 0)
 							{
-								if (!(str[0] == '<' || str[0] == '[' || str[0] == ' '))
+								if (!(str[0] === '<' || str[0] === '[' || str[0] === ' '))
 									str = sym_open + str + sym_close;
 							}
 
@@ -352,7 +352,7 @@ let Template =
 					break;
 
 				case 13:
-					if (template[i] == '\0')
+					if (template[i] === '\0')
 						throw new Error ("Parse error: Unexpected end of template");
 
 					if (template[i] == sym_close)
@@ -364,7 +364,7 @@ let Template =
 
 						if (count == 0)
 						{
-							if (!(str[0] == '<' || str[0] == '[' || str[0] == ' '))
+							if (!(str[0] === '<' || str[0] === '[' || str[0] === ' '))
 								str = sym_open + str + sym_close;
 
 							state = 10;
@@ -380,12 +380,12 @@ let Template =
 					break;
 
 				case 14:
-					if (template[i] == '\0')
+					if (template[i] === '\0')
 					{
 						throw new Error ("Parse error: Unexpected end of template");
 					}
 	
-					if (template[i] == '"')
+					if (template[i] === '"')
 					{
 						count--;
 	
@@ -396,7 +396,7 @@ let Template =
 						{
 							state = 10;
 	
-							if (nflush == 'parse-merge' || nflush == 'parse-merge-alt' || nflush == 'parse-trim-merge')
+							if (nflush === 'parse-merge' || nflush === 'parse-merge-alt' || nflush === 'parse-trim-merge')
 								break;
 						}
 					}
@@ -405,12 +405,12 @@ let Template =
 					break;
 
 				case 15:
-					if (template[i] == '\0')
+					if (template[i] === '\0')
 					{
 						throw new Error ("Parse error: Unexpected end of template");
 					}
 	
-					if (template[i] == '\'')
+					if (template[i] === '\'')
 					{
 						count--;
 	
@@ -421,7 +421,7 @@ let Template =
 						{
 							state = 10;
 	
-							if (nflush == 'parse-merge' || nflush == 'parse-merge-alt' || nflush == 'parse-trim-merge')
+							if (nflush === 'parse-merge' || nflush === 'parse-merge-alt' || nflush === 'parse-trim-merge')
 								break;
 						}
 					}
@@ -430,12 +430,12 @@ let Template =
 					break;
 
 				case 16:
-					if (template[i] == '\0')
+					if (template[i] === '\0')
 					{
 						throw new Error ("Parse error: Unexpected end of template");
 					}
 	
-					if (template[i] == '`')
+					if (template[i] === '`')
 					{
 						count--;
 	
@@ -446,7 +446,7 @@ let Template =
 						{
 							state = 10;
 	
-							if (nflush == 'parse-merge' || nflush == 'parse-merge-alt' || nflush == 'parse-trim-merge')
+							if (nflush === 'parse-merge' || nflush === 'parse-merge-alt' || nflush === 'parse-trim-merge')
 								break;
 						}
 					}
@@ -467,7 +467,7 @@ let Template =
 			let i = 0;
 			while (i < mparts.length)
 			{
-				if (mparts[i].type == 'string' && mparts[i].data == '')
+				if (mparts[i].type === 'string' && mparts[i].data === '')
 					mparts.splice(i, 1);
 				else
 					break;
@@ -476,7 +476,7 @@ let Template =
 			i = mparts.length-1;
 			while (i > 0)
 			{
-				if (mparts[i].type == 'string' && mparts[i].data == '')
+				if (mparts[i].type === 'string' && mparts[i].data === '')
 					mparts.splice(i--, 1);
 				else
 					break;
@@ -512,7 +512,7 @@ let Template =
 	{
 		for (let i = 0; i < parts.length; i++)
 		{
-			if (parts[i].type != 'template')
+			if (parts[i].type !== 'template')
 			{
 				parts.splice(i, 1);
 				i--;
@@ -533,7 +533,7 @@ let Template =
 		let s = [];
 
 		// Expand variable parts.
-		if (mode == 'var')
+		if (mode === 'var')
 		{
 			let escape = true;
 			let quote = false;
@@ -555,7 +555,7 @@ let Template =
 
 					case 'template':
 						last = this.expand(parts[i].data, root, 'arg', 'template');
-						str += typeof(last) != 'object' ? last : '';
+						str += typeof(last) !== 'object' ? last : '';
 						break;
 
 					case 'base-string':
@@ -564,19 +564,16 @@ let Template =
 						break;
 
 					case 'access':
-						if (!last || typeof(last) != 'object')
+						if (!last || typeof(last) !== 'object')
 						{
-							if (str == '') str = 'this';
+							if (str === '') str = 'this';
 
-							while (true)
-							{
-								if (str[0] == '!')
-								{
+							while (true) {
+								if (str[0] === '!') {
 									str = str.substr(1);
 									escape = false;
 								}
-								else if (str[0] == '$')
-								{
+								else if (str[0] === '$') {
 									str = str.substr(1);
 									quote = true;
 								}
@@ -584,7 +581,7 @@ let Template =
 									break;
 							}
 
-							if (str != 'this' && data != null)
+							if (str !== 'this' && data != null)
 							{
 								let tmp = data;
 								data = (str in data) ? data[str] : null;
@@ -606,15 +603,12 @@ let Template =
 				}
 			}
 
-			while (str != '')
-			{
-				if (str[0] == '!')
-				{
+			while (str !== '') {
+				if (str[0] === '!') {
 					str = str.substr(1);
 					escape = false;
 				}
-				else if (str[0] == '$')
-				{
+				else if (str[0] === '$') {
 					str = str.substr(1);
 					quote = true;
 				}
@@ -622,7 +616,7 @@ let Template =
 					break;
 			}
 
-			if (str != 'this')
+			if (str !== 'this')
 			{
 				let failed = false;
 
@@ -646,7 +640,7 @@ let Template =
 				}
 			}
 
-			if (typeof(data) == 'string')
+			if (typeof(data) === 'string')
 			{
 				if (escape)
 					data = data.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -659,7 +653,7 @@ let Template =
 		}
 
 		// Expand variable parts and returns a reference to it.
-		if (ret == 'varref')
+		if (ret === 'varref')
 		{
 			let root = data;
 			let last = null;
@@ -678,7 +672,7 @@ let Template =
 
 					case 'template':
 						last = this.expand(parts[i].data, root, 'arg', 'template');
-						str += typeof(last) != 'object' ? last : '';
+						str += typeof(last) !== 'object' ? last : '';
 						break;
 
 					case 'base-string':
@@ -687,25 +681,22 @@ let Template =
 						break;
 
 					case 'access':
-						if (!last || typeof(last) != 'object')
+						if (!last || typeof(last) !== 'object')
 						{
-							if (str == '') str = 'this';
+							if (str === '') str = 'this';
 
-							while (true)
-							{
-								if (str[0] == '!')
-								{
+							while (true) {
+								if (str[0] === '!') {
 									str = str.substr(1);
 								}
-								else if (str[0] == '$')
-								{
+								else if (str[0] === '$') {
 									str = str.substr(1);
 								}
 								else
 									break;
 							}
 
-							if (str != 'this' && data != null)
+							if (str !== 'this' && data != null)
 							{
 								let tmp = data;
 								data = (str in data) ? data[str] : null;
@@ -727,25 +718,22 @@ let Template =
 				}
 			}
 
-			while (str != '')
-			{
-				if (str[0] == '!')
-				{
+			while (str !== '') {
+				if (str[0] === '!') {
 					str = str.substr(1);
 				}
-				else if (str[0] == '$')
-				{
+				else if (str[0] === '$') {
 					str = str.substr(1);
 				}
 				else
 					break;
 			}
 
-			return str != 'this' ? [data, str] : null;
+			return str !== 'this' ? [data, str] : null;
 		}
 
 		// Expand function parts.
-		if (mode == 'fn')
+		if (mode === 'fn')
 		{
 			var args = [];
 
@@ -762,7 +750,7 @@ let Template =
 				return `(Unknown: ${args[0]})`;
 			}
 
-			if (args[0][0] == '_')
+			if (args[0][0] === '_')
 				return Template.functions[args[0]] (parts, data);
 
 			for (let i = 1; i < parts.length; i++)
@@ -772,14 +760,14 @@ let Template =
 		}
 
 		// Template mode.
-		if (mode == 'template')
+		if (mode === 'template')
 		{
 			if (parts.length == 1)
 			{
-				if (parts[0].length == 1 && parts[0][0].type == 'string')
+				if (parts[0].length == 1 && parts[0][0].type === 'string')
 					return parts[0][0].data;
 
-				if (parts[0].length == 1 && parts[0][0].type == 'identifier')
+				if (parts[0].length == 1 && parts[0][0].type === 'identifier')
 				{
 					let name = parts[0][0].data;
 
@@ -794,7 +782,7 @@ let Template =
 		}
 
 		// Expand parts.
-		if (mode == 'base-string')
+		if (mode === 'base-string')
 		{
 			let index = -1;
 
@@ -818,10 +806,10 @@ let Template =
 						break;
 				}
 
-				if (ret == 'void')
+				if (ret === 'void')
 					continue;
 
-				if (ret == 'last' && index != parts.length-1)
+				if (ret === 'last' && index != parts.length-1)
 					continue;
 
 				s.push(tmp);
@@ -829,23 +817,23 @@ let Template =
 		}
 
 		// Return types for direct objects.
-		if (ret == 'obj') return s;
+		if (ret === 'obj') return s;
 
-		if (ret == 'last')
+		if (ret === 'last')
 		{
-			if (typeOf(s) == 'Rose\\Arry')
+			if (typeOf(s) === 'Rose\\Arry')
 				s = s[0];
 
 			return s;
 		}
 
 		// When the output is not really needed.
-		if (ret == 'void') return null;
+		if (ret === 'void') return null;
 
 		// Return as argument ('object' if only one, or string if more than one), that is, the first item in the result.
-		if (ret == 'arg')
+		if (ret === 'arg')
 		{
-			if (Rinn.typeOf(s) == 'array')
+			if (Rinn.typeOf(s) === 'array')
 			{
 				if (s.length != 1)
 					return s.join('');
@@ -856,9 +844,9 @@ let Template =
 			return s;
 		}
 
-		if (ret == 'text' && Rinn.typeOf(s) == 'array')
+		if (ret === 'text' && Rinn.typeOf(s) === 'array')
 		{
-			let f = (e => e != null && typeof(e) == 'object' ? ('map' in e ? e.map(f).join('') : ('join' in e ? e.join('') : e.toString())) : e);
+			let f = (e => e != null && typeof(e) === 'object' ? ('map' in e ? e.map(f).join('') : ('join' in e ? e.join('') : e.toString())) : e);
 			s = s.map(f).join('');
 		}
 
@@ -897,7 +885,7 @@ let Template =
 	*/
 	value: function (parts, data=null)
 	{
-		return Rinn.typeOf(parts) != 'array' ? parts : Template.expand(parts, data ? data : { }, 'arg');
+		return Rinn.typeOf(parts) !== 'array' ? parts : Template.expand(parts, data ? data : { }, 'arg');
 	},
 
 	/**
@@ -1172,13 +1160,10 @@ Template.functions =
 
 		for (let i = 0; i < args.length; i++)
 		{
-			if (Rinn.typeOf(args[i]) == 'array')
-			{
+			if (Rinn.typeOf(args[i]) === 'array') {
 				s += `<${name}>`;
-				
 				for (let j = 0; j < args[i].length; j++)
 					s += args[i][j];
-
 				s += `</${name}>`;
 			}
 			else
@@ -1201,8 +1186,7 @@ Template.functions =
 		let attr = '';
 		let text = '';
 
-		for (let i = 0; i < args.length; i += 2)
-		{
+		for (let i = 0; i < args.length; i += 2) {
 			if (i+1 < args.length)
 				attr += ` ${args[i]}="${args[i+1]}"`;
 			else
@@ -1219,7 +1203,7 @@ Template.functions =
 	*/
 	'join': function (args)
 	{
-		if (args[2] && Rinn.typeOf(args[2]) == 'array')
+		if (args[2] && Rinn.typeOf(args[2]) === 'array')
 			return args[2].join(args[1]);
 
 		return '';
@@ -1371,7 +1355,7 @@ Template.functions =
 	{
 		for (let i = 0; i < parts.length; i += 3)
 		{
-			if (Template.expand(parts[i], data, 'arg') == 'else')
+			if (Template.expand(parts[i], data, 'arg') === 'else')
 				return Template.expand(parts[i+1], data, 'text');
 
 			if (Template.expand(parts[i+1], data, 'arg'))
@@ -1393,7 +1377,7 @@ Template.functions =
 		for (let i = 2; i < parts.length; i += 2)
 		{
 			let case_value = Template.expand(parts[i], data, 'arg');
-			if (case_value == value || case_value == 'default')
+			if (case_value == value || case_value === 'default')
 				return Template.expand(parts[i+1], data, 'text');
 		}
 
@@ -1476,8 +1460,8 @@ Template.functions =
 						arr.push(Template.value(tpl, data));
 					} catch (e) {
 						let name = e.message;
-						if (name == 'EXC_BREAK') break;
-						if (name == 'EXC_CONTINUE') continue;
+						if (name === 'EXC_BREAK') break;
+						if (name === 'EXC_CONTINUE') continue;
 						throw e;
 					}
 				}
@@ -1491,8 +1475,8 @@ Template.functions =
 						arr.push(Template.value(tpl, data));
 					} catch (e) {
 						let name = e.message;
-						if (name == 'EXC_BREAK') break;
-						if (name == 'EXC_CONTINUE') continue;
+						if (name === 'EXC_BREAK') break;
+						if (name === 'EXC_CONTINUE') continue;
 						throw e;
 					}
 				}
@@ -1510,8 +1494,8 @@ Template.functions =
 					arr.push(Template.value(tpl, data));
 				} catch (e) {
 					let name = e.message;
-					if (name == 'EXC_BREAK') break;
-					if (name == 'EXC_CONTINUE') continue;
+					if (name === 'EXC_BREAK') break;
+					if (name === 'EXC_CONTINUE') continue;
 					throw e;
 				}
 			}
@@ -1529,8 +1513,8 @@ Template.functions =
 				}
 				catch (e) {
 					let name = e.message;
-					if (name == 'EXC_BREAK') break;
-					if (name == 'EXC_CONTINUE') continue;
+					if (name === 'EXC_BREAK') break;
+					if (name === 'EXC_CONTINUE') continue;
 					throw e;
 				}
 			}
@@ -1595,8 +1579,8 @@ Template.functions =
 						Template.value(tpl, data);
 					} catch (e) {
 						let name = e.message;
-						if (name == 'EXC_BREAK') break;
-						if (name == 'EXC_CONTINUE') continue;
+						if (name === 'EXC_BREAK') break;
+						if (name === 'EXC_CONTINUE') continue;
 						throw e;
 					}
 				}
@@ -1610,8 +1594,8 @@ Template.functions =
 						Template.value(tpl, data);
 					} catch (e) {
 						let name = e.message;
-						if (name == 'EXC_BREAK') break;
-						if (name == 'EXC_CONTINUE') continue;
+						if (name === 'EXC_BREAK') break;
+						if (name === 'EXC_CONTINUE') continue;
 						throw e;
 					}
 				}
@@ -1629,8 +1613,8 @@ Template.functions =
 					Template.value(tpl, data);
 				} catch (e) {
 					let name = e.message;
-					if (name == 'EXC_BREAK') break;
-					if (name == 'EXC_CONTINUE') continue;
+					if (name === 'EXC_BREAK') break;
+					if (name === 'EXC_CONTINUE') continue;
 					throw e;
 				}
 			}
@@ -1648,8 +1632,8 @@ Template.functions =
 				}
 				catch (e) {
 					let name = e.message;
-					if (name == 'EXC_BREAK') break;
-					if (name == 'EXC_CONTINUE') continue;
+					if (name === 'EXC_BREAK') break;
+					if (name === 'EXC_CONTINUE') continue;
 					throw e;
 				}
 			}
@@ -1678,8 +1662,8 @@ Template.functions =
 			}
 			catch (e) {
 				let name = e.message;
-				if (name == 'EXC_BREAK') break;
-				if (name == 'EXC_CONTINUE') continue;
+				if (name === 'EXC_BREAK') break;
+				if (name === 'EXC_CONTINUE') continue;
 				throw e;
 			}
 		}
@@ -1764,7 +1748,7 @@ Template.functions =
 	{
 		let value = args[1];
 
-		if (typeof(value) != 'object')
+		if (typeof(value) !== 'object')
 		{
 			data.err = 'Argument is not a Map';
 			return false;
@@ -1778,7 +1762,7 @@ Template.functions =
 				s += ', '+args[i];
 		}
 
-		if (s != '')
+		if (s !== '')
 		{
 			data.err = s.substr(1);
 			return false;
@@ -1796,7 +1780,7 @@ Template.functions =
 	{
 		let value = args[2];
 
-		if (Rinn.typeOf(value) != 'object')
+		if (Rinn.typeOf(value) !== 'object')
 			return false;
 
 		return args[1] in value;
@@ -1814,7 +1798,7 @@ Template.functions =
 		let list = Template.expand(parts[2], data, 'arg');
 		if (!list) return list;
 
-		let arrayMode = Rinn.typeOf(list) == 'array' ? true : false;
+		let arrayMode = Rinn.typeOf(list) === 'array' ? true : false;
 		let output = arrayMode ? [] : {};
 		let j = 0;
 
@@ -1849,7 +1833,7 @@ Template.functions =
 		let list = Template.expand(parts[2], data, 'arg');
 		if (!list) return list;
 
-		let arrayMode = Rinn.typeOf(list) == 'array' ? true : false;
+		let arrayMode = Rinn.typeOf(list) === 'array' ? true : false;
 		let output = arrayMode ? [] : {};
 		let j = 0;
 
@@ -1895,7 +1879,7 @@ Template.functions =
 	{
 		let ref = Template.expand(parts[1], data, 'varref');
 
-		if (!ref || typeof(ref[0][ref[1]]) != 'function')
+		if (!ref || typeof(ref[0][ref[1]]) !== 'function')
 			throw new Error ('Expression is not a function: ' + Template.expand(parts[1], data, 'obj').map(i => i == null ? '.' : i).join(''));
 
 		let args = [];
